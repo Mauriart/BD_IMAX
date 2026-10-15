@@ -1,6 +1,6 @@
 # Acuerdos del equipo — Proyecto II: Base de datos IMAX
 
-Versión 1.0 · 15 de octubre de 2026  
+Versión 1.1 · 15 de octubre de 2026  
 Repositorio: [Mauriart/BD_IMAX](https://github.com/Mauriart/BD_IMAX)  
 Relacionado con [T-01 / issue #1](https://github.com/Mauriart/BD_IMAX/issues/1).
 
@@ -69,7 +69,7 @@ La propiedad de una tabla identifica al módulo que coordina su esquema y operac
 
 ### Contrato de instalación local
 
-La implementación deberá cumplir esta secuencia, que se documentará con comandos completos en el README:
+La implementación deberá cumplir esta secuencia, que se documentará con comandos comprobados en `docs/guia_trabajo.md`. Por decisión de Mauriart se omite ampliar el README como entregable:
 
 1. Instalar PostgreSQL 17 y Python 3.12; crear la base vacía `imax` y los roles técnicos de instalación/aplicación.
 2. Crear/activar `.venv` e instalar `requirements.txt`.
@@ -319,13 +319,13 @@ Guardar entorno, versiones, datos, comandos, esperado, obtenido y evidencia. No 
 Estructura acordada para incorporar progresivamente:
 
 ~~~text
-README.md
 requirements.txt
 .env.example
 .gitignore
 docs/
   00_acuerdos.md
   requisitos.md
+  guia_trabajo.md
   factibilidad.md
   operacion.md
   modelos/
@@ -368,7 +368,7 @@ No se crea ni mantiene un tablero de GitHub Projects. Las etiquetas son opcional
 
 Revisión cruzada: A revisa B, B revisa C y C revisa A. Cambios de contrato, permisos o esquema global requieren revisión de los tres, incluido el autor. No se declara una revisión que no haya ocurrido.
 
-Los acuerdos iniciales se publican como base documental por solicitud del equipo; las modificaciones posteriores siguen este flujo. No cerrar T-01 automáticamente: también exige DER inicial, trazabilidad y README de colaboración.
+Los acuerdos iniciales se publican como base documental por solicitud del equipo; las modificaciones posteriores siguen este flujo. No cerrar T-01 automáticamente. La trazabilidad y la guía de colaboración se documentan en `docs/requisitos.md` y `docs/guia_trabajo.md`; se omite el README por decisión de Mauriart. Las entidades existentes son la base del DER que se desarrolla en las tareas de diseño. En este apartado se trabaja únicamente A.
 
 ## 14. Regla de terminado y control de cambios
 
@@ -394,3 +394,7 @@ Si un issue o la guía conserva una formulación incompatible con estos acuerdos
 - Reglas de expiración, idempotencia, concurrencia, reembolso parcial y consumo QR compartido.
 - Privacidad de disponibilidad: no revelar el dueño de bloqueos ajenos.
 - Corrección de 500 títulos a 500 funciones diarias; separación de requisitos de la consigna y objetivos internos.
+
+### Actualización de alcance — 15 de octubre de 2026
+
+Mauriart toma las decisiones pendientes. La matriz y la guía de esta etapa cubren solo el bloque A, con B/C como dependencias. Los detalles técnicos añadidos durante la corrección anterior no se consideran ratificados por el solo hecho de estar publicados; antes de usarlos para fijar comportamiento se identifican y se someten a su decisión cuando corresponda. Esta actualización no declara una revisión del grupo ni modifica sus módulos.
