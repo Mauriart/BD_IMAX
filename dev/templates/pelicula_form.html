@@ -2,12 +2,20 @@
 {% block title %}{{ titulo_formulario }}{% endblock %}
 {% block content %}
 <a class="volver" href="{{ url_for('listar_peliculas') }}">← Volver a películas</a>
-<div class="titulo-pagina"><div><p class="etiqueta">CATÁLOGO</p><h1>{{ titulo_formulario }}</h1><p class="descripcion">Completa la información del título. Todos los campos son obligatorios.</p></div></div>
+<div class="titulo-pagina"><div><p class="etiqueta">CATÁLOGO</p><h1>{{ titulo_formulario }}</h1><p class="descripcion">Completa la información del título. Los géneros son opcionales.</p></div></div>
 <section class="tarjeta formulario-pelicula">
     {% if error %}<p class="alerta" role="alert">{{ error }}</p>{% endif %}
     <form method="post" action="{{ accion }}" class="formulario">
         <div class="campo"><label for="titulo">Título</label><input id="titulo" name="titulo" maxlength="200" value="{{ datos.titulo }}" required></div>
         <div class="campo"><label for="sinopsis">Sinopsis</label><textarea id="sinopsis" name="sinopsis" rows="4" required>{{ datos.sinopsis }}</textarea></div>
+        <fieldset class="generos-pelicula"><legend>Géneros</legend>
+            <p class="ayuda">Puedes seleccionar varios géneros para que la película aparezca en esos filtros.</p>
+            <div class="lista-generos">
+                {% for genero in generos %}
+                <label class="campo-check"><input type="checkbox" name="generos" value="{{ genero[0] }}" {% if genero[0]|string in seleccionados %}checked{% endif %}> {{ genero[1] }}</label>
+                {% else %}<p class="ayuda">No hay géneros configurados en el catálogo.</p>{% endfor %}
+            </div>
+        </fieldset>
         <div class="dos-columnas">
             <div class="campo"><label for="clasificacion">Clasificación</label><input id="clasificacion" name="clasificacion" maxlength="30" placeholder="Ej. Todo público" value="{{ datos.clasificacion }}" required></div>
             <div class="campo"><label for="duracion_min">Duración en minutos</label><input id="duracion_min" name="duracion_min" type="number" min="1" max="2147483647" step="1" value="{{ datos.duracion_min }}" required></div>

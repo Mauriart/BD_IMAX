@@ -3,10 +3,26 @@ import psycopg
 from conexion import obtener_conexion
 from salas import salas_bp
 from funciones import funciones_bp
+from cartelera import cartelera_bp
 
 app = Flask(__name__)
 app.register_blueprint(salas_bp)
 app.register_blueprint(funciones_bp)
+app.register_blueprint(cartelera_bp)
+
+
+def cargar_generos():
+    with obtener_conexion() as conexion:
+        with conexion.cursor() as cursor:
+            cursor.execute("SELECT id_genero, nombre FROM genero ORDER BY nombre;")
+            return cursor.fetchall()
+
+
+def validar_generos(seleccionados, generos):
+    disponibles = {str(genero[0]) for genero in generos}
+    if not seleccionados.issubset(disponibles):
+        return "Selecciona géneros existentes en el catálogo."
+    return None
 
 
 def validar_pelicula(datos):
@@ -41,6 +57,8 @@ def listar_peliculas():
 
 @app.route("/peliculas/nueva", methods=["GET", "POST"])
 def crear_pelicula():
+    generos = cargar_generos()
+    seleccionados = set()
     datos = {
         "titulo": "",
         "sinopsis": "",
@@ -55,6 +73,9 @@ def crear_pelicula():
             datos[campo] = request.form.get(campo, "").strip()
 
         error = validar_pelicula(datos)
+        seleccionados = set(request.form.getlist("generos"))
+        if error is None:
+            error = validar_generos(seleccionados, generos)
 
         if error is None:
             try:
@@ -65,7 +86,8 @@ def crear_pelicula():
                                 titulo, sinopsis, clasificacion,
                                 duracion_min, poster_url
                             )
-                            VALUES (%s, %s, %s, %s, %s);
+                            VALUES (%s, %s, %s, %s, %s)
+                            RETURNING id_pelicula;
                         """, (
                             datos["titulo"],
                             datos["sinopsis"],
@@ -73,6 +95,12 @@ def crear_pelicula():
                             int(datos["duracion_min"]),
                             datos["poster_url"],
                         ))
+                        id_pelicula = cursor.fetchone()[0]
+                        if seleccionados:
+                            cursor.executemany("""
+                                INSERT INTO pelicula_genero (id_pelicula, id_genero)
+                                VALUES (%s, %s);
+                            """, [(id_pelicula, int(genero)) for genero in sorted(seleccionados)])
                 return redirect(url_for("listar_peliculas"))
             except (psycopg.IntegrityError, psycopg.DataError):
                 error = "No se pudo guardar la película. Revisa los datos."
@@ -82,11 +110,13 @@ def crear_pelicula():
         "pelicula_form.html", datos=datos, error=error,
         titulo_formulario="Agregar película",
         accion=url_for("crear_pelicula"),
+        generos=generos, seleccionados=seleccionados,
     ), estado
 
 
 @app.route("/peliculas/<int:id_pelicula>/editar", methods=["GET", "POST"])
 def editar_pelicula(id_pelicula):
+    generos = cargar_generos()
     with obtener_conexion() as conexion:
         with conexion.cursor() as cursor:
             cursor.execute("""
@@ -95,6 +125,9 @@ def editar_pelicula(id_pelicula):
                 WHERE id_pelicula = %s;
             """, (id_pelicula,))
             pelicula = cursor.fetchone()
+            cursor.execute("SELECT id_genero FROM pelicula_genero WHERE id_pelicula = %s;",
+                           (id_pelicula,))
+            seleccionados = {str(fila[0]) for fila in cursor.fetchall()}
 
     if pelicula is None:
         abort(404)
@@ -109,6 +142,9 @@ def editar_pelicula(id_pelicula):
         for campo in datos:
             datos[campo] = request.form.get(campo, "").strip()
         error = validar_pelicula(datos)
+        seleccionados = set(request.form.getlist("generos"))
+        if error is None:
+            error = validar_generos(seleccionados, generos)
 
         if error is None:
             try:
@@ -127,6 +163,13 @@ def editar_pelicula(id_pelicula):
                         ))
                         if cursor.fetchone() is None:
                             abort(404)
+                        cursor.execute("DELETE FROM pelicula_genero WHERE id_pelicula = %s;",
+                                       (id_pelicula,))
+                        if seleccionados:
+                            cursor.executemany("""
+                                INSERT INTO pelicula_genero (id_pelicula, id_genero)
+                                VALUES (%s, %s);
+                            """, [(id_pelicula, int(genero)) for genero in sorted(seleccionados)])
                 return redirect(url_for("listar_peliculas"))
             except (psycopg.IntegrityError, psycopg.DataError):
                 error = "No se pudo guardar la película. Revisa los datos."
@@ -136,4 +179,5 @@ def editar_pelicula(id_pelicula):
         "pelicula_form.html", datos=datos, error=error,
         titulo_formulario="Editar película",
         accion=url_for("editar_pelicula", id_pelicula=id_pelicula),
+        generos=generos, seleccionados=seleccionados,
     ), estado

@@ -73,6 +73,30 @@ summary { cursor:pointer; font-weight:600; font-size:13px; }
 .estado.inactivo { color:#59677c; background:#edf0f5; }
 .campo-check { display:flex; gap:10px; align-items:center; }
 .campo-check input { width:18px; height:18px; min-height:0; }
+.filtros-cartelera { padding:24px; margin-bottom:26px; }
+.campos-filtros { display:grid; grid-template-columns:1.7fr 1fr 1fr; gap:20px; }
+.cartelera-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.pelicula-cartelera { display:flex; flex-direction:column; }
+.poster-cartelera { background:#172c49; height:235px; position:relative; overflow:hidden; display:grid; place-items:center; }
+.poster-respaldo { color:#8da9cc; font-size:44px; letter-spacing:4px; font-weight:850; }
+.poster-cartelera img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#172c49; }
+.poster-cartelera img[hidden] { display:none; }
+.contenido-pelicula { padding:24px; }
+.contenido-pelicula h2 { font-size:23px; }
+.contenido-pelicula h3 { font-size:13px; margin:24px 0 10px; }
+.datos-pelicula { color:var(--suave); font-size:13px; margin:8px 0; }
+.sinopsis { font-size:14px; margin:14px 0; }
+.horarios-cartelera { padding:0; margin:0; list-style:none; }
+.horarios-cartelera li { padding:12px 0; border-top:1px solid var(--borde); }
+.horarios-cartelera li div { display:flex; flex-wrap:wrap; gap:8px 16px; align-items:center; }
+.horarios-cartelera li strong { color:var(--azul); font-size:14px; }
+.horarios-cartelera li span { font-size:13px; }
+.vacio-cartelera { grid-column:1 / -1; padding:44px 28px; text-align:center; }
+.generos-pelicula { border:1px solid var(--borde); border-radius:7px; padding:14px 16px; margin:0; }
+.generos-pelicula legend { font-size:13px; font-weight:650; padding:0 5px; }
+.lista-generos { display:flex; flex-wrap:wrap; gap:12px 22px; margin-top:12px; }
+@media(max-width:850px) { .cartelera-grid { grid-template-columns:1fr; } }
+@media(max-width:600px) { .campos-filtros { grid-template-columns:1fr; } }
 @media(max-width:850px) { .paneles-salas,.paneles-zonas { grid-template-columns:1fr; } .campos-lote { grid-template-columns:1fr 1fr; } }
 @media(max-width:600px) {
  .barra { padding:16px 18px; align-items:flex-start; flex-direction:column; gap:14px; }

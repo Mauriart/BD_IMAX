@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Cartelera{% endblock %}
+{% block content %}
+<div class="titulo-pagina"><div><p class="etiqueta">EN PANTALLA</p><h1>Cartelera</h1><p class="descripcion">Encuentra tu próxima película por cine, fecha y género.</p></div><span class="contador">{{ total_funciones }} funciones disponibles</span></div>
+<section class="tarjeta filtros-cartelera">
+    <form method="get" action="{{ url_for('cartelera.ver_cartelera') }}" class="formulario">
+        <div class="campos-filtros">
+            <div class="campo"><label for="cine">Cine / ubicación</label><select id="cine" name="cine"><option value="">Todos los cines</option>
+                {% for cine in cines %}<option value="{{ cine.id_cine }}" {% if filtros.cine == cine.id_cine|string %}selected{% endif %}>{{ cine.nombre }} · {{ cine.ubicacion }}</option>{% endfor %}
+            </select></div>
+            <div class="campo"><label for="fecha">Fecha</label><input id="fecha" name="fecha" type="date" value="{{ filtros.fecha }}"></div>
+            <div class="campo"><label for="genero">Género</label><select id="genero" name="genero"><option value="">Todos los géneros</option>
+                {% for genero in generos %}<option value="{{ genero.id_genero }}" {% if filtros.genero == genero.id_genero|string %}selected{% endif %}>{{ genero.nombre }}</option>{% endfor %}
+            </select></div>
+        </div>
+        <div class="acciones-formulario"><button type="submit">Buscar funciones</button><a class="boton secundario" href="{{ url_for('cartelera.ver_cartelera') }}">Limpiar filtros</a></div>
+    </form>
+</section>
+{% if error %}<p class="alerta" role="alert">{{ error }}</p>{% endif %}
+<div class="cartelera-grid">
+    {% for pelicula in peliculas %}
+    <article class="tarjeta pelicula-cartelera">
+        <div class="poster-cartelera">
+            <span class="poster-respaldo" aria-hidden="true">IMAX</span>
+            {% if pelicula.datos.poster_url.startswith(('https://', 'http://', '/static/')) %}
+            <img src="{{ pelicula.datos.poster_url }}" alt="Póster de {{ pelicula.datos.titulo }}" loading="lazy" data-poster>
+            {% endif %}
+        </div>
+        <div class="contenido-pelicula">
+            <p class="etiqueta">{{ pelicula.datos.generos|join(' · ') if pelicula.datos.generos else 'CINE' }}</p>
+            <h2>{{ pelicula.datos.titulo }}</h2>
+            <p class="datos-pelicula">{{ pelicula.datos.clasificacion }} · {{ pelicula.datos.duracion_min }} min</p>
+            <p class="sinopsis">{{ pelicula.datos.sinopsis }}</p>
+            <h3>Próximas funciones</h3>
+            <ul class="horarios-cartelera">
+                {% for funcion in pelicula.funciones %}
+                <li><div><strong>{{ funcion.inicio_local.strftime('%d/%m · %H:%M') }}</strong><span>{{ funcion.cine }} · {{ funcion.sala }}</span></div><small>{{ funcion.ubicacion }}<br>{{ funcion.zona_horaria }}</small></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </article>
+    {% else %}
+    <section class="tarjeta vacio-cartelera"><h2>{{ 'Revisa los filtros' if error else 'No hay funciones para esta búsqueda' }}</h2><p class="descripcion">{{ 'Corrige los datos indicados y vuelve a buscar.' if error else 'Prueba otra fecha, cine o género. Solo aparecen funciones activas que todavía no han comenzado.' }}</p></section>
+    {% endfor %}
+</div>
+<script src="{{ url_for('static', filename='cartelera.js') }}" defer></script>
+{% endblock %}
