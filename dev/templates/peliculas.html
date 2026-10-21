@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Películas</title>
+</head>
+<body>
+    <h1>Películas</h1>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Clasificación</th>
+                <th>Duración</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pelicula in peliculas %}
+            <tr>
+                <td>{{ pelicula[0] }}</td>
+                <td>{{ pelicula[1] }}</td>
+                <td>{{ pelicula[2] }}</td>
+                <td>{{ pelicula[3] }} minutos</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4">No hay películas registradas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
