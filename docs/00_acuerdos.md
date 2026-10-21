@@ -398,3 +398,7 @@ Si un issue o la guía conserva una formulación incompatible con estos acuerdos
 ### Actualización de alcance — 15 de octubre de 2026
 
 Mauriart toma las decisiones pendientes. La matriz y la guía de esta etapa cubren solo el bloque A, con B/C como dependencias. Los detalles técnicos añadidos durante la corrección anterior no se consideran ratificados por el solo hecho de estar publicados; antes de usarlos para fijar comportamiento se identifican y se someten a su decisión cuando corresponda. Esta actualización no declara una revisión del grupo ni modifica sus módulos.
+
+### Diseño parcial entregado por A
+
+La implementación A-01 usa SERIAL PRIMARY KEY e INT en sus referencias; la sala de un asiento se obtiene a través de zona. La capacidad se calcula y género se normaliza en genero/pelicula_genero. Las promociones conservan condición textual en esta etapa; su aplicación se implementa en A-03. El esquema y contratos vigentes de A están en [compañeroA/modelo_a.md](compa%C3%B1eroA/modelo_a.md) y [compañeroA/contratos_a.md](compa%C3%B1eroA/contratos_a.md). Esta especificación refleja el SQL construido con Mauriart y prevalece para A-01 sobre los detalles más amplios propuestos al inicio. Por su decisión, A-01 se entrega sin revisión externa ni PR adicional.

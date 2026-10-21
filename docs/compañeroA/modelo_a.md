@@ -124,12 +124,15 @@ El diseño evita duplicación descriptiva y dependencias parciales/transitivas b
 
 El DDL impide referencias inexistentes, asociaciones duplicadas, nombres de sala/zona repetidos dentro de su propietario, asientos repetidos dentro de una zona, duraciones y números de asiento no positivos, precios negativos, monedas diferentes de USD y vigencias/horarios invertidos.
 
+[ajuste_integridad_A.sql](ajuste_integridad_A.sql) comprueba además que la zona de una tarifa pertenezca a la sala de su función, al insertar o actualizar la tarifa. También impide reasignar de sala una función o zona que ya tenga tarifas. Esta regla conserva la relación sin duplicar id_sala en tarifa ni modificar el Chen. Se verifican primero los datos existentes y se detiene el ajuste si hay una incoherencia.
+
+La validación utiliza triggers: se ejecutan automáticamente en las escrituras y sus errores revierten la operación. Los bloqueos de fila FOR SHARE mantienen las referencias estables durante la comprobación. Referencias: [triggers de PostgreSQL](https://www.postgresql.org/docs/18/trigger-definition.html) y [bloqueos de fila](https://www.postgresql.org/docs/18/explicit-locking.html#LOCKING-ROWS).
+
 La numeración se identifica por zona, fila y número: puede repetirse en otra zona de la sala. La zona forma parte de la ubicación del asiento.
 
 Todavía deben implementarse y verificarse:
 
 - Evitar traslapes de funciones considerando limpieza y concurrencia (A-02).
-- Comprobar que la zona de una tarifa pertenece a la sala de su función.
 - Impedir vigencias superpuestas para función, zona y categoría.
 - Aplicar filtros de cartelera, promociones y acreditación en los flujos reales (A-03).
 - Proteger distribución con reservas/ventas activas, permisos y auditoría (A-04 e integración B/C).
@@ -139,12 +142,20 @@ El modelo actual usa `SERIAL`, obtiene sala mediante zona y conserva las condici
 ## Uso de los scripts
 
 1. Ejecutar [relacional_A.sql](relacional_A.sql) en una base de prueba sin estas tablas.
-2. Ejecutar [datos_A.sql](datos_A.sql) por secciones. Espera IDs desde 1; comprobar los SELECT y ajustar referencias si las secuencias ya se utilizaron. No es una carga repetible sobre datos existentes.
-3. Ejecutar [consultas_A.sql](consultas_A.sql) para revisar funciones, tarifas y capacidad.
-4. Ejecutar cada sentencia de [pruebas_A.sql](pruebas_A.sql) por separado: todas deben fallar. Si la sesión queda abortada, usar Rollback antes de continuar. Confirmar primero los datos válidos para no perderlos.
+2. Ejecutar [ajuste_integridad_A.sql](ajuste_integridad_A.sql). Si las 12 tablas ya existen, ejecutar solo este ajuste; no volver a crear tablas ni cargar datos.
+3. En una instalación nueva, ejecutar [datos_A.sql](datos_A.sql) por secciones. Espera IDs desde 1; comprobar los SELECT y ajustar referencias si las secuencias ya se utilizaron. No es una carga repetible sobre datos existentes.
+4. Ejecutar [consultas_A.sql](consultas_A.sql) para revisar funciones, tarifas y capacidad.
+5. Ejecutar cada sentencia de [pruebas_A.sql](pruebas_A.sql) por separado: todas deben fallar. Si la sesión queda abortada, usar Rollback antes de continuar. Confirmar primero los datos válidos para no perderlos.
+6. Para repetir las comprobaciones adicionales sobre el conjunto de ejemplo, ejecutar [verificacion_A.sql](verificacion_A.sql). Comprueba los errores esperados y termina con ROLLBACK para retirar sus cambios auxiliares. Las secuencias pueden avanzar aunque se reviertan los registros.
 
 La carga representa un cine, una sala, dos zonas, seis asientos, una película, dos géneros, cuatro categorías, una función, ocho tarifas y una promoción. La imagen del póster es una ruta de ejemplo, no un recurso incluido. Las fechas de función/vigencias son fijas; deberán actualizarse para demostraciones posteriores al 1 de noviembre de 2026.
 
 Los archivos recibidos tenían nombres y contenidos cruzados: `datos_A.sql` contenía consultas y `consultas_A.sql` repetía pruebas. Aquí las consultas están en su archivo correspondiente y la carga se reconstruye a partir de los INSERT sencillos utilizados. Los originales locales no se modifican.
 
 Los resultados y límites de verificación están en [pruebas_a.md](pruebas_a.md). Este material se integrará con los otros bloques en el diseño y las pruebas del informe final; no constituye un informe final independiente.
+
+## Entrega de A-01
+
+Se revisó la correspondencia Chen–SQL: relaciones 1:N mediante FK; género multivalorado y promoción/función mediante tablas puente; capacidad derivada sin columna almacenada. Las 12 tablas y las 50 columnas están descritas arriba. Los [campos y firmas para B/C](contratos_a.md) completan el contrato inicial del módulo.
+
+La instalación limpia, los datos y los rechazos se verificaron en una instancia temporal independiente. La integración real con B/C y las operaciones de A-02/A-03/A-04 se realizan en sus tareas; no son una condición pendiente del diseño parcial A-01. Por indicación de Mauriart, esta entrega se completa sin requerir revisión de otra persona ni PR adicional.

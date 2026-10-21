@@ -1,6 +1,6 @@
 # Matriz de requisitos y trazabilidad — Bloque A
 
-Responsable: **Mauriart**. Fecha de elaboración: 15 de octubre de 2026.
+Responsable: **Mauriart**.
 
 ## Alcance y lectura
 
@@ -10,16 +10,16 @@ Fuentes: RN-01, RN-02, RN-06, RN-07, RN-17, RN-18 y RN-20 de la consigna, pauta 
 
 El orden es el número ascendente de los issues existentes: **#2, #3, #4, #5, #7, #8 y #20**. Por eso A-05 aparece antes de A-04 y A-06 al final. El número de issue y el código A-xx se conservan.
 
-**Avance del esquema A:** el Chen, las 12 tablas, los datos de ejemplo y las consultas ya están incorporados en [compañeroA](compa%C3%B1eroA/modelo_a.md). El integrante confirmó las consultas y cinco rechazos en DBeaver; véase [registro de pruebas](compa%C3%B1eroA/pruebas_a.md). La revisión completa e integración permanecen pendientes. Las rutas de la matriz que todavía no tienen enlace son destinos previstos.
+**A-01 completado en su alcance de diseño parcial:** Chen, esquema de 12 tablas, diccionario, normalización, datos, contratos para B/C y verificación en base temporal. Véanse [modelo](compa%C3%B1eroA/modelo_a.md), [contratos](compa%C3%B1eroA/contratos_a.md) y [resultados](compa%C3%B1eroA/pruebas_a.md). La integración y los comportamientos de A-02/A-03/A-04 permanecen en sus issues. No se exige revisión de otra persona para cerrar A-01, por decisión de Mauriart.
 
 ## 1. Matriz por issue
 
 | ID | Issue | Fuente | Comportamiento o entregable verificable | Implementación/documento previsto | Prueba o verificación | Estado |
 | --- | --- | --- | --- | --- | --- | --- |
-| RF-A-01 | [#2 · A-01](https://github.com/Mauriart/BD_IMAX/issues/2) | RN-01/02/06/07/18; DBLC 3 | Modelar cine, película, género, sala, zona, asiento, función, categoría, tarifa y promoción con sus relaciones. | DER parcial y diccionario en `docs/modelos/`; DDL A en `sql/`. | PA-01: coherencia entre entidades, cardinalidades, PK/FK y diccionario. | Pendiente |
-| RNF-A-01 | #2 · A-01 | DBLC 3/4 | DDL instalable en base vacía; rechazar vínculos inválidos, importes negativos y asientos duplicados por sala. | DDL y restricciones del dominio A. | PA-02: instalación limpia y casos negativos SQL. | Pendiente |
-| RNF-A-02 | #2 · A-01 | RN-03/18; contrato con B | Diferenciar asiento físico y disponibilidad por función; no guardar ocupación global en `asiento`. | Modelo A y contrato de IDs con B. | PA-01 y PA-03: mismo asiento físico referenciable por dos funciones. | Pendiente |
-| RNF-A-03 | #2 · A-01 | DBLC 3 | Justificar normalización con claves y dependencias funcionales; ofrecer datos sintéticos y campos compartidos antes de la GUI. | Normalización y diccionario en `docs/modelos/`; datos A en `sql/`. | PA-01: revisión de anomalías y reproducción de los datos. | Pendiente |
+| RF-A-01 | [#2 · A-01](https://github.com/Mauriart/BD_IMAX/issues/2) | RN-01/02/06/07/18; DBLC 3 | Modelar cine, película, género, sala, zona, asiento, función, categoría, tarifa y promoción con sus relaciones. | [Modelo y SQL](compa%C3%B1eroA/modelo_a.md); [datos](compa%C3%B1eroA/datos_A.sql); [contratos](compa%C3%B1eroA/contratos_a.md). | [Verificación y resultados](compa%C3%B1eroA/pruebas_a.md): instalación, relaciones, integridad y consultas. | Verificado en el alcance A-01; integración posterior. |
+| RNF-A-01 | #2 · A-01 | DBLC 3/4 | DDL instalable en base vacía; rechazar vínculos inválidos, importes negativos y asientos duplicados por sala. | [Modelo y SQL](compa%C3%B1eroA/modelo_a.md); [datos](compa%C3%B1eroA/datos_A.sql); [contratos](compa%C3%B1eroA/contratos_a.md). | [Verificación y resultados](compa%C3%B1eroA/pruebas_a.md): instalación, relaciones, integridad y consultas. | Verificado en el alcance A-01; integración posterior. |
+| RNF-A-02 | #2 · A-01 | RN-03/18; contrato con B | Diferenciar asiento físico y disponibilidad por función; no guardar ocupación global en `asiento`. | [Modelo y SQL](compa%C3%B1eroA/modelo_a.md); [datos](compa%C3%B1eroA/datos_A.sql); [contratos](compa%C3%B1eroA/contratos_a.md). | [Verificación y resultados](compa%C3%B1eroA/pruebas_a.md): instalación, relaciones, integridad y consultas. | Verificado en el alcance A-01; integración posterior. |
+| RNF-A-03 | #2 · A-01 | DBLC 3 | Justificar normalización con claves y dependencias funcionales; ofrecer datos sintéticos y campos compartidos antes de la GUI. | [Modelo y SQL](compa%C3%B1eroA/modelo_a.md); [datos](compa%C3%B1eroA/datos_A.sql); [contratos](compa%C3%B1eroA/contratos_a.md). | [Verificación y resultados](compa%C3%B1eroA/pruebas_a.md): instalación, relaciones, integridad y consultas. | Verificado en el alcance A-01; integración posterior. |
 | RF-A-02 | [#3 · A-02](https://github.com/Mauriart/BD_IMAX/issues/3) | RN-02; pauta de programación | Administrador crea/edita películas con título, sinopsis, clasificación, duración y póster. Rechazar información obligatoria incompleta. | `src/cartelera/`, plantillas y validación SQL/servidor. | PA-04: alta válida y altas incompletas rechazadas. | Pendiente |
 | RF-A-03 | #3 · A-02 | Pauta de programación | Gestionar salas, zonas, asientos y funciones con capacidad/distribución coherentes. | Modelo y operaciones administrativas A. | PA-05: sala válida, numeración duplicada y zona ajena rechazadas. | Pendiente |
 | RNF-A-04 | #3 · A-02 | Pauta de programación; acuerdos | Impedir traslapes por sala considerando duración y limpieza, incluso ante programación simultánea. | Restricción o protocolo transaccional de programación A. | PA-06: traslape, límite exacto permitido y dos altas concurrentes incompatibles. | Pendiente |
@@ -60,7 +60,7 @@ Evidencia prevista: `evidencias/a/<id_prueba>/`, con salidas SQL, errores espera
 | C-05 [#19](https://github.com/Mauriart/BD_IMAX/issues/19) | Necesidades de arquitectura/costos. | Dimensionamiento con versión y supuestos. | Estimación preliminar identificada; conciliar antes de terminar A-06. |
 | C-06 [#21](https://github.com/Mauriart/BD_IMAX/issues/21) | Arquitectura y componentes propuestos. | Políticas de continuidad y riesgos para mantener coherencia documental. | Referenciar aportes de C, sin redactar su módulo. |
 
-Solo cambiar un requisito a **Verificado** cuando existan implementación/documento y evidencia accesibles. Un ensayo con fixtures se marca **Verificado aisladamente; integración pendiente**. Crear esta matriz no cierra ninguno de los siete issues.
+Solo cambiar un requisito a **Verificado** cuando existan implementación/documento y evidencia accesibles. Un ensayo con fixtures se marca **Verificado aisladamente; integración pendiente**. La documentación de A-01 ya fue contrastada con el SQL y su verificación. Los demás issues conservan su estado propio.
 
 ## 4. Decisiones y mantenimiento
 

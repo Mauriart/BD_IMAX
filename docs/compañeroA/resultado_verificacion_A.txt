@@ -1,0 +1,164 @@
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+BEGIN
+LOCK TABLE
+DO
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+psql:docs/compa�eroA/ajuste_integridad_A.sql:46: NOTICE:  trigger "trg_validar_zona_tarifa" for relation "tarifa" does not exist, skipping
+CREATE FUNCTION
+psql:docs/compa�eroA/ajuste_integridad_A.sql:75: NOTICE:  trigger "trg_proteger_sala_funcion" for relation "funcion" does not exist, skipping
+DROP TRIGGER
+CREATE TRIGGER
+psql:docs/compa�eroA/ajuste_integridad_A.sql:80: NOTICE:  trigger "trg_proteger_sala_zona" for relation "zona" does not exist, skipping
+DROP TRIGGER
+CREATE TRIGGER
+COMMIT
+INSERT 0 1
+ id_cine |    nombre    |      ubicacion       |    zona_horaria
+---------+--------------+----------------------+--------------------
+       1 | IMAX Central | San José, Costa Rica | America/Costa_Rica
+(1 row)
+
+INSERT 0 1
+ id_sala | id_cine | nombre
+---------+---------+--------
+       1 |       1 | Sala 1
+(1 row)
+
+INSERT 0 2
+ id_zona | id_sala | nombre
+---------+---------+---------
+       1 |       1 | General
+       2 |       1 | VIP
+(2 rows)
+
+INSERT 0 6
+INSERT 0 1
+ id_pelicula |      titulo       |                    sinopsis                     | clasificacion | duracion_min |            poster_url
+-------------+-------------------+-------------------------------------------------+---------------+--------------+-----------------------------------
+           1 | Horizonte estelar | Una tripulación explora un planeta desconocido. | Todo público  |          120 | /static/img/horizonte_estelar.png
+(1 row)
+
+INSERT 0 2
+ id_genero |     nombre
+-----------+-----------------
+         1 | Ciencia ficción
+         2 | Aventura
+(2 rows)
+
+INSERT 0 2
+INSERT 0 4
+ id_categoria_entrada |    nombre    | requiere_acreditacion
+----------------------+--------------+-----------------------
+                    1 | Adulto       | f
+                    2 | Niño         | t
+                    3 | Estudiante   | t
+                    4 | Tercera edad | t
+(4 rows)
+
+INSERT 0 1
+ id_funcion | id_pelicula | id_sala |         inicio         |          fin           | activa
+------------+-------------+---------+------------------------+------------------------+--------
+          1 |           1 |       1 | 2026-11-01 18:00:00-06 | 2026-11-01 20:00:00-06 | t
+(1 row)
+
+INSERT 0 8
+INSERT 0 1
+ id_promocion |     nombre     | tipo |                          condicion                          |     vigente_desde      |     vigente_hasta      | activa
+--------------+----------------+------+-------------------------------------------------------------+------------------------+------------------------+--------
+            1 | Pareja General | 2x1  | Dos entradas de adulto en zona General de la misma función. | 2026-10-01 00:00:00-06 | 2026-11-01 18:00:00-06 | t
+(1 row)
+
+INSERT 0 1
+     cine     |  sala  |     pelicula      |         inicio         |          fin
+--------------+--------+-------------------+------------------------+------------------------
+ IMAX Central | Sala 1 | Horizonte estelar | 2026-11-01 18:00:00-06 | 2026-11-01 20:00:00-06
+(1 row)
+
+ id_funcion |      titulo       |  zona   |  categoria   | monto | moneda
+------------+-------------------+---------+--------------+-------+--------
+          1 | Horizonte estelar | General | Niño         |  5.00 | USD
+          1 | Horizonte estelar | General | Tercera edad |  5.00 | USD
+          1 | Horizonte estelar | General | Estudiante   |  6.00 | USD
+          1 | Horizonte estelar | General | Adulto       |  8.00 | USD
+          1 | Horizonte estelar | VIP     | Tercera edad |  9.00 | USD
+          1 | Horizonte estelar | VIP     | Niño         |  9.00 | USD
+          1 | Horizonte estelar | VIP     | Estudiante   | 10.00 | USD
+          1 | Horizonte estelar | VIP     | Adulto       | 12.00 | USD
+(8 rows)
+
+ id_sala | nombre | capacidad
+---------+--------+-----------
+       1 | Sala 1 |         6
+(1 row)
+
+BEGIN
+DO
+psql:docs/compa�eroA/verificacion_A.sql:21: NOTICE:  OK: 12 tablas, 8 tarifas y capacidad derivada de 6.
+INSERT 0 1
+INSERT 0 1
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: asiento duplicado rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: duración negativa rechazada.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: horario invertido rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: monto negativo rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: cine inexistente rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: tarifa de zona ajena rechazada al insertar.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: tarifa de zona ajena rechazada al actualizar.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: cambio de sala de función con tarifas rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: cambio de sala de zona con tarifas rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: cambios válidos aceptados, incluida zona sin tarifas.
+DO
+INSERT 0 1
+ funciones_sala_1
+------------------
+                2
+(1 row)
+
+ROLLBACK
+BEGIN
+LOCK TABLE
+DO
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+DROP TRIGGER
+CREATE TRIGGER
+COMMIT
+BEGIN
+DO
+psql:docs/compa�eroA/verificacion_A.sql:21: NOTICE:  OK: 12 tablas, 8 tarifas y capacidad derivada de 6.
+INSERT 0 1
+INSERT 0 1
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: asiento duplicado rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: duración negativa rechazada.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: horario invertido rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: monto negativo rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: cine inexistente rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: tarifa de zona ajena rechazada al insertar.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: tarifa de zona ajena rechazada al actualizar.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: cambio de sala de función con tarifas rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: cambio de sala de zona con tarifas rechazado.
+psql:docs/compa�eroA/verificacion_A.sql:97: NOTICE:  OK: cambios válidos aceptados, incluida zona sin tarifas.
+DO
+INSERT 0 1
+ funciones_sala_1
+------------------
+                2
+(1 row)
+
+ROLLBACK

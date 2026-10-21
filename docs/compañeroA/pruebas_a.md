@@ -32,6 +32,26 @@ Las sentencias están en [pruebas_A.sql](pruebas_A.sql). Las restricciones esper
 
 ## Alcance de los resultados
 
-Estas pruebas comprueban creación, relaciones básicas, consultas y cinco rechazos. No prueban concurrencia, traslapes, tarifas con vigencias superpuestas, pertenencia zona/función, permisos, ventas ni auditoría. No se han medido tiempos ni planes de ejecución.
+Las primeras comprobaciones fueron confirmadas desde DBeaver. Adicionalmente se ejecutó una instalación limpia y la verificación siguiente en PostgreSQL 18.6, en una instancia temporal separada. No se modificó la base de DBeaver. La versión de esa base no se ha comprobado.
 
-A-01 mantiene pendiente la revisión de coherencia completa con los acuerdos y la integración compartida. No se cierra un issue por publicar estos archivos.
+| Verificación adicional | Resultado |
+| --- | --- |
+| Instalación de relacional_A.sql y ajuste_integridad_A.sql con detención ante errores | Correcta: 12 tablas. |
+| Carga de datos y consultas | Ocho tarifas y capacidad de seis asientos; función, película y ubicación correctas. |
+| Repetición de los cinco errores básicos | Todos rechazados por la clase de restricción esperada. |
+| Insertar tarifa con zona ajena a la sala de su función | Rechazado. |
+| Actualizar tarifa para usar una zona ajena | Rechazado. |
+| Cambiar sala de una función con tarifas | Rechazado. |
+| Cambiar sala de una zona con tarifas | Rechazado. |
+| Actualizar importe conservando referencias válidas | Aceptado. |
+| Actualizar sala al mismo valor | Aceptado. |
+| Mover una zona sin tarifas | Aceptado. |
+| Crear una segunda función en la misma sala | Aceptado; los asientos físicos no quedan ocupados globalmente. |
+
+La [salida de ejecución](resultado_verificacion_A.txt) conserva los resultados reales. [verificacion_A.sql](verificacion_A.sql) permite repetirlos sobre los datos de ejemplo y revierte sus registros auxiliares al terminar.
+
+Orden usado: relacional_A.sql → ajuste_integridad_A.sql → datos_A.sql → consultas_A.sql → verificacion_A.sql. La ejecución se detuvo ante cualquier error no previsto mediante ON_ERROR_STOP=1. Las comprobaciones de rechazo usan bloques EXCEPTION para distinguir el fallo esperado de otro problema.
+
+No se han ejecutado pruebas de concurrencia, traslapes, tarifas con vigencias superpuestas, permisos, ventas o auditoría. No se han medido tiempos ni planes de ejecución. Esas verificaciones corresponden a las tareas posteriores.
+
+A-01 entrega el modelo parcial, la normalización, el diccionario, el esquema, los datos, los contratos y esta verificación. Mauriart indicó que no requiere revisión por otra persona para esta entrega. El ajuste deberá ejecutarse también en su base existente para que incorpore la validación nueva.

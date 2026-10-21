@@ -1,6 +1,6 @@
 # Guía de trabajo — Bloque A de BD IMAX
 
-Responsable: **Mauriart**. Fecha: 15 de octubre de 2026.
+Responsable: **Mauriart**.
 
 ## 1. Propósito y alcance
 
@@ -162,3 +162,9 @@ Mauriart decide las cuestiones que aún no estén acordadas. Si una decisión a�
 - Revisión e integración registradas; ninguna aprobación se presume.
 
 El avance de **A-01 / issue #2** se encuentra en [docs/compañeroA/modelo_a.md](compa%C3%B1eroA/modelo_a.md): Chen, esquema SQL, carga de ejemplo, consultas, diccionario y normalización. Los resultados confirmados y las comprobaciones pendientes se registran en [pruebas_a.md](compa%C3%B1eroA/pruebas_a.md). Se mantiene esta carpeta para el material de A; las rutas sugeridas anteriormente no exigen duplicar archivos.
+
+## Entrega de A-01
+
+El modelo parcial, SQL, datos, diccionario, normalización, contratos y pruebas de instalación están completos en [compañeroA](compa%C3%B1eroA/modelo_a.md). Por decisión de Mauriart no se requiere otra persona ni PR adicional para cerrar esta entrega. La integración B/C se verifica en las tareas posteriores. El siguiente trabajo es A-02: administración y programación sin traslapes.
+
+Para la base ya creada en DBeaver, ejecutar únicamente [ajuste_integridad_A.sql](compa%C3%B1eroA/ajuste_integridad_A.sql); no repetir CREATE TABLE ni la carga de datos. La prueba temporal ya incorporó este ajuste, pero no modifica automáticamente la base personal.
