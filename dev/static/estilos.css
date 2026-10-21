@@ -68,10 +68,15 @@ summary { cursor:pointer; font-weight:600; font-size:13px; }
 .tabla-asientos { max-height:420px; overflow:auto; }
 .tabla-asientos th { position:sticky; top:0; }
 .pie { text-align:center; font-size:12px; color:var(--suave); padding:0 24px 28px; }
+.estado { display:inline-block; padding:4px 9px; border-radius:5px; font-size:12px; font-weight:650; }
+.estado.activo { color:#226745; background:#e9f5ee; }
+.estado.inactivo { color:#59677c; background:#edf0f5; }
+.campo-check { display:flex; gap:10px; align-items:center; }
+.campo-check input { width:18px; height:18px; min-height:0; }
 @media(max-width:850px) { .paneles-salas,.paneles-zonas { grid-template-columns:1fr; } .campos-lote { grid-template-columns:1fr 1fr; } }
 @media(max-width:600px) {
  .barra { padding:16px 18px; align-items:flex-start; flex-direction:column; gap:14px; }
- .marca { font-size:24px; } nav { width:100%; } nav a { padding:8px 12px; }
+ .marca { font-size:24px; } nav { width:100%; flex-wrap:wrap; } nav a { padding:8px 12px; }
  .contenedor { padding:26px 16px 40px; } .titulo-pagina { align-items:flex-start; flex-direction:column; gap:18px; }
  h1 { font-size:28px; } .dos-columnas,.campos-lote,.campos-individual { grid-template-columns:1fr; }
  .formulario-pelicula,.panel-alta,.formulario-lote { padding:20px; }

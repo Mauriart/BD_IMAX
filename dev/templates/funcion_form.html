@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo_formulario }}{% endblock %}
+{% block content %}
+<a class="volver" href="{{ url_for('funciones.listar_funciones') }}">← Volver a funciones</a>
+<div class="titulo-pagina"><div><p class="etiqueta">PROGRAMACIÓN</p><h1>{{ titulo_formulario }}</h1><p class="descripcion">La hora final se calcula con la duración de la película.</p></div></div>
+<section class="tarjeta formulario-pelicula">
+    {% if error %}<p class="alerta" role="alert">{{ error }}</p>{% endif %}
+    {% if peliculas and salas %}
+    <form method="post" action="{{ accion }}" class="formulario">
+        <div class="campo"><label for="id_pelicula">Película</label><select id="id_pelicula" name="id_pelicula" required>
+            <option value="">Selecciona una película</option>
+            {% for pelicula in peliculas %}<option value="{{ pelicula.id_pelicula }}" {% if datos.id_pelicula == pelicula.id_pelicula|string %}selected{% endif %}>{{ pelicula.titulo }} · {{ pelicula.duracion_min }} min</option>{% endfor %}
+        </select></div>
+        <div class="campo"><label for="id_sala">Sala</label><select id="id_sala" name="id_sala" required>
+            <option value="">Selecciona una sala</option>
+            {% for sala in salas %}<option value="{{ sala.id_sala }}" {% if datos.id_sala == sala.id_sala|string %}selected{% endif %}>{{ sala.cine }} · {{ sala.nombre }} ({{ sala.zona_horaria }})</option>{% endfor %}
+        </select></div>
+        <div class="campo"><label for="inicio">Fecha y hora de inicio</label><input id="inicio" name="inicio" type="datetime-local" step="1" value="{{ datos.inicio }}" required>
+            <span class="ayuda">Introduce la hora local del cine seleccionado. Se reservan 15 minutos de limpieza después del final.</span>
+        </div>
+        <label class="campo-check"><input type="checkbox" name="activa" {% if datos.activa %}checked{% endif %}> Función activa</label>
+        <div class="acciones-formulario"><button type="submit">Guardar función</button><a class="boton secundario" href="{{ url_for('funciones.listar_funciones') }}">Cancelar</a></div>
+    </form>
+    {% else %}<p class="vacio">Registra al menos una película y una sala antes de programar funciones.</p>{% endif %}
+</section>
+{% endblock %}

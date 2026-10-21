@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Funciones{% endblock %}
+{% block content %}
+<div class="titulo-pagina">
+    <div><p class="etiqueta">PROGRAMACIÓN</p><h1>Funciones</h1><p class="descripcion">Organiza los horarios de cada sala, con 15 minutos entre funciones.</p></div>
+    <a class="boton" href="{{ url_for('funciones.formulario_funcion') }}">+ Programar función</a>
+</div>
+<section class="tarjeta">
+    <div class="encabezado-tarjeta"><h2>Programación registrada</h2><span class="contador">{{ funciones|length }} funciones</span></div>
+    <div class="tabla-scroll"><table>
+        <thead><tr><th>Película</th><th>Cine / sala</th><th>Inicio / fin local</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>{% for funcion in funciones %}
+            <tr>
+                <td class="destacado">{{ funcion.titulo }}<small>Función {{ funcion.id_funcion }}</small></td>
+                <td>{{ funcion.sala }}<small>{{ funcion.cine }}</small></td>
+                <td>{{ funcion.inicio_local.strftime('%d/%m/%Y %H:%M') }}<br>{{ funcion.fin_local.strftime('%d/%m/%Y %H:%M') }}<small>{{ funcion.zona_horaria }}</small></td>
+                <td><span class="estado {{ 'activo' if funcion.activa else 'inactivo' }}">{{ 'Activa' if funcion.activa else 'Inactiva' }}</span></td>
+                <td><a class="enlace-accion" href="{{ url_for('funciones.formulario_funcion', id_funcion=funcion.id_funcion) }}">Editar</a></td>
+            </tr>
+        {% else %}<tr><td colspan="5" class="vacio">Todavía no hay funciones. Programa la primera.</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% endblock %}
