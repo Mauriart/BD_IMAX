@@ -1,8 +1,10 @@
 from flask import Flask, abort, redirect, render_template, request, url_for
 import psycopg
 from conexion import obtener_conexion
+from salas import salas_bp
 
 app = Flask(__name__)
+app.register_blueprint(salas_bp)
 
 
 def validar_pelicula(datos):

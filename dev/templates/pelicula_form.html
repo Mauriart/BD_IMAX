@@ -1,46 +1,19 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ titulo_formulario }}</title>
-</head>
-<body>
-    <h1>{{ titulo_formulario }}</h1>
-
-    {% if error %}
-    <p role="alert">{{ error }}</p>
-    {% endif %}
-
-    <form method="post" action="{{ accion }}">
-        <p>
-            <label for="titulo">Título</label><br>
-            <input id="titulo" name="titulo" type="text" maxlength="200"
-                   value="{{ datos.titulo }}" required>
-        </p>
-        <p>
-            <label for="sinopsis">Sinopsis</label><br>
-            <textarea id="sinopsis" name="sinopsis" rows="4" cols="50"
-                      required>{{ datos.sinopsis }}</textarea>
-        </p>
-        <p>
-            <label for="clasificacion">Clasificación</label><br>
-            <input id="clasificacion" name="clasificacion" type="text"
-                   maxlength="30" value="{{ datos.clasificacion }}" required>
-        </p>
-        <p>
-            <label for="duracion_min">Duración en minutos</label><br>
-            <input id="duracion_min" name="duracion_min" type="number"
-                   min="1" max="2147483647" step="1"
-                   value="{{ datos.duracion_min }}" required>
-        </p>
-        <p>
-            <label for="poster_url">Ruta o dirección del póster</label><br>
-            <input id="poster_url" name="poster_url" type="text"
-                   value="{{ datos.poster_url }}" required>
-        </p>
-        <button type="submit">Guardar película</button>
-        <a href="{{ url_for('listar_peliculas') }}">Cancelar</a>
+{% extends 'base.html' %}
+{% block title %}{{ titulo_formulario }}{% endblock %}
+{% block content %}
+<a class="volver" href="{{ url_for('listar_peliculas') }}">← Volver a películas</a>
+<div class="titulo-pagina"><div><p class="etiqueta">CATÁLOGO</p><h1>{{ titulo_formulario }}</h1><p class="descripcion">Completa la información del título. Todos los campos son obligatorios.</p></div></div>
+<section class="tarjeta formulario-pelicula">
+    {% if error %}<p class="alerta" role="alert">{{ error }}</p>{% endif %}
+    <form method="post" action="{{ accion }}" class="formulario">
+        <div class="campo"><label for="titulo">Título</label><input id="titulo" name="titulo" maxlength="200" value="{{ datos.titulo }}" required></div>
+        <div class="campo"><label for="sinopsis">Sinopsis</label><textarea id="sinopsis" name="sinopsis" rows="4" required>{{ datos.sinopsis }}</textarea></div>
+        <div class="dos-columnas">
+            <div class="campo"><label for="clasificacion">Clasificación</label><input id="clasificacion" name="clasificacion" maxlength="30" placeholder="Ej. Todo público" value="{{ datos.clasificacion }}" required></div>
+            <div class="campo"><label for="duracion_min">Duración en minutos</label><input id="duracion_min" name="duracion_min" type="number" min="1" max="2147483647" step="1" value="{{ datos.duracion_min }}" required></div>
+        </div>
+        <div class="campo"><label for="poster_url">Ruta o dirección del póster</label><input id="poster_url" name="poster_url" value="{{ datos.poster_url }}" placeholder="/static/img/pelicula.png" required></div>
+        <div class="acciones-formulario"><button type="submit">Guardar película</button><a class="boton secundario" href="{{ url_for('listar_peliculas') }}">Cancelar</a></div>
     </form>
-</body>
-</html>
+</section>
+{% endblock %}

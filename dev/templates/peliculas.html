@@ -1,41 +1,18 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Películas</title>
-</head>
-<body>
-    <h1>Películas</h1>
-
-    <p><a href="{{ url_for('crear_pelicula') }}">Agregar película</a></p>
-
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Título</th>
-                <th>Clasificación</th>
-                <th>Duración</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for pelicula in peliculas %}
-            <tr>
-                <td>{{ pelicula[0] }}</td>
-                <td>{{ pelicula[1] }}</td>
-                <td>{{ pelicula[2] }}</td>
-                <td>{{ pelicula[3] }} minutos</td>
-                <td>
-                    <a href="{{ url_for('editar_pelicula', id_pelicula=pelicula[0]) }}">Editar</a>
-                </td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="5">No hay películas registradas.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Películas{% endblock %}
+{% block content %}
+<div class="titulo-pagina">
+    <div><p class="etiqueta">CATÁLOGO</p><h1>Películas</h1><p class="descripcion">Administra los títulos y su información para la programación.</p></div>
+    <a class="boton" href="{{ url_for('crear_pelicula') }}">+ Agregar película</a>
+</div>
+<section class="tarjeta" aria-labelledby="lista-peliculas">
+    <div class="encabezado-tarjeta"><h2 id="lista-peliculas">Catálogo registrado</h2><span class="contador">{{ peliculas|length }} títulos</span></div>
+    <div class="tabla-scroll"><table>
+        <thead><tr><th>ID</th><th>Título</th><th>Clasificación</th><th>Duración</th><th>Acciones</th></tr></thead>
+        <tbody>{% for pelicula in peliculas %}
+            <tr><td class="secundario">{{ pelicula[0] }}</td><td class="destacado">{{ pelicula[1] }}</td><td>{{ pelicula[2] }}</td><td>{{ pelicula[3] }} min</td>
+                <td><a class="enlace-accion" href="{{ url_for('editar_pelicula', id_pelicula=pelicula[0]) }}">Editar</a></td></tr>
+        {% else %}<tr><td colspan="5" class="vacio">Todavía no hay películas. Agrega el primer título para comenzar.</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% endblock %}

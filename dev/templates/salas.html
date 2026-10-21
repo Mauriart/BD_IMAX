@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Salas{% endblock %}
+{% block content %}
+<div class="titulo-pagina"><div><p class="etiqueta">DISTRIBUCIÓN</p><h1>Salas y asientos</h1><p class="descripcion">Organiza las salas de cada cine y configura su capacidad.</p></div></div>
+<div class="paneles-salas">
+    <section class="tarjeta panel-alta" aria-labelledby="agregar-sala">
+        <h2 id="agregar-sala">Agregar sala</h2>
+        {% if error %}<p class="alerta" role="alert">{{ error }}</p>{% endif %}
+        {% if cines %}
+        <form method="post" action="{{ url_for('salas.listar_salas') }}" class="formulario">
+            <div class="campo"><label for="id_cine">Cine</label><select id="id_cine" name="id_cine" required><option value="">Selecciona un cine</option>
+                {% for cine in cines %}<option value="{{ cine.id_cine }}" {% if datos.id_cine == cine.id_cine|string %}selected{% endif %}>{{ cine.nombre }}</option>{% endfor %}
+            </select></div>
+            <div class="campo"><label for="nombre">Nombre de la sala</label><input id="nombre" name="nombre" maxlength="100" placeholder="Ej. Sala 2" value="{{ datos.nombre }}" required></div>
+            <button type="submit">Guardar sala</button>
+        </form>
+        {% else %}<p class="vacio">Primero debe existir un cine registrado en la base de datos.</p>{% endif %}
+    </section>
+    <section class="tarjeta" aria-labelledby="salas-registradas">
+        <div class="encabezado-tarjeta"><h2 id="salas-registradas">Salas registradas</h2><span class="contador">{{ salas|length }} salas</span></div>
+        <div class="tabla-scroll"><table><thead><tr><th>Cine / sala</th><th>Capacidad</th><th>Acciones</th></tr></thead><tbody>
+            {% for sala in salas %}<tr><td><span class="destacado">{{ sala.nombre }}</span><small>{{ sala.cine }}</small></td><td>{{ sala.capacidad }} asientos</td><td><a class="enlace-accion" href="{{ url_for('salas.detalle_sala', id_sala=sala.id_sala) }}">Ver distribución →</a></td></tr>
+            {% else %}<tr><td colspan="3" class="vacio">Todavía no hay salas registradas.</td></tr>{% endfor %}
+        </tbody></table></div>
+    </section>
+</div>
+{% endblock %}

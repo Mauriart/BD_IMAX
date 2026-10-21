@@ -1,0 +1,80 @@
+/* Estilos comunes del módulo de administración. */
+:root { --fondo:#f4f6fa; --tinta:#202d43; --suave:#64748b; --azul:#2358c9; --borde:#e0e6ef; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:var(--fondo); color:var(--tinta); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; font-size:15px; line-height:1.5; }
+a { color:var(--azul); text-decoration:none; }
+a:hover { text-decoration:underline; }
+.cabecera { background:#14243e; color:white; }
+.barra { max-width:1180px; margin:auto; padding:0 28px; min-height:78px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.marca { color:white; font-weight:850; font-size:26px; letter-spacing:-1px; display:flex; align-items:center; gap:18px; }
+.marca span { font-size:13px; font-weight:450; color:#c4d0e4; letter-spacing:0; border-left:1px solid #465369; padding-left:18px; }
+.marca:hover { text-decoration:none; }
+nav { display:flex; gap:8px; }
+nav a { color:#d0daeb; padding:10px 16px; border-radius:7px; font-weight:550; }
+nav a:hover,nav a[aria-current] { color:white; background:#2a3e5f; text-decoration:none; }
+.contenedor { max-width:1180px; margin:auto; padding:36px 28px 55px; }
+.titulo-pagina { display:flex; align-items:center; justify-content:space-between; gap:24px; margin:0 0 26px; }
+h1 { margin:2px 0 8px; font-size:32px; line-height:1.2; letter-spacing:-.8px; }
+h2 { font-size:18px; margin:0; line-height:1.4; }
+.etiqueta { color:var(--azul); font-size:11px; font-weight:750; letter-spacing:1.8px; text-transform:uppercase; margin:0 0 10px; }
+.descripcion { color:var(--suave); margin:6px 0 0; }
+.tarjeta { background:white; border:1px solid var(--borde); border-radius:12px; box-shadow:0 3px 14px #14243e04; min-width:0; overflow:hidden; }
+.encabezado-tarjeta { padding:22px 24px; display:flex; justify-content:space-between; align-items:center; gap:16px; border-bottom:1px solid var(--borde); }
+.contador { color:var(--suave); font-size:12px; white-space:nowrap; }
+.tabla-scroll { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; text-align:left; }
+th { color:#52617a; background:#f8fafd; font-size:11px; text-transform:uppercase; letter-spacing:.7px; font-weight:700; }
+th,td { padding:15px 24px; border-bottom:1px solid #edf0f5; }
+tbody tr:last-child td { border-bottom:none; }
+tbody tr:hover { background:#fafcff; }
+.destacado { font-weight:650; }
+.secundario,.descripcion,small { color:var(--suave); }
+small { display:block; margin-top:3px; }
+.enlace-accion { font-size:13px; font-weight:650; white-space:nowrap; }
+.vacio { padding:30px 24px; text-align:center; color:var(--suave); }
+button,.boton { display:inline-flex; align-items:center; justify-content:center; background:var(--azul); color:white; padding:11px 18px; border:1px solid var(--azul); border-radius:7px; font:inherit; font-size:14px; font-weight:650; cursor:pointer; line-height:1.4; text-align:center; }
+button:hover,.boton:hover { background:#1846a8; text-decoration:none; }
+button.secundario,.boton.secundario { background:white; color:var(--tinta); border-color:#ccd5e2; }
+button.secundario:hover,.boton.secundario:hover { background:#f2f5fa; }
+a:focus-visible,button:focus-visible,summary:focus-visible { outline:3px solid #78a6ff; outline-offset:3px; }
+.campo { display:flex; flex-direction:column; gap:7px; min-width:0; }
+label { font-size:13px; font-weight:650; }
+input,select,textarea { width:100%; border:1px solid #cbd4e1; border-radius:7px; padding:10px 12px; color:var(--tinta); background:white; font:inherit; min-height:43px; }
+input::placeholder,textarea::placeholder { color:#8390a3; }
+input:focus,select:focus,textarea:focus { outline:3px solid #e2ecff; border-color:var(--azul); }
+textarea { resize:vertical; }
+.formulario { display:flex; flex-direction:column; gap:19px; }
+.formulario-pelicula { max-width:760px; padding:28px; }
+.dos-columnas { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.acciones-formulario { display:flex; gap:10px; padding-top:8px; }
+.volver { display:inline-block; font-size:13px; font-weight:600; margin-bottom:22px; }
+.paneles-salas,.paneles-zonas { display:grid; grid-template-columns:330px minmax(0,1fr); gap:24px; align-items:start; }
+.panel-alta { padding:24px; }
+.panel-alta h2 { margin-bottom:20px; }
+.alerta { background:#fff2f1; border:1px solid #f1c4be; border-left:4px solid #bf392b; color:#8c261c; border-radius:6px; padding:13px 16px; margin:0 0 22px; }
+.resumen { display:flex; border:1px solid var(--borde); border-radius:10px; background:white; padding:15px 22px; gap:28px; flex-shrink:0; }
+.resumen div { display:flex; flex-direction:column; }
+.resumen strong { font-size:25px; line-height:1.2; }
+.resumen span { font-size:12px; color:var(--suave); margin-top:4px; }
+.separada { margin-top:24px; scroll-margin-top:20px; }
+.formulario-lote { padding:24px; }
+.campos-lote { display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:18px; }
+.campos-individual { display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:18px; }
+.ayuda { font-size:12px; color:var(--suave); margin:0; }
+.asiento-individual { padding:20px 24px; border-top:1px solid var(--borde); background:#fbfcfe; }
+summary { cursor:pointer; font-weight:600; font-size:13px; }
+.asiento-individual[open] summary { margin-bottom:20px; }
+.tabla-asientos { max-height:420px; overflow:auto; }
+.tabla-asientos th { position:sticky; top:0; }
+.pie { text-align:center; font-size:12px; color:var(--suave); padding:0 24px 28px; }
+@media(max-width:850px) { .paneles-salas,.paneles-zonas { grid-template-columns:1fr; } .campos-lote { grid-template-columns:1fr 1fr; } }
+@media(max-width:600px) {
+ .barra { padding:16px 18px; align-items:flex-start; flex-direction:column; gap:14px; }
+ .marca { font-size:24px; } nav { width:100%; } nav a { padding:8px 12px; }
+ .contenedor { padding:26px 16px 40px; } .titulo-pagina { align-items:flex-start; flex-direction:column; gap:18px; }
+ h1 { font-size:28px; } .dos-columnas,.campos-lote,.campos-individual { grid-template-columns:1fr; }
+ .formulario-pelicula,.panel-alta,.formulario-lote { padding:20px; }
+ th,td { padding:13px 18px; } .encabezado-tarjeta { padding:18px; flex-wrap:wrap; }
+ .resumen { width:100%; } .resumen div { flex:1; } .acciones-formulario { flex-wrap:wrap; }
+}
