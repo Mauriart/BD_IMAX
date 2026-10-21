@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}{{ sala.nombre }}{% endblock %}
+{% block content %}
+<a class="volver" href="{{ url_for('salas.listar_salas') }}">← Volver a salas</a>
+<div class="titulo-pagina">
+    <div><p class="etiqueta">{{ sala.cine }}</p><h1>{{ sala.nombre }}</h1><p class="descripcion">Configura las zonas y agrega los asientos de cada fila.</p></div>
+    <div class="resumen"><div><strong>{{ zonas|length }}</strong><span>Zonas</span></div><div><strong>{{ capacidad }}</strong><span>Asientos</span></div></div>
+</div>
+{% if error %}<p class="alerta" role="alert">{{ error }}</p>{% endif %}
+<div class="paneles-zonas">
+    <section class="tarjeta panel-alta">
+        <h2>Agregar zona</h2>
+        <form method="post" action="{{ url_for('salas.crear_zona', id_sala=sala.id_sala) }}" class="formulario">
+            <div class="campo"><label for="nombre_zona">Nombre de la zona</label><input id="nombre_zona" name="nombre_zona" maxlength="50" placeholder="Ej. General o VIP" value="{{ datos.get('nombre_zona', '') }}" required></div>
+            <button type="submit">Guardar zona</button>
+        </form>
+    </section>
+    <section class="tarjeta">
+        <div class="encabezado-tarjeta"><h2>Zonas de la sala</h2><span class="contador">Capacidad calculada</span></div>
+        <div class="tabla-scroll"><table><thead><tr><th>Zona</th><th>Asientos</th></tr></thead><tbody>
+            {% for zona in zonas %}<tr><td class="destacado">{{ zona.nombre }}</td><td>{{ zona.capacidad }}</td></tr>
+            {% else %}<tr><td colspan="2" class="vacio">Agrega la primera zona para comenzar.</td></tr>{% endfor %}
+        </tbody></table></div>
+    </section>
+</div>
+<section class="tarjeta separada" id="asientos">
+    <div class="encabezado-tarjeta"><div><h2>Agregar fila de asientos</h2><p class="descripcion">Por ejemplo: fila A, del 1 al 20. Se crean todos juntos.</p></div></div>
+    {% if zonas %}
+    <form method="post" action="{{ url_for('salas.crear_fila_asientos', id_sala=sala.id_sala) }}" class="formulario formulario-lote">
+        <div class="campos-lote">
+            <div class="campo"><label for="lote_zona">Zona</label><select id="lote_zona" name="lote_zona" required><option value="">Selecciona una zona</option>
+                {% for zona in zonas %}<option value="{{ zona.id_zona }}" {% if datos.get('lote_zona') == zona.id_zona|string %}selected{% endif %}>{{ zona.nombre }}</option>{% endfor %}
+            </select></div>
+            <div class="campo"><label for="lote_fila">Fila</label><input id="lote_fila" name="lote_fila" maxlength="10" placeholder="A" value="{{ datos.get('lote_fila', '') }}" required></div>
+            <div class="campo"><label for="desde">Desde el número</label><input id="desde" name="desde" type="number" min="1" max="2147483647" step="1" value="{{ datos.get('desde', '1') }}" required></div>
+            <div class="campo"><label for="hasta">Hasta el número</label><input id="hasta" name="hasta" type="number" min="1" max="2147483647" step="1" placeholder="20" value="{{ datos.get('hasta', '') }}" required></div>
+        </div>
+        <p class="ayuda">Hasta 1 000 asientos por operación. Si alguno ya existe, no se guarda ningún asiento del lote.</p>
+        <div><button type="submit">Crear fila de asientos</button></div>
+    </form>
+    <details class="asiento-individual" {% if datos.get('numero') %}open{% endif %}>
+        <summary>Agregar un solo asiento</summary>
+        <form method="post" action="{{ url_for('salas.crear_asiento', id_sala=sala.id_sala) }}" class="formulario">
+            <div class="campos-individual">
+                <div class="campo"><label for="id_zona">Zona</label><select id="id_zona" name="id_zona" required><option value="">Selecciona una zona</option>{% for zona in zonas %}<option value="{{ zona.id_zona }}" {% if datos.get('id_zona') == zona.id_zona|string %}selected{% endif %}>{{ zona.nombre }}</option>{% endfor %}</select></div>
+                <div class="campo"><label for="fila">Fila</label><input id="fila" name="fila" maxlength="10" value="{{ datos.get('fila', '') }}" required></div>
+                <div class="campo"><label for="numero">Número</label><input id="numero" name="numero" type="number" min="1" max="2147483647" step="1" value="{{ datos.get('numero', '') }}" required></div>
+            </div>
+            <div><button class="secundario" type="submit">Guardar asiento</button></div>
+        </form>
+    </details>
+    {% else %}<p class="vacio">Agrega una zona antes de registrar asientos.</p>{% endif %}
+</section>
+<section class="tarjeta separada">
+    <div class="encabezado-tarjeta"><h2>Asientos registrados</h2><span class="contador">{{ capacidad }} en total</span></div>
+    <div class="tabla-scroll tabla-asientos"><table><thead><tr><th>Zona</th><th>Fila</th><th>Número</th></tr></thead><tbody>
+        {% for asiento in asientos %}<tr><td>{{ asiento.zona }}</td><td class="destacado">{{ asiento.fila }}</td><td>{{ asiento.numero }}</td></tr>
+        {% else %}<tr><td colspan="3" class="vacio">Todavía no hay asientos. Crea una fila para comenzar.</td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

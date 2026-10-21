@@ -168,3 +168,7 @@ El avance de **A-01 / issue #2** se encuentra en [docs/compañeroA/modelo_a.md](
 El modelo parcial, SQL, datos, diccionario, normalización, contratos y pruebas de instalación están completos en [compañeroA](compa%C3%B1eroA/modelo_a.md). Por decisión de Mauriart no se requiere otra persona ni PR adicional para cerrar esta entrega. La integración B/C se verifica en las tareas posteriores. El siguiente trabajo es A-02: administración y programación sin traslapes.
 
 Para la base ya creada en DBeaver, ejecutar únicamente [ajuste_integridad_A.sql](compa%C3%B1eroA/ajuste_integridad_A.sql); no repetir CREATE TABLE ni la carga de datos. La prueba temporal ya incorporó este ajuste, pero no modifica automáticamente la base personal.
+
+## Entrega funcional de A-02
+
+Las pantallas de películas, salas, distribución y funciones, más el rechazo de traslapes y las pruebas simultáneas, están completas en dev/. Para verificar: desde dev ejecutar `.\.venv\Scripts\python.exe verificar_a02.py`. La descripción y el guion están en [interfaz_A.md](compa%C3%B1eroA/interfaz_A.md). Por decisión de Mauriart, permisos/auditoría con C se integran en T-02 (#23); siguen pendientes y no bloquean este cierre funcional de A-02.
