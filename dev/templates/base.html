@@ -11,9 +11,10 @@
         <div class="barra">
             <a class="marca" href="{{ url_for('listar_peliculas') }}">IMAX <span>Administración</span></a>
             <nav aria-label="Navegación principal">
+                <a href="{{ url_for('cartelera.ver_cartelera') }}" {% if request.blueprint == 'cartelera' or request.endpoint == 'precios.ver_precios' %}aria-current="page"{% endif %}>Cartelera</a>
                 <a href="{{ url_for('listar_peliculas') }}" {% if not request.blueprint %}aria-current="page"{% endif %}>Películas</a>
                 <a href="{{ url_for('salas.listar_salas') }}" {% if request.blueprint == 'salas' %}aria-current="page"{% endif %}>Salas y asientos</a>
-                <a href="{{ url_for('funciones.listar_funciones') }}" {% if request.blueprint == 'funciones' %}aria-current="page"{% endif %}>Funciones</a>
+                <a href="{{ url_for('funciones.listar_funciones') }}" {% if request.blueprint == 'funciones' or request.endpoint == 'precios.configurar_precios' %}aria-current="page"{% endif %}>Funciones</a>
             </nav>
         </div>
     </header>
