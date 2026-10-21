@@ -37,6 +37,6 @@ Se verificó en navegador la cartelera y una búsqueda combinada por cine, fecha
 4. Probar una fecha sin funciones y después limpiar los filtros.
 5. Editar los géneros de una película desde Películas y comprobar el cambio en la búsqueda.
 
-## Pendientes de A-03
+## Tarifas y promociones de A-03
 
-Quedan por implementar las tarifas por zona y categoría, la consulta de vigencias y la presentación de promociones y sus condiciones. La integración con B debe utilizar esos datos para la venta. El issue A-03 permanece abierto.
+Cada horario ofrece **Ver precios**, con la matriz por zona/categoría y las promociones aplicables. La configuración, el ajuste SQL y los contratos para B están documentados en [tarifas_promociones_A.md](tarifas_promociones_A.md). La integración con B debe utilizar esos datos para la venta. El issue permanece abierto mientras se verifica la entrega.

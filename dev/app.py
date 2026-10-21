@@ -4,11 +4,13 @@ from conexion import obtener_conexion
 from salas import salas_bp
 from funciones import funciones_bp
 from cartelera import cartelera_bp
+from precios import precios_bp
 
 app = Flask(__name__)
 app.register_blueprint(salas_bp)
 app.register_blueprint(funciones_bp)
 app.register_blueprint(cartelera_bp)
+app.register_blueprint(precios_bp)
 
 
 def cargar_generos():

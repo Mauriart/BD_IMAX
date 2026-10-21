@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Precios · {{ funcion.titulo }}{% endblock %}
+{% block content %}
+<a class="volver" href="{{ url_for('cartelera.ver_cartelera') }}">← Volver a cartelera</a>
+<div class="titulo-pagina"><div><p class="etiqueta">TU FUNCIÓN</p><h1>{{ funcion.titulo }}</h1><p class="descripcion">{{ funcion.cine }} · {{ funcion.sala }} · {{ funcion.ubicacion }}<br>{{ funcion.inicio_local.strftime('%d/%m/%Y %H:%M') }} · {{ funcion.zona_horaria }}</p></div></div>
+<section class="tarjeta"><div class="encabezado-tarjeta"><h2>Precios por zona y categoría</h2><span class="contador">USD</span></div><div class="tabla-scroll"><table><thead><tr><th>Zona</th>{% for categoria in categorias %}<th>{{ categoria.nombre }}{% if categoria.requiere_acreditacion %}<small>Requiere acreditación</small>{% endif %}</th>{% endfor %}</tr></thead><tbody>
+{% for fila in matriz %}<tr><td class="destacado">{{ fila.zona.nombre }}</td>{% for celda in fila.celdas %}<td>{% if celda.tarifa %}${{ '%.2f'|format(celda.tarifa.monto) }}{% else %}<span class="precio-ausente" title="{{ celda.error }}">No disponible</span>{% endif %}</td>{% endfor %}</tr>{% else %}<tr><td class="vacio" colspan="{{ categorias|length + 1 }}">Esta sala todavía no tiene zonas configuradas.</td></tr>{% endfor %}
+</tbody></table></div></section>
+<p class="nota-precios">Precios base consultados el {{ consultado }}. La compra confirmará el precio y las promociones aplicables. Las categorías especiales requieren presentar acreditación física en la entrada.</p>
+<section class="tarjeta separada"><div class="encabezado-tarjeta"><h2>Promociones disponibles</h2></div><div class="lista-promociones">
+{% for promocion in promociones %}<article><h3>{{ promocion.nombre }} · 2x1</h3><p>Por cada pareja de entradas de la misma función, zona y categoría, se descuenta el precio de una entrada. Si la cantidad es impar, la entrada sobrante se cobra completa.</p><p>{{ promocion.condicion }}</p>
+<p class="ayuda">Zonas: {% for zona in zonas %}{% if zona.id_zona in promocion.zonas %}{{ zona.nombre }} {% endif %}{% endfor %}<br>Categorías: {% for categoria in categorias %}{% if categoria.id_categoria_entrada in promocion.categorias %}{{ categoria.nombre }} {% endif %}{% endfor %}<br>Días de función: {% for numero,nombre in dias %}{% if numero in promocion.dias %}{{ nombre }} {% endif %}{% endfor %}</p>
+<p class="ayuda">Válida para cotizar desde {{ promocion.vigente_desde.strftime('%d/%m/%Y %H:%M %z') }} hasta {{ promocion.vigente_hasta.strftime('%d/%m/%Y %H:%M %z') }}.</p></article>{% else %}<p class="descripcion">No hay promociones aplicables a esta función en este momento.</p>{% endfor %}
+</div></section>
+<p class="nota-precios">Las promociones no se acumulan. Se aplica la de mayor descuento; en empate, la de menor identificador. La acreditación se verifica al ingresar.</p>
+{% endblock %}

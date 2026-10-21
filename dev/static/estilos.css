@@ -95,6 +95,16 @@ summary { cursor:pointer; font-weight:600; font-size:13px; }
 .generos-pelicula { border:1px solid var(--borde); border-radius:7px; padding:14px 16px; margin:0; }
 .generos-pelicula legend { font-size:13px; font-weight:650; padding:0 5px; }
 .lista-generos { display:flex; flex-wrap:wrap; gap:12px 22px; margin-top:12px; }
+.paneles-precios { align-items:start; }
+.nota-precios { color:var(--suave); font-size:13px; margin:18px 0 24px; }
+.categoria-alta { padding:22px 24px; }
+.categoria-alta[open] summary { margin-bottom:22px; }
+.lista-promociones { padding:0 24px 24px; }
+.lista-promociones article { padding:18px 0; border-bottom:1px solid var(--borde); }
+.lista-promociones article:last-child { border-bottom:0; }
+.lista-promociones h3 { font-size:16px; margin:0 0 10px; }
+.lista-promociones p { font-size:14px; }
+.precio-ausente { color:var(--suave); font-size:13px; }
 @media(max-width:850px) { .cartelera-grid { grid-template-columns:1fr; } }
 @media(max-width:600px) { .campos-filtros { grid-template-columns:1fr; } }
 @media(max-width:850px) { .paneles-salas,.paneles-zonas { grid-template-columns:1fr; } .campos-lote { grid-template-columns:1fr 1fr; } }

@@ -34,7 +34,7 @@
             <h3>Próximas funciones</h3>
             <ul class="horarios-cartelera">
                 {% for funcion in pelicula.funciones %}
-                <li><div><strong>{{ funcion.inicio_local.strftime('%d/%m · %H:%M') }}</strong><span>{{ funcion.cine }} · {{ funcion.sala }}</span></div><small>{{ funcion.ubicacion }}<br>{{ funcion.zona_horaria }}</small></li>
+                <li><div><strong>{{ funcion.inicio_local.strftime('%d/%m · %H:%M') }}</strong><span>{{ funcion.cine }} · {{ funcion.sala }}</span><a class="enlace-accion" href="{{ url_for('precios.ver_precios', id_funcion=funcion.id_funcion) }}">Ver precios</a></div><small>{{ funcion.ubicacion }}<br>{{ funcion.zona_horaria }}</small></li>
                 {% endfor %}
             </ul>
         </div>

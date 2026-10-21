@@ -15,7 +15,7 @@
                 <td>{{ funcion.sala }}<small>{{ funcion.cine }}</small></td>
                 <td>{{ funcion.inicio_local.strftime('%d/%m/%Y %H:%M') }}<br>{{ funcion.fin_local.strftime('%d/%m/%Y %H:%M') }}<small>{{ funcion.zona_horaria }}</small></td>
                 <td><span class="estado {{ 'activo' if funcion.activa else 'inactivo' }}">{{ 'Activa' if funcion.activa else 'Inactiva' }}</span></td>
-                <td><a class="enlace-accion" href="{{ url_for('funciones.formulario_funcion', id_funcion=funcion.id_funcion) }}">Editar</a></td>
+                <td><a class="enlace-accion" href="{{ url_for('funciones.formulario_funcion', id_funcion=funcion.id_funcion) }}">Editar</a><br><a class="enlace-accion" href="{{ url_for('precios.configurar_precios', id_funcion=funcion.id_funcion) }}">Tarifas y promociones</a></td>
             </tr>
         {% else %}<tr><td colspan="5" class="vacio">Todavía no hay funciones. Programa la primera.</td></tr>{% endfor %}</tbody>
     </table></div>

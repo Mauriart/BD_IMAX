@@ -159,3 +159,9 @@ Los resultados y límites de verificación están en [pruebas_a.md](pruebas_a.md
 Se revisó la correspondencia Chen–SQL: relaciones 1:N mediante FK; género multivalorado y promoción/función mediante tablas puente; capacidad derivada sin columna almacenada. Las 12 tablas y las 50 columnas están descritas arriba. Los [campos y firmas para B/C](contratos_a.md) completan el contrato inicial del módulo.
 
 La instalación limpia, los datos y los rechazos se verificaron en una instancia temporal independiente. La integración real con B/C y las operaciones de A-02/A-03/A-04 se realizan en sus tareas; no son una condición pendiente del diseño parcial A-01. Por indicación de Mauriart, esta entrega se completa sin requerir revisión de otra persona ni PR adicional.
+
+## Extensión implementada en A-03
+
+La versión base anterior describe las doce tablas de A-01. [tarifas_promociones_A.sql](tarifas_promociones_A.sql) extiende ese esquema con `promocion_dia`, `promocion_zona` y `promocion_categoria`: quince tablas y 56 columnas en total. Cada nueva tabla tiene PK compuesta y FK; `dia_semana` admite valores ISO de 1 a 7. Así se conservan los días como atributo multivalorado normalizado y las relaciones N:M de promoción con zona y categoría.
+
+El mismo ajuste instala el trigger que rechaza vigencias superpuestas de tarifa por función, zona y categoría. Los filtros de cartelera y la consulta de condiciones/vigencias ya están implementados en Python. Los detalles, pruebas, límites y cambios que debe incorporar el DER global están en [tarifas_promociones_A.md](tarifas_promociones_A.md). Los archivos Chen de A-01 aún representan la versión base.

@@ -13,15 +13,15 @@ Todos los identificadores simples son enteros generados con SERIAL. B y C deben 
 | Función | id_funcion, id_pelicula, id_sala, inicio, fin, activa | Reserva B y validación de puerta C. |
 | Categoría | id_categoria_entrada, nombre, requiere_acreditacion | Selección de tarifa y acreditación C. |
 | Tarifa | id_tarifa, id_funcion, id_zona, id_categoria_entrada, monto, moneda, vigente_desde, vigente_hasta | Cotización B; monto decimal y moneda USD. |
-| Promoción | id_promocion, nombre, tipo, condicion, vigente_desde, vigente_hasta, activa | Referencia de reglas; aplicación automática pendiente de A-03/B. |
+| Promoción | id_promocion, nombre, tipo, condicion, vigente_desde, vigente_hasta, activa; días, zonas y categorías relacionadas | A-03 entrega condiciones consultables; B aplica el descuento y conserva sus referencias. |
 
-Las firmas siguientes son el contrato de implementación para A-02/A-03. No son funciones ejecutables ya creadas en A-01.
+Las firmas siguientes parten del contrato de A-01. A-03 implementa las consultas de funciones en `dev/cartelera.py` y tarifas/promociones en `dev/precios.py`; el contrato de distribución se conserva para B.
 
 ## Consultar funciones
 
 `consultar_funciones(id_cine opcional, fecha_local opcional, genero opcional)`
 
-Devuelve función, película, sala, cine, ubicación, horario y metadatos. Debe filtrar por función activa e inicio futuro. Las consultas de ejemplo del repositorio comprueban las relaciones; todavía no implementan todos esos filtros.
+Devuelve función, película, sala, cine, ubicación, horario y metadatos. Filtra por función activa e inicio futuro. La implementación utiliza el parámetro `id_genero` y fechas locales; ver [cartelera_A.md](cartelera_A.md).
 
 ## Consultar distribución
 
@@ -33,11 +33,11 @@ Devuelve id_funcion, id_sala, id_zona, nombre_zona, id_asiento, fila y numero. B
 
 `consultar_tarifas(id_funcion, id_zona, id_categoria_entrada, instante)`
 
-Devuelve tarifa, monto, moneda y vigencia aplicable. Intervalos de vigencia: desde incluido y hasta excluido. A-03 debe resolver las vigencias sin ambigüedad y devolver errores comprensibles si falta una tarifa.
+Implementada en `dev/precios.py`. Devuelve un diccionario con tarifa, monto `Decimal`, moneda, vigencia, nombre de zona/categoría y `requiere_acreditacion`. Intervalos: desde incluido y hasta excluido. El instante debe incluir zona horaria. Lanza `ValueError` si falta tarifa, es ambigua o la función no está disponible. El SQL de A-03 impide vigencias superpuestas, incluidas altas simultáneas en `READ COMMITTED`.
 
-`consultar_promociones(id_funcion, instante)`
+`consultar_promociones(id_funcion, instante, id_zona=None, id_categoria_entrada=None)`
 
-Devuelve promociones asociadas mediante funcion_promocion, activas y vigentes. La condición actual es texto descriptivo: no se debe interpretar como código ni afirmar que el 2x1 ya se calcula automáticamente.
+Implementada en `dev/precios.py`. Devuelve promociones 2x1 asociadas mediante `funcion_promocion`, activas y vigentes al cotizar; verifica el día local de inicio de la función. Incluye listas de IDs `dias`, `zonas` y `categorias` procedentes de las tres tablas de condiciones; permite filtrar por zona/categoría. Una promoción sin condiciones estructuradas no se ofrece. La descripción no se interpreta como código. A no calcula ni reserva el descuento: B aplica parejas, no acumulación, desempate e instantáneas históricas. Ver [tarifas_promociones_A.md](tarifas_promociones_A.md).
 
 B conserva en su compra el precio, descuento y referencias utilizados. A no cambia los precios históricos de una venta al editar tarifas.
 
