@@ -7,6 +7,8 @@
 <body>
     <h1>Películas</h1>
 
+    <p><a href="{{ url_for('crear_pelicula') }}">Agregar película</a></p>
+
     <table border="1" cellpadding="8">
         <thead>
             <tr>
@@ -14,6 +16,7 @@
                 <th>Título</th>
                 <th>Clasificación</th>
                 <th>Duración</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -23,10 +26,13 @@
                 <td>{{ pelicula[1] }}</td>
                 <td>{{ pelicula[2] }}</td>
                 <td>{{ pelicula[3] }} minutos</td>
+                <td>
+                    <a href="{{ url_for('editar_pelicula', id_pelicula=pelicula[0]) }}">Editar</a>
+                </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="4">No hay películas registradas.</td>
+                <td colspan="5">No hay películas registradas.</td>
             </tr>
             {% endfor %}
         </tbody>
