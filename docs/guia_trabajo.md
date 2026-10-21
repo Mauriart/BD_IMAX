@@ -172,3 +172,11 @@ Para la base ya creada en DBeaver, ejecutar únicamente [ajuste_integridad_A.sql
 ## Entrega funcional de A-02
 
 Las pantallas de películas, salas, distribución y funciones, más el rechazo de traslapes y las pruebas simultáneas, están completas en dev/. Para verificar: desde dev ejecutar `.\.venv\Scripts\python.exe verificar_a02.py`. La descripción y el guion están en [interfaz_A.md](compa%C3%B1eroA/interfaz_A.md). Por decisión de Mauriart, permisos/auditoría con C se integran en T-02 (#23); siguen pendientes y no bloquean este cierre funcional de A-02.
+
+## Avance de A-03, A-04 y A-05
+
+A-03 está integrado en main mediante el [PR #27](https://github.com/Mauriart/BD_IMAX/pull/27), con el issue #4 cerrado. La cartelera, tarifas/promociones, SQL, contratos y 27 pruebas de A-02/A-03 se documentan en [cartelera_A.md](compa%C3%B1eroA/cartelera_A.md) y [tarifas_promociones_A.md](compa%C3%B1eroA/tarifas_promociones_A.md). Las dependencias reales de B/C y el Chen global permanecen registradas en T-02 (#23).
+
+Se avanza en A-05 mientras A-04 necesita el contrato y la actividad de reservas/ventas de B para verificar su protección real. El orden por número de issue es una referencia de organización, no una obligación de esperar a B para redactar arquitectura.
+
+El entregable de A-05 es [factibilidad.md](factibilidad.md): dictamen del legado, seis debilidades, diagrama, flujo, riesgos, operación y criterios de capacidad/continuidad. Es documentación para revisión de Mauriart; no agrega SQL ni Python y no despliega infraestructura. El dimensionamiento detallado de C y los costos de A-06 se mantienen pendientes, sin bloquear este análisis de A.
