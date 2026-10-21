@@ -10,7 +10,7 @@ Fuentes: RN-01, RN-02, RN-06, RN-07, RN-17, RN-18 y RN-20 de la consigna, pauta 
 
 El orden es el número ascendente de los issues existentes: **#2, #3, #4, #5, #7, #8 y #20**. Por eso A-05 aparece antes de A-04 y A-06 al final. El número de issue y el código A-xx se conservan.
 
-**Estado inicial:** requisitos documentados; implementación y pruebas pendientes. Las rutas de implementación/evidencia indicadas son destinos previstos, no archivos ya existentes ni resultados obtenidos.
+**Avance del esquema A:** el Chen, las 12 tablas, los datos de ejemplo y las consultas ya están incorporados en [compañeroA](compa%C3%B1eroA/modelo_a.md). El integrante confirmó las consultas y cinco rechazos en DBeaver; véase [registro de pruebas](compa%C3%B1eroA/pruebas_a.md). La revisión completa e integración permanecen pendientes. Las rutas de la matriz que todavía no tienen enlace son destinos previstos.
 
 ## 1. Matriz por issue
 

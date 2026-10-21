@@ -161,4 +161,4 @@ Mauriart decide las cuestiones que aún no estén acordadas. Si una decisión a�
 - Matriz, diccionario y documentación actualizados.
 - Revisión e integración registradas; ninguna aprobación se presume.
 
-El siguiente trabajo de implementación es **A-01 / issue #2**, usando las entidades existentes.
+El avance de **A-01 / issue #2** se encuentra en [docs/compañeroA/modelo_a.md](compa%C3%B1eroA/modelo_a.md): Chen, esquema SQL, carga de ejemplo, consultas, diccionario y normalización. Los resultados confirmados y las comprobaciones pendientes se registran en [pruebas_a.md](compa%C3%B1eroA/pruebas_a.md). Se mantiene esta carpeta para el material de A; las rutas sugeridas anteriormente no exigen duplicar archivos.
