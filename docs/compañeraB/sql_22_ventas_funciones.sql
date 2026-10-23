@@ -89,7 +89,7 @@ BEGIN
         RETURNING id_reserva INTO v_id_reserva;
 
         -- Registrar el detalle de la compra
-        INSERT INTO compra_detalle (id_compra, id_asiento, id_categoria_entrada, id_tarifa, precio_base, total_linea)
+        INSERT INTO compra_detalle (id_compra, id_asiento, id_categoria_entrada, id_tarifa, precio_base, descuento, total_linea)
         VALUES (v_id_compra, v_asiento, 1, 1, 7.50, 0.00, 7.50);
 
         -- Actualizar el inventario a estado 'bloqueado' vinculando la reserva
@@ -136,6 +136,7 @@ RETURNS VOID AS $$
 DECLARE
     v_monto NUMERIC(10,2);
     v_estado_pago VARCHAR(12);
+    v_resultado_log VARCHAR(20);
     v_id_pago BIGINT;
     r_asiento RECORD;
 BEGIN
@@ -149,8 +150,10 @@ BEGIN
     -- Evaluar resultado del pago
     IF p_resultado = 'Exito' OR p_resultado = 'Aprobado' THEN
         v_estado_pago := 'Aprobado';
+        v_resultado_log := 'Exito';
     ELSE
         v_estado_pago := 'Rechazado';
+        v_resultado_log := 'Fallido';
     END IF;
 
     -- Registrar el pago en la tabla pago
@@ -160,7 +163,7 @@ BEGIN
 
     -- Registrar la transacción en el log
     INSERT INTO transaccion_log (id_compra, id_pago, resultado, evento, estado_anterior, estado_nuevo, monto, moneda)
-    VALUES (p_id_compra, v_id_pago, p_resultado, 'Procesar Pago', 'Pendiente', v_estado_pago, v_monto, 'USD');
+    VALUES (p_id_compra, v_id_pago, v_resultado_log, 'Procesar Pago', 'Pendiente', v_estado_pago, v_monto, 'USD');
 
     -- Acciones si el pago fue aprobado exitosamente
     IF v_estado_pago = 'Aprobado' THEN
@@ -169,7 +172,7 @@ BEGIN
 
         -- Generar boletos y actualizar inventario a 'vendido' para cada asiento de la compra
         FOR r_asiento IN 
-            SELECT cd.id_funcion, cd.id_asiento 
+            SELECT c.id_funcion, cd.id_asiento 
             FROM compra_detalle cd 
             JOIN compra c ON cd.id_compra = c.id_compra 
             WHERE c.id_compra = p_id_compra
@@ -187,13 +190,14 @@ BEGIN
         UPDATE compra SET estado = 'Cancelada' WHERE id_compra = p_id_compra;
         
         -- Se marcan las reservas como liberadas
-		UPDATE reserva SET estado = 'liberada' WHERE id_compra = p_id_compra;
+        UPDATE reserva SET estado = 'liberada' WHERE id_compra = p_id_compra;
 
         -- Se devuelve el inventario a estado 'disponible'
         UPDATE inventario_funcion inv
         SET estado = 'disponible', id_reserva = NULL
         FROM compra_detalle cd
-        WHERE inv.id_funcion = (SELECT id_funcion FROM compra WHERE id_compra = p_id_compra)
+        JOIN compra c ON cd.id_compra = c.id_compra
+        WHERE inv.id_funcion = c.id_funcion
           AND inv.id_asiento = cd.id_asiento
           AND cd.id_compra = p_id_compra;
     END IF;

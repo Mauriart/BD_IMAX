@@ -13,7 +13,7 @@ monto NUMERIC(10,2),
 moneda CHAR(3),
 detalle TEXT,
 CONSTRAINT ck_trasaccion_log_resultado CHECK (resultado IN 
-('Exito', 'Rechazo', 'Fallo'))
+('Exito', 'Rechazado', 'Fallido'))
 );
 
 -- Logs de bloqueo de asientos y estados temporales
