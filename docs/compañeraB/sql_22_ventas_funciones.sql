@@ -125,7 +125,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Procesa el pago, cambia estados a pagado/vendido y genera los boletos correspondientes
+-- Procesa el pago, cambia estados a pagado o vendido y genera los boletos correspondientes
 CREATE OR REPLACE FUNCTION procesar_pago(
     p_id_compra BIGINT, 
     p_resultado VARCHAR, 
@@ -153,12 +153,12 @@ BEGIN
         v_estado_pago := 'Rechazado';
     END IF;
 
-    -- Registrar el pago en la tabla pago[cite: 1]
+    -- Registrar el pago en la tabla pago
     INSERT INTO pago (id_compra, estado, metodo, referencia, monto)
     VALUES (p_id_compra, v_estado_pago, p_metodo, p_referencia, v_monto)
     RETURNING id_pago INTO v_id_pago;
 
-    -- Registrar la transacción en el log[cite: 1]
+    -- Registrar la transacción en el log
     INSERT INTO transaccion_log (id_compra, id_pago, resultado, evento, estado_anterior, estado_nuevo, monto, moneda)
     VALUES (p_id_compra, v_id_pago, p_resultado, 'Procesar Pago', 'Pendiente', v_estado_pago, v_monto, 'USD');
 
@@ -185,6 +185,17 @@ BEGIN
     ELSE
         -- Si el pago es rechazado, se cancela la compra
         UPDATE compra SET estado = 'Cancelada' WHERE id_compra = p_id_compra;
+        
+        -- Se marcan las reservas como liberadas
+		UPDATE reserva SET estado = 'liberada' WHERE id_compra = p_id_compra;
+
+        -- Se devuelve el inventario a estado 'disponible'
+        UPDATE inventario_funcion inv
+        SET estado = 'disponible', id_reserva = NULL
+        FROM compra_detalle cd
+        WHERE inv.id_funcion = (SELECT id_funcion FROM compra WHERE id_compra = p_id_compra)
+          AND inv.id_asiento = cd.id_asiento
+          AND cd.id_compra = p_id_compra;
     END IF;
 END;
 $$ LANGUAGE plpgsql;
