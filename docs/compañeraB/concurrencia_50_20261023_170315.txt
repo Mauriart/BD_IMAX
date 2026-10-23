@@ -1,0 +1,7 @@
+Fecha: 2026-10-23T17:03:15
+Solicitudes simultaneas: 50  (funcion 1, asiento 3)
+Exitos: 1  (esperado: 1)
+Rechazos por conflicto: 49  (esperado: 49)
+Errores inesperados u otros: ninguno
+Estado final del asiento: bloqueado  (esperado: bloqueado)
+Reservas activas de ese asiento: 1  (esperado: 1)

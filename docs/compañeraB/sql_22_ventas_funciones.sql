@@ -75,9 +75,10 @@ BEGIN
     -- Recorrer cada asiento solicitado de manera segura
     FOREACH v_asiento IN ARRAY p_asientos
     LOOP
-        -- Verificar disponibilidad estricta en el inventario
+        -- Verificar disponibilidad estricta en el inventario Y BLOQUEAR LA FILA (FOR UPDATE)
         PERFORM 1 FROM inventario_funcion 
-        WHERE id_funcion = p_id_funcion AND id_asiento = v_asiento AND estado = 'disponible';
+        WHERE id_funcion = p_id_funcion AND id_asiento = v_asiento AND estado = 'disponible'
+        FOR UPDATE;
         
         IF NOT FOUND THEN
             RAISE EXCEPTION 'El asiento con ID % no se encuentra disponible. Operación cancelada.', v_asiento;
