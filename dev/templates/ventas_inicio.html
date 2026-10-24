@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Funciones a la venta{% endblock %}
+
+{% block content %}
+<div class="ventas">
+  {% include "ventas_comun.html" %}
+
+  <div class="v-tarjeta">
+    <h1>Funciones disponibles</h1>
+    <p class="v-suave">Elige una función para ver el mapa de asientos y comprar tus entradas.</p>
+
+    {% if not session.get('id_usuario') %}
+      <p class="v-mensaje error">
+        Todavía no hay una sesión iniciada. Para probar, entra a
+        <a href="{{ url_for('ventas.entrar_prueba', id_usuario=1) }}">sesión de prueba como usuario 1</a>.
+      </p>
+    {% endif %}
+
+    {% if funciones %}
+      <table>
+        <tr><th>Película</th><th>Cine / Sala</th><th>Fecha y hora</th><th></th></tr>
+        {% for f in funciones %}
+          <tr>
+            <td><strong>{{ f.titulo }}</strong><br><span class="v-suave">{{ f.clasificacion }}</span></td>
+            <td>{{ f.cine }} · {{ f.sala }}</td>
+            <td>{{ f.inicio_local.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td class="v-num">
+              <a class="v-boton" href="{{ url_for('ventas.mapa', id_funcion=f.id_funcion) }}">Elegir asientos</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p>No hay funciones activas con fecha futura.</p>
+      <p class="v-suave">Si instalaste los datos de ejemplo hace más de una semana, la función de ejemplo ya pasó:
+        pídele a A una función nueva o mueve las fechas en la base de datos.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
