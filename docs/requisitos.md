@@ -32,9 +32,9 @@ El orden es el número ascendente de los issues existentes: **#2, #3, #4, #5, #7
 | DOC-A-02 | #5 · A-05 | DBLC 1/2 | Proponer arquitectura técnica/operativa con BD, cómputo, red, seguridad, históricos y continuidad para la escala indicada. | [Arquitectura, operación y validación](factibilidad.md#4-arquitectura-propuesta). | VA-02: diagrama, autoridad de escritura, 8 millones concurrentes, pico de 50.000 TPS, históricos y recuperación; capacidad propuesta separada del prototipo. | Verificado documentalmente; conciliación de dimensionamiento/políticas con C pendiente. |
 | RF-A-08 | [#7 · A-04](https://github.com/Mauriart/BD_IMAX/issues/7) | RN-18 | Rechazar eliminación o cambio incompatible de distribución si existen reservas/ventas activas de funciones de la sala. | Operación real de modificación de sala A; consulta de actividad de B. | PA-12: protección con reserva, con venta y caso permitido sin actividad. | Pendiente de integración con B |
 | RNF-A-06 | #7 · A-04 | RN-18; integridad | Impedir que una reserva/venta concurrente evada la protección de sala; conservar referencias e historia. | Coordinación transaccional A/B, definida en diseño. | PA-13: carrera cambio de sala/reserva; ningún resultado deja datos incompatibles. | Pendiente de integración con B |
-| RF-A-09 | #7 · A-04 | RN-17/20 | Autorizar cambios permitidos y registrar actor, fecha, acción, sala y motivo mediante C. | Contratos de autorización y auditoría. | PA-07 y PA-12: cambio autorizado auditado; denegación efectiva. | Pendiente de integración con C |
-| DOC-A-03 | [#8 · A-07](https://github.com/Mauriart/BD_IMAX/issues/8) | DBLC 4; RN del bloque A | Documentar pruebas positivas/negativas, concurrencia, GUI y restricciones; vincular resultados con requisitos. | `docs/pruebas_a.md`, `tests/cartelera/`, `evidencias/a/` y esta matriz. | PA-14: otro integrante reproduce casos y revisa correspondencia con implementación. | Pendiente |
-| DOC-A-04 | #8 · A-07 | Pauta de programación | Preparar demostración reproducible de catálogo, programación, tarifas, cartelera, permisos y salas protegidas. | Guion en `docs/pruebas_a.md`. | PA-15: ensayo desde datos conocidos con rechazos esperados y evidencia SQL/GUI. | Pendiente |
+| RF-A-09 | #7 · A-04 | RN-17/20 | Autorizar cambios permitidos y registrar actor, fecha, acción, sala y motivo mediante C. | Contratos de autorización y auditoría. | PA-07 y PA-12: cambio autorizado auditado; denegación efectiva. | Mecanismo común de C disponible; operación protegida de A-04 pendiente de B. |
+| DOC-A-03 | [#8 · A-07](https://github.com/Mauriart/BD_IMAX/issues/8) | DBLC 4; RN del bloque A | Documentar pruebas positivas/negativas, concurrencia, GUI y restricciones; vincular resultados con requisitos. | [Pruebas del módulo A](compa%C3%B1eroA/pruebas_modulo_A.md), cinco salidas reales en compañeroA/evidencias/ y esta matriz. | PA-01 a PA-11: 47 pruebas aprobadas; PA-14: documentación y enlaces comprobados, reproducción en otro entorno pendiente. | Avance parcial; falta A-04/B y validación final. |
+| DOC-A-04 | #8 · A-07 | Pauta de programación | Preparar demostración reproducible de catálogo, programación, tarifas, cartelera, permisos y salas protegidas. | [Guion de defensa](compa%C3%B1eroA/guion_defensa_A.md). | PA-15: pasos y explicación SQL/Python preparados; ensayo completo y protección por reservas/ventas pendientes. | Guion preparado; ensayo final pendiente. |
 | DOC-A-05 | [#20 · A-06](https://github.com/Mauriart/BD_IMAX/issues/20) | DBLC 1; plan interno | Comparar dos proveedores con capacidades, regiones, disponibilidad y retención equivalentes; proyección de tres años. | Sección económica de `docs/factibilidad.md`. | VA-03: fuentes fechadas, moneda, cantidades y fórmulas reproducibles. | Pendiente |
 | DOC-A-06 | #20 · A-06 | DBLC 1; plan interno | Separar inversión inicial y OPEX; calcular costo por millón de transacciones y ROI con supuestos explícitos y volúmenes de C. | Tabla económica y referencia a la versión del dimensionamiento recibido. | VA-04: denominador mensual definido, sin convertir TPS pico en tasa continua ni prometer rentabilidad. | Pendiente de datos de C |
 
@@ -42,13 +42,13 @@ El orden es el número ascendente de los issues existentes: **#2, #3, #4, #5, #7
 
 Los códigos anteriores identifican los casos de verificación. Su ejecución y evidencia se indican en la columna Estado y en los documentos enlazados; publicar esta matriz por sí solo no demuestra una prueba. VA-01/02 son revisiones documentales, no ensayos de capacidad global.
 
-Para cada PA-xx se registrará en `docs/pruebas_a.md`:
+El registro actual de PA-01 a PA-15 está en [pruebas_modulo_A.md](compa%C3%B1eroA/pruebas_modulo_A.md), con precondiciones, pasos, resultados, evidencia y pendientes. Los PA agrupan comprobaciones y no se suman al número de métodos automatizados. Para ampliar el registro se conservarán estos campos:
 
 `ID | requisitos cubiertos | precondiciones/dataset | pasos/comando | esperado | obtenido | evidencia | entorno | responsable | fecha`.
 
 Para cada VA-xx se registrará el apartado revisado, fuente y fecha, supuestos, cálculos o criterio usado, hallazgos y resolución. Las comprobaciones documentales no se presentan como pruebas de rendimiento.
 
-Evidencia prevista: `evidencias/a/<id_prueba>/`, con salidas SQL, errores esperados, resultados de concurrencia y capturas pertinentes. Una captura no sustituye la comprobación del estado de BD.
+Evidencia actual de A: [compañeroA/evidencias](compa%C3%B1eroA/evidencias/), con cinco salidas reales de unittest. Las capturas y consultas adicionales se incorporarán cuando correspondan a una ejecución real. Una captura no sustituye la comprobación del estado de BD.
 
 ## 3. Límites de responsabilidad y dependencias
 

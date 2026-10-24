@@ -184,3 +184,9 @@ El entregable de A-05 es [factibilidad.md](factibilidad.md): dictamen del legado
 ## Acceso a las pantallas administrativas de A
 
 La integración de A con identidad, permisos y auditoría de C-01 se explica en [permisos_auditoria_A.md](compa%C3%B1eroA/permisos_auditoria_A.md). Incluye la preparación local de la contraseña, los permisos por rol y las 47 pruebas de A y compatibilidad. El esquema de C se conserva en su carpeta original. A-04 sigue dependiendo de reservas y ventas de B; T-02 permanece pendiente para la integración completa.
+
+## Avance parcial de A-07
+
+Las [pruebas del módulo A](compa%C3%B1eroA/pruebas_modulo_A.md) reúnen los casos PA-01 a PA-15, las salidas reales de 47 pruebas y las instrucciones para repetirlas. El [guion de defensa](compa%C3%B1eroA/guion_defensa_A.md) explica qué mostrar y por qué se usan esas reglas, con ejemplos de reversión de lotes, limpieza, tarifas y permisos.
+
+A-07 permanece abierto. Faltan la protección por reservas/ventas de A-04, la concurrencia con B y el ensayo completo del guion. Las referencias antiguas a permisos/auditoría pendientes describen el cierre funcional original de A-02; la integración posterior de A con C-01 y la compatibilidad acotada con C-03 están documentadas en permisos_auditoria_A.md.
