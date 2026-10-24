@@ -17,6 +17,6 @@ test_sin_instalacion_no_habilita_eliminar (__main__.PruebasSalasProtegidas.test_
 test_zona_con_inventario_no_se_traslada (__main__.PruebasSalasProtegidas.test_zona_con_inventario_no_se_traslada) ... ok
 
 ----------------------------------------------------------------------
-Ran 17 tests in 2.767s
+Ran 17 tests in 3.231s
 
 OK

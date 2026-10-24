@@ -15,6 +15,6 @@ test_sin_clave_o_servicio_de_permisos_no_hay_acceso_administrativo (__main__.Pru
 test_todas_las_escrituras_de_a_tienen_auditoria (__main__.PruebasSeguridad.test_todas_las_escrituras_de_a_tienen_auditoria) ... ok
 
 ----------------------------------------------------------------------
-Ran 15 tests in 6.633s
+Ran 15 tests in 6.160s
 
 OK

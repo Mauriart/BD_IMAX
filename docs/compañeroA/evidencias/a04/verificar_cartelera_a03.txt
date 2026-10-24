@@ -5,6 +5,6 @@ test_solo_futuras_activas_y_sin_duplicar_por_generos (__main__.PruebasCartelera.
 test_varios_horarios_agrupados_y_busqueda_vacia (__main__.PruebasCartelera.test_varios_horarios_agrupados_y_busqueda_vacia) ... ok
 
 ----------------------------------------------------------------------
-Ran 5 tests in 1.069s
+Ran 5 tests in 1.189s
 
 OK

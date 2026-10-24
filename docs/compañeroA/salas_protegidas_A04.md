@@ -4,9 +4,9 @@
 
 A incorpora una operación de eliminación de asientos con confirmación, permiso y motivo. PostgreSQL rechaza cambios de distribución cuando hay reservas o ventas activas y coordina esas comprobaciones con las escrituras de ocupación de B.
 
-Se aprobaron 17 pruebas nuevas, incluidas dos carreras con conexiones independientes, y las 47 anteriores. Total de esta validación: 64 pruebas aprobadas. Las seis salidas reales están en [evidencias/a04](evidencias/a04/).
+Se aprobaron 17 pruebas de protección con contrato reducido, 10 con los SQL reales de B y las 47 anteriores. Total de esta validación: 74 pruebas aprobadas. Las siete salidas reales están en [evidencias/a04](evidencias/a04/).
 
-A-04 sigue abierto. La protección se verificó con un fixture de contrato de B, no con su instalación o su proceso completo de compra/pago. El SQL no se instaló en public ni en los datos de trabajo. La nueva opción de eliminación permanece deshabilitada en una instalación que no tenga la migración de A-04.
+La protección se verificó tanto con un fixture reducido como con las tablas y funciones reales de reserva/pago de B. El PR de A-04 queda pendiente de integrar; el issue no se cierra por publicar esta evidencia. El SQL no se instaló en public ni en los datos de trabajo. La nueva opción de eliminación permanece deshabilitada en una instalación que no tenga la migración de A-04.
 
 ## Qué hace SQL
 
@@ -59,7 +59,7 @@ Se revisaron en navegador la navegación, el enlace Eliminar, la confirmación c
 
 El ensayo consulta pg_stat_activity para observar la espera; no supone concurrencia solo por lanzar dos llamadas. Cada conexión tiene límites de espera.
 
-La ruta de eliminación toma sala antes de asiento. El SQL directo y otras operaciones de B todavía pueden adquirir filas en otro orden: PostgreSQL puede abortar una transacción por deadlock. Eso debe manejarse con rollback y reintento acotado; no se afirma que el protocolo completo de compra/pago de B ya tenga un orden común verificado. Los casos probados de la tabla no produjeron un estado incompatible.
+La ruta de eliminación toma sala antes de asiento. El SQL directo y otras operaciones de B todavía pueden adquirir filas en otro orden: PostgreSQL puede abortar una transacción por deadlock. Eso debe manejarse con rollback y reintento acotado; no se afirma que todas las combinaciones de operaciones de B ya tengan un orden común verificado. Los casos probados de la tabla no produjeron un estado incompatible.
 
 ## Las 17 pruebas nuevas
 
@@ -97,6 +97,39 @@ El archivo real de C-03 usado fue el del commit f19dd9b01fc643805b2cb0baefc334fe
 
 Para integrar la protección real, primero debe existir el esquema definitivo de B y conciliarse con el modelo provisional de C. No se debe ejecutar el fixture en la base de trabajo. La instalación de A-04 requiere comprobar también los privilegios de la cuenta técnica sobre las tablas compartidas; esta suite usa la cuenta configurada de ensayo.
 
-La rama Compañera_B revisada, commit c9085e7c73282d4b346683cf9170214b911d3aed, todavía llama a calcular_total sin definir esa función en sus SQL publicados. Por ese motivo no se presenta este ensayo como validación de reservar_asientos ni de compra/pago reales. A no modificó ese módulo.
+## Integración comprobada con B real
+
+Se incorporaron a esta rama los tres SQL de B desde Compañera_B, commit c9085e7c73282d4b346683cf9170214b911d3aed, con los ajustes mínimos autorizados por Mauriart:
+
+- sql_20_ventas_tablas.sql usa las tablas de identidad y solicitud de reembolso de C-01, sin recrearlas ni insertar un usuario provisional. Inventario se crea después de boleto y termina con punto y coma. El índice de reservas usa los estados en minúsculas que admite su CHECK.
+- sql_21_ventas_logs.sql llama a su bloqueo de logs bloquear_modificacion_log_b para conservar la función de C con su código de error.
+- sql_22_ventas_funciones.sql recupera calcular_total, que reservar_asientos ya invocaba. Su cuerpo procede del SQL original de B en c16e010; suma total_linea y actualiza compra.total.
+
+No se incorporó la rama completa de B ni sus pantallas. Estos archivos son copias corregidas para integración; al reunir las ramas debe conservarse esta versión de los tres SQL. No se cambiaron las reglas de pago, reembolso, precios o autorización de B.
+
+Desde dev se reproduce con:
+
+    .\.venv\Scripts\python.exe verificar_integracion_b_a04.py
+
+La suite carga A, C-01, los tres SQL reales de B y la protección A-04 en un esquema temporal. Comprueba que B no modifica los usuarios ni la función de logs de C. La protección se instala dos veces para verificar su reejecución.
+
+| Caso real | Resultado comprobado |
+| --- | --- |
+| reservar_asientos y consultar_disponibilidad | Compra de USD 8, inventario bloqueado y cambios incompatibles rechazados. |
+| procesar_pago aprobado y consultar_boletos_usuario | Compra pagada, boleto emitido, inventario vendido y distribución/horario protegidos. |
+| Pago rechazado | Compra cancelada, inventario disponible y borrado de otro asiento permitido y auditado. |
+| liberar_reservas_vencidas | El inventario bloqueado protege hasta su liberación; después permite un cambio sin referencias. |
+| revertir_venta | Anula el boleto y libera inventario; conserva historia y rechaza borrar el asiento referenciado. |
+| Índice de reservas activas | Rechaza el duplicado directo, además del control de disponibilidad de B. |
+| Reserva de varios asientos con uno no disponible | Revierte compra, detalles y reservas de ese intento. |
+| Logs de B y C | Ambos siguen siendo inalterables y usan sus funciones independientes. |
+| Reserva real primero, cambio después | Se observa espera; tras confirmar la reserva se rechaza el cambio con 55000. |
+| Cambio permitido primero, reserva real después | B espera por la sala; tras confirmar el borrado de un asiento sin inventario, reserva otro asiento válido. |
+
+En las carreras se reserva un asiento con inventario y se intenta borrar otro sin referencias de la misma sala. No se inventa un borrado permitido sobre inventario existente: sus FK conservan la historia. Se observó la espera en pg_stat_activity y se verificaron las filas finales.
+
+La [salida real de integración](evidencias/a04/verificar_integracion_b_a04.txt) contiene los 10 casos aprobados. Los 64 anteriores se repitieron y aprobaron en esta versión.
+
+Esta validación cubre las funciones SQL de B y las rutas de A. No certifica las pantallas, permisos ni todas las reglas comerciales de B; tampoco su pasarela externa. Los datos usan una sola categoría y tarifa vigente: no se presenta el fallback de precios ni la elección de categoría de B como integración completa de A-03. La conciliación del boleto provisional de C, su instalación completa y los privilegios de despliegue siguen en T-02. Las pruebas usan la cuenta local configurada y no demuestran privilegios mínimos de una cuenta nueva.
 
 Queda pendiente instalar B de forma reproducible, repetir los casos con sus operaciones completas —reserva, pago, expiración y reversión—, revisar su orden de bloqueos y probar la interfaz integrada. Solo entonces corresponde cerrar A-04 y trasladar la evidencia a la entrega final de A-07.

@@ -5,6 +5,6 @@ test_pelicula_usa_funcion_comun_c03_y_revierte_si_falla (__main__.PruebasCompati
 test_trigger_deshabilitado_tiene_respaldo_manual (__main__.PruebasCompatibilidadC03.test_trigger_deshabilitado_tiene_respaldo_manual) ... ok
 
 ----------------------------------------------------------------------
-Ran 5 tests in 1.746s
+Ran 5 tests in 1.668s
 
 OK

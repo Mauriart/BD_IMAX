@@ -11,6 +11,6 @@ test_salas_zonas_y_lote (__main__.PruebasA02.test_salas_zonas_y_lote) ... ok
 test_traslapes_y_limpieza (__main__.PruebasA02.test_traslapes_y_limpieza) ... ok
 
 ----------------------------------------------------------------------
-Ran 11 tests in 2.661s
+Ran 11 tests in 2.048s
 
 OK
