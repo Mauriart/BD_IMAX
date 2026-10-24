@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Tarifas{% endblock %}
+{% block content %}
+<div class="titulo-pagina"><div><p class="etiqueta">PRECIOS</p><h1>Tarifas y promociones</h1><p class="descripcion">Consulta las vigencias por función. Los cambios requieren el permiso correspondiente.</p></div></div>
+<section class="tarjeta"><div class="tabla-scroll"><table><thead><tr><th>Película</th><th>Cine / sala</th><th>Inicio local</th><th>Acciones</th></tr></thead><tbody>
+{% for funcion in funciones %}<tr><td>{{ funcion.titulo }}</td><td>{{ funcion.cine }} · {{ funcion.sala }}</td><td>{{ funcion.inicio_local.strftime('%d/%m/%Y %H:%M') }}</td><td><a href="{{ url_for('precios.configurar_precios', id_funcion=funcion.id_funcion) }}">Ver tarifas y promociones</a></td></tr>{% else %}<tr><td colspan="4" class="vacio">Todavía no hay funciones registradas.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

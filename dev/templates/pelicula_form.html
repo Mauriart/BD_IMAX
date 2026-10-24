@@ -21,7 +21,8 @@
             <div class="campo"><label for="duracion_min">Duración en minutos</label><input id="duracion_min" name="duracion_min" type="number" min="1" max="2147483647" step="1" value="{{ datos.duracion_min }}" required></div>
         </div>
         <div class="campo"><label for="poster_url">Ruta o dirección del póster</label><input id="poster_url" name="poster_url" value="{{ datos.poster_url }}" placeholder="/static/img/pelicula.png" required></div>
-        <div class="acciones-formulario"><button type="submit">Guardar película</button><a class="boton secundario" href="{{ url_for('listar_peliculas') }}">Cancelar</a></div>
+        {% include '_seguridad_form.html' %}
+    <div class="acciones-formulario"><button type="submit">Guardar película</button><a class="boton secundario" href="{{ url_for('listar_peliculas') }}">Cancelar</a></div>
     </form>
 </section>
 {% endblock %}

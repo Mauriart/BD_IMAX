@@ -19,7 +19,8 @@
             <span class="ayuda">Introduce la hora local del cine seleccionado. Se reservan 15 minutos de limpieza después del final.</span>
         </div>
         <label class="campo-check"><input type="checkbox" name="activa" {% if datos.activa %}checked{% endif %}> Función activa</label>
-        <div class="acciones-formulario"><button type="submit">Guardar función</button><a class="boton secundario" href="{{ url_for('funciones.listar_funciones') }}">Cancelar</a></div>
+        {% include '_seguridad_form.html' %}
+    <div class="acciones-formulario"><button type="submit">Guardar función</button><a class="boton secundario" href="{{ url_for('funciones.listar_funciones') }}">Cancelar</a></div>
     </form>
     {% else %}<p class="vacio">Registra al menos una película y una sala antes de programar funciones.</p>{% endif %}
 </section>

@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}Tarifas y promociones{% endblock %}
 {% block content %}
-<a class="volver" href="{{ url_for('funciones.listar_funciones') }}">← Volver a funciones</a>
+<a class="volver" href="{{ url_for('precios.listar_precios') }}">← Volver a tarifas</a>
 <div class="titulo-pagina"><div><p class="etiqueta">PRECIOS</p><h1>Tarifas y promociones</h1><p class="descripcion">{{ funcion.titulo }} · {{ funcion.cine }} · {{ funcion.sala }}<br>{{ funcion.inicio_local.strftime('%d/%m/%Y %H:%M') }} · {{ funcion.zona_horaria }}</p></div></div>
 {% if error %}<p class="alerta" role="alert">{{ error }}</p>{% endif %}
 <p class="nota-precios">Todas las vigencias se introducen en hora local del cine. Incluyen el inicio y excluyen el final. Para cambiar precios, agrega otra vigencia sin superponer la anterior; los registros anteriores se conservan.</p>
+{% if puede('configurar_tarifas') %}
 <div class="dos-columnas paneles-precios">
 <section class="tarjeta panel-alta"><h2>Agregar tarifa</h2><form method="post" class="formulario">
     <input type="hidden" name="accion" value="tarifa">
@@ -13,6 +14,7 @@
     <div class="campo"><label for="monto">Precio en USD</label><input id="monto" name="monto" type="number" min="0" max="9999999999.99" step="0.01" required value="{{ datos.get('monto','') }}"></div>
     <div class="campo"><label for="tarifa_desde">Vigente desde</label><input id="tarifa_desde" name="vigente_desde" type="datetime-local" required value="{{ datos.get('vigente_desde','') if datos.get('accion') == 'tarifa' else '' }}"></div>
     <div class="campo"><label for="tarifa_hasta">Vigente hasta</label><input id="tarifa_hasta" name="vigente_hasta" type="datetime-local" required value="{{ datos.get('vigente_hasta','') if datos.get('accion') == 'tarifa' else '' }}"></div>
+    {% include '_seguridad_form.html' %}
     <button type="submit">Guardar tarifa</button>
 </form></section>
 <section class="tarjeta panel-alta"><h2>Agregar promoción 2x1</h2><form method="post" class="formulario">
@@ -24,6 +26,7 @@
     <fieldset class="generos-pelicula"><legend>Categorías</legend><div class="lista-generos">{% for categoria in categorias %}<label class="campo-check"><input type="checkbox" name="categorias" value="{{ categoria.id_categoria_entrada }}" {% if categoria.id_categoria_entrada|string in datos.getlist('categorias') %}checked{% endif %}>{{ categoria.nombre }}</label>{% endfor %}</div></fieldset>
     <div class="campo"><label for="promocion_desde">Vigente desde</label><input id="promocion_desde" name="vigente_desde" type="datetime-local" required value="{{ datos.get('vigente_desde','') if datos.get('accion') == 'promocion' else '' }}"></div>
     <div class="campo"><label for="promocion_hasta">Vigente hasta</label><input id="promocion_hasta" name="vigente_hasta" type="datetime-local" required value="{{ datos.get('vigente_hasta','') if datos.get('accion') == 'promocion' else '' }}"></div>
+    {% include '_seguridad_form.html' %}
     <button type="submit">Guardar promoción</button>
 </form></section>
 </div>
@@ -31,8 +34,10 @@
     <input type="hidden" name="accion" value="categoria">
     <div class="campo"><label for="nombre_categoria">Nombre</label><input id="nombre_categoria" name="nombre_categoria" maxlength="50" required value="{{ datos.get('nombre_categoria','') }}"></div>
     <label class="campo-check"><input type="checkbox" name="requiere_acreditacion" {% if datos.get('requiere_acreditacion') == 'on' %}checked{% endif %}> Requiere acreditación física en la entrada</label>
+    {% include '_seguridad_form.html' %}
     <button type="submit">Guardar categoría</button>
 </form></details>
+{% endif %}
 <section class="tarjeta separada"><div class="encabezado-tarjeta"><h2>Tarifas registradas</h2><span class="contador">USD · historial de vigencias</span></div><div class="tabla-scroll"><table><thead><tr><th>Zona</th><th>Categoría</th><th>Precio</th><th>Desde (local)</th><th>Hasta (local)</th></tr></thead><tbody>
 {% for tarifa in tarifas %}<tr><td>{{ tarifa.zona }}</td><td>{{ tarifa.categoria }}</td><td>{{ '%.2f'|format(tarifa.monto) }}</td><td>{{ tarifa.desde_local.strftime('%d/%m/%Y %H:%M') }}</td><td>{{ tarifa.hasta_local.strftime('%d/%m/%Y %H:%M') }}</td></tr>{% else %}<tr><td colspan="5" class="vacio">Todavía no hay tarifas para esta función.</td></tr>{% endfor %}
 </tbody></table></div></section>

@@ -12,7 +12,8 @@
                 {% for cine in cines %}<option value="{{ cine.id_cine }}" {% if datos.id_cine == cine.id_cine|string %}selected{% endif %}>{{ cine.nombre }}</option>{% endfor %}
             </select></div>
             <div class="campo"><label for="nombre">Nombre de la sala</label><input id="nombre" name="nombre" maxlength="100" placeholder="Ej. Sala 2" value="{{ datos.nombre }}" required></div>
-            <button type="submit">Guardar sala</button>
+            {% include '_seguridad_form.html' %}
+    <button type="submit">Guardar sala</button>
         </form>
         {% else %}<p class="vacio">Primero debe existir un cine registrado en la base de datos.</p>{% endif %}
     </section>

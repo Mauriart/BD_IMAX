@@ -1,0 +1,2 @@
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<div class="campo"><label>Motivo del cambio<textarea name="motivo" rows="2" maxlength="500" placeholder="Describe brevemente por qué realizas este cambio." required>{{ request.form.get('motivo', '') }}</textarea></label></div>

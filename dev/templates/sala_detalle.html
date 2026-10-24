@@ -12,7 +12,8 @@
         <h2>Agregar zona</h2>
         <form method="post" action="{{ url_for('salas.crear_zona', id_sala=sala.id_sala) }}" class="formulario">
             <div class="campo"><label for="nombre_zona">Nombre de la zona</label><input id="nombre_zona" name="nombre_zona" maxlength="50" placeholder="Ej. General o VIP" value="{{ datos.get('nombre_zona', '') }}" required></div>
-            <button type="submit">Guardar zona</button>
+            {% include '_seguridad_form.html' %}
+    <button type="submit">Guardar zona</button>
         </form>
     </section>
     <section class="tarjeta">
@@ -36,7 +37,8 @@
             <div class="campo"><label for="hasta">Hasta el número</label><input id="hasta" name="hasta" type="number" min="1" max="2147483647" step="1" placeholder="20" value="{{ datos.get('hasta', '') }}" required></div>
         </div>
         <p class="ayuda">Hasta 1 000 asientos por operación. Si alguno ya existe, no se guarda ningún asiento del lote.</p>
-        <div><button type="submit">Crear fila de asientos</button></div>
+        {% include '_seguridad_form.html' %}
+    <div><button type="submit">Crear fila de asientos</button></div>
     </form>
     <details class="asiento-individual" {% if datos.get('numero') %}open{% endif %}>
         <summary>Agregar un solo asiento</summary>
@@ -46,7 +48,8 @@
                 <div class="campo"><label for="fila">Fila</label><input id="fila" name="fila" maxlength="10" value="{{ datos.get('fila', '') }}" required></div>
                 <div class="campo"><label for="numero">Número</label><input id="numero" name="numero" type="number" min="1" max="2147483647" step="1" value="{{ datos.get('numero', '') }}" required></div>
             </div>
-            <div><button class="secundario" type="submit">Guardar asiento</button></div>
+            {% include '_seguridad_form.html' %}
+    <div><button class="secundario" type="submit">Guardar asiento</button></div>
         </form>
     </details>
     {% else %}<p class="vacio">Agrega una zona antes de registrar asientos.</p>{% endif %}

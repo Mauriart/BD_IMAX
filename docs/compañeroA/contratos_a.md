@@ -44,6 +44,12 @@ B conserva en su compra el precio, descuento y referencias utilizados. A no camb
 ## Coordinación pendiente
 
 - B entrega el contrato de actividad vigente para proteger salas en A-04.
-- C entrega identidad, autorización y auditoría. A no duplica sus tablas.
+- C aporta identidad, autorización y auditoría. A ya consume sus tablas y autorizar_accion en esta integración; ver [permisos_auditoria_A.md](permisos_auditoria_A.md). A no duplica sus tablas.
 - La sala de una función o zona con tarifas no puede reasignarse directamente; el ajuste de integridad protege este vínculo. Los flujos futuros de reprogramación deben respetarlo.
 - A-01 entrega modelo, datos, campos y estas firmas; su consumo real se verifica al integrar los módulos.
+
+## Identidad y auditoría de A con C
+
+La sesión autenticada identifica al usuario; los formularios no eligen actor ni rol. A consulta autorizar_accion y revalida el permiso dentro de cada transacción de escritura. Cada cambio guarda un evento en admin_operacion_audit con actor, rol, IP, acción, entidad, ID, motivo y datos antes/después. El cambio y el evento se confirman juntos; si falla la auditoría, ninguno se guarda. Las once variantes de escritura actuales se verifican en dev/verificar_seguridad_a.py. T-02 conserva pendiente la integración global con B/C.
+
+La compatibilidad con C-03 añade contexto local de transacción (app.id_usuario, app.ip, app.motivo) para sus guardias. Si un trigger habilitado ya auditó la fila, A no registra nuevamente ese cambio. Sin ese trigger se conserva el evento explícito de A. Las cinco pruebas en dev/verificar_compatibilidad_c03.py consumen las funciones reales del SQL de C-03; no prueban ni instalan su módulo completo. Ver el alcance de las asociaciones y lotes en permisos_auditoria_A.md.
