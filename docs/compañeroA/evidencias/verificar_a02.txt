@@ -1,0 +1,16 @@
+test_creacion_duracion_y_zona_horaria (__main__.PruebasA02.test_creacion_duracion_y_zona_horaria) ... ok
+test_datos_y_referencias_invalidas (__main__.PruebasA02.test_datos_y_referencias_invalidas) ... ok
+test_edicion_y_horario_original (__main__.PruebasA02.test_edicion_y_horario_original) ... ok
+test_editar_pelicula (__main__.PruebasA02.test_editar_pelicula) ... ok
+test_inactiva_y_reactivacion (__main__.PruebasA02.test_inactiva_y_reactivacion) ... ok
+test_metadatos_pelicula (__main__.PruebasA02.test_metadatos_pelicula) ... ok
+test_pantallas_y_estilos (__main__.PruebasA02.test_pantallas_y_estilos) ... ok
+test_programacion_simultanea (__main__.PruebasA02.test_programacion_simultanea) ... ok
+test_sala_con_tarifas_protegida (__main__.PruebasA02.test_sala_con_tarifas_protegida) ... ok
+test_salas_zonas_y_lote (__main__.PruebasA02.test_salas_zonas_y_lote) ... ok
+test_traslapes_y_limpieza (__main__.PruebasA02.test_traslapes_y_limpieza) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.861s
+
+OK
