@@ -5,6 +5,7 @@ import psycopg
 from psycopg.rows import dict_row
 from conexion import obtener_conexion
 from salas import entero_positivo
+from seguridad import autorizar_cambio, auditar, leer_registro
 
 precios_bp = Blueprint('precios', __name__)
 DIAS = [(1, 'Lunes'), (2, 'Martes'), (3, 'Miércoles'), (4, 'Jueves'),
@@ -118,10 +119,14 @@ def registrar_tarifa(id_funcion, funcion, zonas, categorias):
         raise ValueError('El monto debe ser positivo o cero, con un máximo de dos decimales.')
     desde, hasta = fechas_locales(request.form)
     with obtener_conexion() as conexion:
-        conexion.execute('''
+        actor = autorizar_cambio(conexion, 'configurar_tarifas')
+        fila = conexion.execute('''
             INSERT INTO tarifa(id_funcion,id_zona,id_categoria_entrada,monto,moneda,vigente_desde,vigente_hasta)
             VALUES (%s,%s,%s,%s,'USD',%s::timestamp AT TIME ZONE %s,%s::timestamp AT TIME ZONE %s)
-        ''', (id_funcion, id_zona, id_categoria, monto, desde, funcion['zona_horaria'], hasta, funcion['zona_horaria']))
+            RETURNING id_tarifa
+        ''', (id_funcion, id_zona, id_categoria, monto, desde, funcion['zona_horaria'], hasta, funcion['zona_horaria'])).fetchone()
+        auditar(conexion, actor, 'configurar_tarifas', 'tarifa', fila[0],
+                despues=leer_registro(conexion, 'tarifa', fila[0]))
 
 
 def registrar_promocion(id_funcion, funcion, zonas, categorias):
@@ -140,6 +145,7 @@ def registrar_promocion(id_funcion, funcion, zonas, categorias):
         raise ValueError('Selecciona al menos una categoría existente.')
     desde, hasta = fechas_locales(request.form)
     with obtener_conexion() as conexion:
+        actor = autorizar_cambio(conexion, 'configurar_tarifas')
         with conexion.cursor() as cursor:
             cursor.execute('''
                 INSERT INTO promocion(nombre,tipo,condicion,vigente_desde,vigente_hasta,activa)
@@ -151,6 +157,11 @@ def registrar_promocion(id_funcion, funcion, zonas, categorias):
             cursor.executemany('INSERT INTO promocion_dia VALUES (%s,%s)', [(identificador, int(d)) for d in sorted(dias)])
             cursor.executemany('INSERT INTO promocion_zona VALUES (%s,%s)', [(identificador, int(z)) for z in sorted(zonas_elegidas)])
             cursor.executemany('INSERT INTO promocion_categoria VALUES (%s,%s)', [(identificador, int(c)) for c in sorted(categorias_elegidas)])
+        despues = leer_registro(conexion, 'promocion', identificador)
+        despues.update(id_funcion=id_funcion, dias=sorted(int(d) for d in dias),
+                       zonas=sorted(int(z) for z in zonas_elegidas),
+                       categorias=sorted(int(c) for c in categorias_elegidas))
+        auditar(conexion, actor, 'configurar_tarifas', 'promocion', identificador, despues=despues)
 
 
 @precios_bp.route('/funciones/<int:id_funcion>/precios', methods=['GET', 'POST'])
@@ -169,8 +180,11 @@ def configurar_precios(id_funcion):
                 if not nombre or len(nombre) > 50:
                     raise ValueError('Introduce un nombre de categoría de hasta 50 caracteres.')
                 with obtener_conexion() as conexion:
-                    conexion.execute('INSERT INTO categoria_entrada(nombre,requiere_acreditacion) VALUES (%s,%s)',
-                                     (nombre, request.form.get('requiere_acreditacion') == 'on'))
+                    actor = autorizar_cambio(conexion, 'configurar_tarifas')
+                    fila = conexion.execute('INSERT INTO categoria_entrada(nombre,requiere_acreditacion) VALUES (%s,%s) RETURNING id_categoria_entrada',
+                                            (nombre, request.form.get('requiere_acreditacion') == 'on')).fetchone()
+                    auditar(conexion, actor, 'configurar_tarifas', 'categoria_entrada', fila[0],
+                            despues=leer_registro(conexion, 'categoria_entrada', fila[0]))
             else:
                 raise ValueError('Selecciona una operación válida.')
             return redirect(url_for('precios.configurar_precios', id_funcion=id_funcion))
@@ -242,3 +256,18 @@ def ver_precios(id_funcion):
     return render_template('precios_publicos.html', funcion=funcion, categorias=categorias,
                            zonas=zonas, matriz=matriz, promociones=promociones, dias=DIAS,
                            consultado=consultado.strftime('%d/%m/%Y %H:%M') + ' · ' + funcion['zona_horaria'])
+
+
+@precios_bp.route('/tarifas')
+def listar_precios():
+    with obtener_conexion() as conexion:
+        with conexion.cursor(row_factory=dict_row) as cursor:
+            cursor.execute("""
+                SELECT f.id_funcion,p.titulo,s.nombre AS sala,c.nombre AS cine,
+                       f.inicio AT TIME ZONE c.zona_horaria AS inicio_local
+                FROM funcion f INNER JOIN pelicula p ON p.id_pelicula=f.id_pelicula
+                INNER JOIN sala s ON s.id_sala=f.id_sala
+                INNER JOIN cine c ON c.id_cine=s.id_cine ORDER BY f.inicio DESC
+            """)
+            funciones = cursor.fetchall()
+    return render_template('tarifas_funciones.html', funciones=funciones)

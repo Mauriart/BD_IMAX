@@ -96,3 +96,7 @@ Orden de instalación desde una base vacía: relacional_A.sql → ajuste_integri
 6. Probar el límite exacto de limpieza y un UPDATE incompatible.
 7. Ejecutar la verificación automatizada para demostrar concurrencia y los casos negativos.
 8. Indicar el pendiente de permisos/auditoría de C en T-02; no presentar un rol administrativo simulado como autorización real.
+
+## Integración posterior de permisos y auditoría
+
+El pendiente del paso 8 del guion se implementó para las operaciones actuales de A usando el esquema real de C-01. Antes de probar las pantallas, preparar el acceso local e iniciar sesión como se indica en [permisos_auditoria_A.md](permisos_auditoria_A.md). Los cambios ahora requieren un motivo. Las 11 pruebas funcionales originales siguen aprobadas; se agregaron 15 pruebas específicas de seguridad. T-02 conserva pendiente la integración completa del proyecto.

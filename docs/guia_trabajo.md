@@ -180,3 +180,7 @@ A-03 está integrado en main mediante el [PR #27](https://github.com/Mauriart/BD
 Se avanza en A-05 mientras A-04 necesita el contrato y la actividad de reservas/ventas de B para verificar su protección real. El orden por número de issue es una referencia de organización, no una obligación de esperar a B para redactar arquitectura.
 
 El entregable de A-05 es [factibilidad.md](factibilidad.md): dictamen del legado, seis debilidades, diagrama, flujo, riesgos, operación y criterios de capacidad/continuidad. Es documentación para revisión de Mauriart; no agrega SQL ni Python y no despliega infraestructura. El dimensionamiento detallado de C y los costos de A-06 se mantienen pendientes, sin bloquear este análisis de A.
+
+## Acceso a las pantallas administrativas de A
+
+La integración de A con identidad, permisos y auditoría de C-01 se explica en [permisos_auditoria_A.md](compa%C3%B1eroA/permisos_auditoria_A.md). Incluye la preparación local de la contraseña, los permisos por rol y las 47 pruebas de A y compatibilidad. El esquema de C se conserva en su carpeta original. A-04 sigue dependiendo de reservas y ventas de B; T-02 permanece pendiente para la integración completa.

@@ -2,6 +2,7 @@ from flask import Blueprint, abort, redirect, render_template, request, url_for
 import psycopg
 from psycopg.rows import dict_row
 from conexion import obtener_conexion
+from seguridad import autorizar_cambio, auditar, leer_registro
 
 salas_bp = Blueprint("salas", __name__)
 
@@ -83,12 +84,15 @@ def listar_salas():
         else:
             try:
                 with obtener_conexion() as conexion:
+                    actor = autorizar_cambio(conexion, 'gestionar_catalogo')
                     with conexion.cursor() as cursor:
                         cursor.execute("""
                             INSERT INTO sala (id_cine, nombre) VALUES (%s, %s)
                             RETURNING id_sala;
                         """, (id_cine, datos["nombre"]))
                         id_sala = cursor.fetchone()[0]
+                    auditar(conexion, actor, 'gestionar_catalogo', 'sala', id_sala,
+                            despues=leer_registro(conexion, 'sala', id_sala))
                 return redirect(url_for("salas.detalle_sala", id_sala=id_sala))
             except psycopg.errors.UniqueViolation:
                 error = "Ese cine ya tiene una sala con ese nombre."
@@ -119,9 +123,13 @@ def crear_zona(id_sala):
     else:
         try:
             with obtener_conexion() as conexion:
+                actor = autorizar_cambio(conexion, 'gestionar_catalogo')
                 with conexion.cursor() as cursor:
-                    cursor.execute("INSERT INTO zona (id_sala, nombre) VALUES (%s, %s);",
+                    cursor.execute("INSERT INTO zona (id_sala, nombre) VALUES (%s, %s) RETURNING id_zona;",
                                    (id_sala, datos["nombre_zona"]))
+                    id_zona = cursor.fetchone()[0]
+                    auditar(conexion, actor, 'gestionar_catalogo', 'zona', id_zona,
+                            despues=leer_registro(conexion, 'zona', id_zona))
             return redirect(url_for("salas.detalle_sala", id_sala=id_sala))
         except psycopg.errors.UniqueViolation:
             error = "La sala ya tiene una zona con ese nombre."
@@ -153,6 +161,7 @@ def crear_fila_asientos(id_sala):
         try:
             # La conexión confirma todos los asientos juntos o revierte el lote.
             with obtener_conexion() as conexion:
+                actor = autorizar_cambio(conexion, 'gestionar_catalogo')
                 with conexion.cursor() as cursor:
                     cursor.execute("""
                         SELECT id_zona FROM zona
@@ -166,6 +175,10 @@ def crear_fila_asientos(id_sala):
                             VALUES (%s, %s, %s);
                         """, [(id_zona, datos["lote_fila"], numero)
                               for numero in range(desde, hasta + 1)])
+                        auditar(conexion, actor, 'gestionar_catalogo', 'asiento',
+                                f'{id_zona}:{datos["lote_fila"]}:{desde}-{hasta}',
+                                despues={'id_zona': id_zona, 'fila': datos['lote_fila'],
+                                         'desde': desde, 'hasta': hasta, 'cantidad': hasta-desde+1})
             if error is None:
                 return redirect(url_for("salas.detalle_sala", id_sala=id_sala) + "#asientos")
         except psycopg.errors.UniqueViolation:
@@ -192,6 +205,7 @@ def crear_asiento(id_sala):
     else:
         try:
             with obtener_conexion() as conexion:
+                actor = autorizar_cambio(conexion, 'gestionar_catalogo')
                 with conexion.cursor() as cursor:
                     cursor.execute("""
                         SELECT id_zona FROM zona
@@ -202,8 +216,11 @@ def crear_asiento(id_sala):
                     else:
                         cursor.execute("""
                             INSERT INTO asiento (id_zona, fila, numero)
-                            VALUES (%s, %s, %s);
+                            VALUES (%s, %s, %s) RETURNING id_asiento;
                         """, (id_zona, datos["fila"], numero))
+                        id_asiento = cursor.fetchone()[0]
+                        auditar(conexion, actor, 'gestionar_catalogo', 'asiento', id_asiento,
+                                despues=leer_registro(conexion, 'asiento', id_asiento))
             if error is None:
                 return redirect(url_for("salas.detalle_sala", id_sala=id_sala))
         except psycopg.errors.UniqueViolation:

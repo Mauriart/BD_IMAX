@@ -4,6 +4,7 @@ import psycopg
 from psycopg.rows import dict_row
 from conexion import obtener_conexion
 from salas import entero_positivo
+from seguridad import autorizar_cambio, auditar, leer_registro
 
 funciones_bp = Blueprint("funciones", __name__)
 
@@ -91,6 +92,9 @@ def formulario_funcion(id_funcion=None):
         if error is None:
             try:
                 with obtener_conexion() as conexion:
+                    actor = autorizar_cambio(conexion, 'gestionar_catalogo')
+                    antes = leer_registro(conexion, 'funcion', id_funcion, bloquear=True) if id_funcion is not None else None
+                    identificador = id_funcion
                     with conexion.cursor() as cursor:
                         # La duración se consulta en BD; no se confía en un fin del formulario.
                         cursor.execute("""
@@ -109,8 +113,9 @@ def formulario_funcion(id_funcion=None):
                         elif id_funcion is None:
                             cursor.execute("""
                                 INSERT INTO funcion (id_pelicula, id_sala, inicio, fin, activa)
-                                VALUES (%s, %s, %s, %s, %s);
+                                VALUES (%s, %s, %s, %s, %s) RETURNING id_funcion;
                             """, (id_pelicula, id_sala, horario[0], horario[1], datos["activa"]))
+                            identificador = cursor.fetchone()[0]
                         else:
                             cursor.execute("""
                                 UPDATE funcion
@@ -121,6 +126,9 @@ def formulario_funcion(id_funcion=None):
                                   datos["activa"], id_funcion))
                             if cursor.fetchone() is None:
                                 abort(404)
+                    if error is None:
+                        auditar(conexion, actor, 'gestionar_catalogo', 'funcion', identificador,
+                                antes=antes, despues=leer_registro(conexion, 'funcion', identificador))
                 if error is None:
                     return redirect(url_for("funciones.listar_funciones"))
             except psycopg.errors.RaiseException:

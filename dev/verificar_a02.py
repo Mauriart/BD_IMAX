@@ -14,7 +14,21 @@ from psycopg import sql
 import app as modulo_app
 import funciones as modulo_funciones
 import salas as modulo_salas
+import seguridad as modulo_seguridad
+from flask.testing import FlaskClient
 from conexion import obtener_conexion
+
+
+class ClienteA(FlaskClient):
+    """Las regresiones de A envían formularios válidos como un administrador."""
+    def post(self, *args, **kwargs):
+        with self.session_transaction() as sesion:
+            token = sesion['csrf_token']
+        datos = dict(kwargs.get('data') or {})
+        datos.setdefault('csrf_token', token)
+        datos.setdefault('motivo', 'Prueba aislada del módulo A')
+        kwargs['data'] = datos
+        return super().post(*args, **kwargs)
 
 
 class PruebasA02(unittest.TestCase):
@@ -27,8 +41,11 @@ class PruebasA02(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.esquema = "ensayo_a02_" + uuid4().hex
+        cls.clave_original = modulo_app.app.secret_key
+        modulo_app.app.secret_key = 'clave_exclusiva_de_las_pruebas_temporales_A'
+        cls.addClassCleanup(setattr, modulo_app.app, 'secret_key', cls.clave_original)
         cls.originales = [modulo_app.obtener_conexion, modulo_salas.obtener_conexion,
-                          modulo_funciones.obtener_conexion]
+                          modulo_funciones.obtener_conexion, modulo_seguridad.obtener_conexion]
         with obtener_conexion() as conexion:
             conexion.execute(sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(cls.esquema)))
         cls.addClassCleanup(cls.limpiar_esquema)
@@ -37,6 +54,8 @@ class PruebasA02(unittest.TestCase):
         try:
             for archivo in ("relacional_A.sql", "ajuste_integridad_A.sql", "programacion_A.sql"):
                 conexion.execute((carpeta / archivo).read_text(encoding="utf-8-sig"))
+            archivo_c = carpeta.parent / 'compañeroC' / 'sql_C-01.sql'
+            conexion.execute(archivo_c.read_text(encoding='utf-8-sig'))
             conexion.execute("INSERT INTO cine(nombre,ubicacion,zona_horaria) VALUES ('Cine ensayo','Ensayo','America/Costa_Rica')")
             conexion.execute("INSERT INTO pelicula(titulo,sinopsis,clasificacion,duracion_min,poster_url) VALUES ('Película ensayo','Sinopsis','Todo público',120,'/prueba.png')")
             conexion.execute("INSERT INTO sala(id_cine,nombre) VALUES (1,'Sala ensayo'),(1,'Sala simultánea')")
@@ -66,13 +85,18 @@ class PruebasA02(unittest.TestCase):
         modulo_app.obtener_conexion = temporal
         modulo_salas.obtener_conexion = temporal
         modulo_funciones.obtener_conexion = temporal
-        self.cliente = modulo_app.app.test_client()
+        modulo_seguridad.obtener_conexion = temporal
+        self.cliente = ClienteA(modulo_app.app, modulo_app.app.response_class, use_cookies=True)
+        administrador = self.conexion.execute("SELECT id_usuario FROM usuario WHERE correo='admin@imax.test'").fetchone()[0]
+        with self.cliente.session_transaction() as sesion:
+            sesion['id_usuario'] = administrador
+            sesion['csrf_token'] = 'token_de_formulario_para_las_regresiones_A'
 
     def tearDown(self):
         self.conexion.rollback()
         self.conexion.close()
         (modulo_app.obtener_conexion, modulo_salas.obtener_conexion,
-         modulo_funciones.obtener_conexion) = self.originales
+         modulo_funciones.obtener_conexion, modulo_seguridad.obtener_conexion) = self.originales
 
     def datos_funcion(self, inicio="2031-01-02T18:00:00"):
         return {"id_pelicula": "1", "id_sala": "1", "inicio": inicio, "activa": "on"}

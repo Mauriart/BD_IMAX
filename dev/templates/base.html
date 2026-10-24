@@ -9,13 +9,21 @@
 <body>
     <header class="cabecera">
         <div class="barra">
-            <a class="marca" href="{{ url_for('listar_peliculas') }}">IMAX <span>Administración</span></a>
+            <a class="marca" href="{{ url_for('cartelera.ver_cartelera') }}">IMAX <span>Administración</span></a>
             <nav aria-label="Navegación principal">
                 <a href="{{ url_for('cartelera.ver_cartelera') }}" {% if request.blueprint == 'cartelera' or request.endpoint == 'precios.ver_precios' %}aria-current="page"{% endif %}>Cartelera</a>
+                {% if puede('gestionar_catalogo') %}
                 <a href="{{ url_for('listar_peliculas') }}" {% if not request.blueprint %}aria-current="page"{% endif %}>Películas</a>
                 <a href="{{ url_for('salas.listar_salas') }}" {% if request.blueprint == 'salas' %}aria-current="page"{% endif %}>Salas y asientos</a>
-                <a href="{{ url_for('funciones.listar_funciones') }}" {% if request.blueprint == 'funciones' or request.endpoint == 'precios.configurar_precios' %}aria-current="page"{% endif %}>Funciones</a>
+                <a href="{{ url_for('funciones.listar_funciones') }}" {% if request.blueprint == 'funciones' %}aria-current="page"{% endif %}>Funciones</a>
+                {% endif %}
+                {% if puede('ver_tarifas') %}<a href="{{ url_for('precios.listar_precios') }}" {% if request.blueprint == 'precios' and request.endpoint != 'precios.ver_precios' %}aria-current="page"{% endif %}>Tarifas</a>{% endif %}
             </nav>
+            <div class="sesion">
+            {% if g.usuario %}<span>{{ g.usuario.nombre }}<small>{{ g.usuario.rol }}</small></span>
+            <form method="post" action="{{ url_for('seguridad.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="secundario" type="submit">Salir</button></form>
+            {% else %}<a class="boton secundario" href="{{ url_for('seguridad.login') }}">Iniciar sesión</a>{% endif %}
+            </div>
         </div>
     </header>
     <main class="contenedor">{% block content %}{% endblock %}</main>

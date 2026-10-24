@@ -5,12 +5,14 @@ from salas import salas_bp
 from funciones import funciones_bp
 from cartelera import cartelera_bp
 from precios import precios_bp
+from seguridad import preparar_seguridad, autorizar_cambio, auditar, leer_registro
 
 app = Flask(__name__)
 app.register_blueprint(salas_bp)
 app.register_blueprint(funciones_bp)
 app.register_blueprint(cartelera_bp)
 app.register_blueprint(precios_bp)
+preparar_seguridad(app)
 
 
 def cargar_generos():
@@ -82,6 +84,7 @@ def crear_pelicula():
         if error is None:
             try:
                 with obtener_conexion() as conexion:
+                    actor = autorizar_cambio(conexion, 'gestionar_catalogo')
                     with conexion.cursor() as cursor:
                         cursor.execute("""
                             INSERT INTO pelicula (
@@ -103,6 +106,10 @@ def crear_pelicula():
                                 INSERT INTO pelicula_genero (id_pelicula, id_genero)
                                 VALUES (%s, %s);
                             """, [(id_pelicula, int(genero)) for genero in sorted(seleccionados)])
+                    despues = leer_registro(conexion, 'pelicula', id_pelicula)
+                    despues['generos'] = sorted(int(genero) for genero in seleccionados)
+                    auditar(conexion, actor, 'gestionar_catalogo', 'pelicula', id_pelicula,
+                            antes=None, despues=despues)
                 return redirect(url_for("listar_peliculas"))
             except (psycopg.IntegrityError, psycopg.DataError):
                 error = "No se pudo guardar la película. Revisa los datos."
@@ -151,6 +158,9 @@ def editar_pelicula(id_pelicula):
         if error is None:
             try:
                 with obtener_conexion() as conexion:
+                    actor = autorizar_cambio(conexion, 'gestionar_catalogo')
+                    antes = leer_registro(conexion, 'pelicula', id_pelicula, bloquear=True)
+                    antes['generos'] = [fila[0] for fila in conexion.execute('SELECT id_genero FROM pelicula_genero WHERE id_pelicula=%s ORDER BY id_genero', (id_pelicula,)).fetchall()]
                     with conexion.cursor() as cursor:
                         cursor.execute("""
                             UPDATE pelicula
@@ -172,6 +182,10 @@ def editar_pelicula(id_pelicula):
                                 INSERT INTO pelicula_genero (id_pelicula, id_genero)
                                 VALUES (%s, %s);
                             """, [(id_pelicula, int(genero)) for genero in sorted(seleccionados)])
+                    despues = leer_registro(conexion, 'pelicula', id_pelicula)
+                    despues['generos'] = sorted(int(genero) for genero in seleccionados)
+                    auditar(conexion, actor, 'gestionar_catalogo', 'pelicula', id_pelicula,
+                            antes=antes, despues=despues)
                 return redirect(url_for("listar_peliculas"))
             except (psycopg.IntegrityError, psycopg.DataError):
                 error = "No se pudo guardar la película. Revisa los datos."

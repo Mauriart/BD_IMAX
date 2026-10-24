@@ -117,3 +117,9 @@ summary { cursor:pointer; font-weight:600; font-size:13px; }
  th,td { padding:13px 18px; } .encabezado-tarjeta { padding:18px; flex-wrap:wrap; }
  .resumen { width:100%; } .resumen div { flex:1; } .acciones-formulario { flex-wrap:wrap; }
 }
+
+.sesion { display:flex; align-items:center; gap:12px; color:white; font-size:12px; }
+.sesion small { color:#b7c7dc; }
+.sesion form { margin:0; }
+.sesion button,.sesion .boton { font-size:12px; padding:7px 10px; }
+.barra { flex-wrap:wrap; gap:16px; }
