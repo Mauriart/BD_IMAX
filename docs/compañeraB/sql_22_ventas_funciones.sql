@@ -2,26 +2,25 @@
 CREATE OR REPLACE FUNCTION liberar_reservas_vencidas()
 RETURNS VOID AS $$
 BEGIN
-    -- Marcar como expiradas las reservas activas cuyo tiempo de vencimiento ya pasó
+    -- Marcar como expiradas las reservas activas cuyo tiempo de vencimiento ya paso
     UPDATE reserva
     SET estado = 'expirada'
     WHERE estado = 'activa' AND vence_en < clock_timestamp();
 
-    -- Actualizar el inventario a 'disponible' donde la reserva haya expirado
+    -- Liberar SOLO los asientos que estan bloqueados por ESA reserva expirada
     UPDATE inventario_funcion inv
     SET estado = 'disponible', id_reserva = NULL
     FROM reserva r
-    WHERE inv.id_funcion = r.id_funcion 
-      AND inv.id_asiento = r.id_asiento 
+    WHERE inv.id_reserva = r.id_reserva      -- <<< CAMBIO: antes comparaba funcion + asiento
       AND r.estado = 'expirada'
       AND inv.estado = 'bloqueado';
-      
+
     -- Actualizar el estado de la compra a 'Expirada' si todas sus reservas expiraron
     UPDATE compra c
     SET estado = 'Expirada'
-    WHERE estado = 'Pendiente' 
+    WHERE estado = 'Pendiente'
       AND NOT EXISTS (
-          SELECT 1 FROM reserva r 
+          SELECT 1 FROM reserva r
           WHERE r.id_compra = c.id_compra AND r.estado = 'activa'
       );
 END;
