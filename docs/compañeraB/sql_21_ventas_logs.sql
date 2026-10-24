@@ -49,5 +49,5 @@ FOR EACH ROW EXECUTE FUNCTION bloquear_modificacion_log();
 
 
 -- Pruebas:
-INSERT INTO transaccion_log (resultado, evento) VALUES ('Exito', 'Registro inicial');
-UPDATE transaccion_log SET evento = 'x';
+-- INSERT INTO transaccion_log (resultado, evento) VALUES ('Exito', 'Registro inicial');
+-- UPDATE transaccion_log SET evento = 'x';

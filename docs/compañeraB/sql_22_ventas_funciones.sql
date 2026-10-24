@@ -56,6 +56,10 @@ DECLARE
     v_asiento INT;
     v_id_reserva BIGINT;
     v_limite_entradas INT := 6;
+    v_id_zona INT;
+    v_id_tarifa INT;
+    v_id_categoria INT;
+    v_precio_base NUMERIC(12,2);
 BEGIN
     -- Validar que se seleccionaron asientos
     IF array_length(p_asientos, 1) IS NULL OR array_length(p_asientos, 1) = 0 THEN
@@ -84,14 +88,35 @@ BEGIN
             RAISE EXCEPTION 'El asiento con ID % no se encuentra disponible. Operación cancelada.', v_asiento;
         END IF;
 
-        -- Registrar la reserva temporal
+        -- 1. OBTENER LA ZONA A LA QUE PERTENECE ESTE ASIENTO
+        SELECT id_zona INTO v_id_zona 
+        FROM asiento 
+        WHERE id_asiento = v_asiento;
+
+        -- 2. CONSULTAR LA TARIFA REAL Y CATEGORÍA VIGENTE SEGÚN LA FUNCIÓN Y SU ZONA
+        SELECT id_tarifa, id_categoria_entrada, monto 
+        INTO v_id_tarifa, v_id_categoria, v_precio_base
+        FROM tarifa
+        WHERE id_funcion = p_id_funcion
+          AND id_zona = v_id_zona
+          AND NOW() BETWEEN vigente_desde AND vigente_hasta
+        LIMIT 1;
+
+        -- Respaldo de seguridad por si no encuentra tarifa activa específica
+        IF v_precio_base IS NULL THEN
+            v_precio_base := 6.00;
+            v_id_tarifa := 1;
+            v_id_categoria := 1;
+        END IF;
+
+        -- Registrar la reserva temporal con el precio real obtenido
         INSERT INTO reserva (id_compra, id_funcion, id_asiento, estado, vence_en, precio_unitario)
-        VALUES (v_id_compra, p_id_funcion, v_asiento, 'activa', now() + interval '2 minutes', 7.50)
+        VALUES (v_id_compra, p_id_funcion, v_asiento, 'activa', now() + interval '2 minutes', v_precio_base)
         RETURNING id_reserva INTO v_id_reserva;
 
-        -- Registrar el detalle de la compra
+        -- Registrar el detalle de la compra con la categoría y tarifa correctas
         INSERT INTO compra_detalle (id_compra, id_asiento, id_categoria_entrada, id_tarifa, precio_base, descuento, total_linea)
-        VALUES (v_id_compra, v_asiento, 1, 1, 7.50, 0.00, 7.50);
+        VALUES (v_id_compra, v_asiento, v_id_categoria, v_id_tarifa, v_precio_base, 0.00, v_precio_base);
 
         -- Actualizar el inventario a estado 'bloqueado' vinculando la reserva
         UPDATE inventario_funcion
@@ -106,25 +131,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Suma los totales de cada línea (que ya consideran precio menos descuento)
-CREATE OR REPLACE FUNCTION calcular_total(p_id_compra BIGINT)
-RETURNS NUMERIC AS $$
-DECLARE
-    v_total NUMERIC(10,2);
-BEGIN
-    -- Suma los totales de cada línea
-    SELECT COALESCE(SUM(total_linea), 0) INTO v_total
-    FROM compra_detalle
-    WHERE id_compra = p_id_compra;
-
-    -- Actualizar el campo total final en la tabla compra
-    UPDATE compra
-    SET total = v_total
-    WHERE id_compra = p_id_compra;
-
-    RETURN v_total;
-END;
-$$ LANGUAGE plpgsql;
 
 -- Procesa el pago, cambia estados a pagado o vendido y genera los boletos correspondientes
 CREATE OR REPLACE FUNCTION procesar_pago(
@@ -140,7 +146,21 @@ DECLARE
     v_resultado_log VARCHAR(20);
     v_id_pago BIGINT;
     r_asiento RECORD;
+    v_expirada BOOLEAN;
 BEGIN
+    -- 1. VALIDACIÓN DE PAGO TARDÍO: 
+    -- Verificar si alguna reserva asociada ya venció por tiempo o cambió de estado
+    SELECT EXISTS (
+        SELECT 1 FROM reserva 
+        WHERE id_compra = p_id_compra 
+          AND (estado <> 'activa' OR vence_en < clock_timestamp())
+    ) INTO v_expirada;
+
+    -- Si ya pasó el tiempo límite, se rechaza el pago automáticamente sin importar lo que manden
+    IF v_expirada THEN
+        p_resultado := 'Rechazado';
+    END IF;
+
     -- Obtener el monto total de la compra
     SELECT total INTO v_monto FROM compra WHERE id_compra = p_id_compra;
     
@@ -187,7 +207,7 @@ BEGIN
             WHERE id_funcion = r_asiento.id_funcion AND id_asiento = r_asiento.id_asiento;
         END LOOP;
     ELSE
-        -- Si el pago es rechazado, se cancela la compra
+        -- Si el pago es rechazado (o tardío), se cancela la compra
         UPDATE compra SET estado = 'Cancelada' WHERE id_compra = p_id_compra;
         
         -- Se marcan las reservas como liberadas
