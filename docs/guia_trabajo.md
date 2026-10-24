@@ -184,3 +184,7 @@ El entregable de A-05 es [factibilidad.md](factibilidad.md): dictamen del legado
 ## Acceso a las pantallas administrativas de A
 
 La integración de A con identidad, permisos y auditoría de C-01 se explica en [permisos_auditoria_A.md](compa%C3%B1eroA/permisos_auditoria_A.md). Incluye la preparación local de la contraseña, los permisos por rol y las 47 pruebas de A y compatibilidad. El esquema de C se conserva en su carpeta original. A-04 sigue dependiendo de reservas y ventas de B; T-02 permanece pendiente para la integración completa.
+
+## Avance de A-04 con contrato de B
+
+La [protección de salas](compa%C3%B1eroA/salas_protegidas_A04.md) incorpora eliminación autorizada de asientos, protección SQL de la distribución y coordinación por sala con reservas/boletos/inventario. Pasaron 17 pruebas nuevas y las 47 anteriores. La migración exige el esquema compatible de B y no se instaló en public. A-04 conserva pendiente la prueba con compra/pago reales de B; el fixture de ensayo no sustituye su instalación.

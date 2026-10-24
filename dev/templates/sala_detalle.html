@@ -56,9 +56,9 @@
 </section>
 <section class="tarjeta separada">
     <div class="encabezado-tarjeta"><h2>Asientos registrados</h2><span class="contador">{{ capacidad }} en total</span></div>
-    <div class="tabla-scroll tabla-asientos"><table><thead><tr><th>Zona</th><th>Fila</th><th>Número</th></tr></thead><tbody>
-        {% for asiento in asientos %}<tr><td>{{ asiento.zona }}</td><td class="destacado">{{ asiento.fila }}</td><td>{{ asiento.numero }}</td></tr>
-        {% else %}<tr><td colspan="3" class="vacio">Todavía no hay asientos. Crea una fila para comenzar.</td></tr>{% endfor %}
+    <div class="tabla-scroll tabla-asientos"><table><thead><tr><th>Zona</th><th>Fila</th><th>Número</th>{% if proteccion_disponible %}<th>Acciones</th>{% endif %}</tr></thead><tbody>
+        {% for asiento in asientos %}<tr><td>{{ asiento.zona }}</td><td class="destacado">{{ asiento.fila }}</td><td>{{ asiento.numero }}</td>{% if proteccion_disponible %}<td><a href="{{ url_for('salas.eliminar_asiento',id_sala=sala.id_sala,id_asiento=asiento.id_asiento) }}">Eliminar</a></td>{% endif %}</tr>
+        {% else %}<tr><td colspan="{{ 4 if proteccion_disponible else 3 }}" class="vacio">Todavía no hay asientos. Crea una fila para comenzar.</td></tr>{% endfor %}
     </tbody></table></div>
 </section>
 {% endblock %}
