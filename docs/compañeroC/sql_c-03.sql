@@ -1,14 +1,3 @@
--- =============================================================================
--- PROYECTO II - BD IMAX  |  Bloque C  |  Issue C-03 (#17)
--- "Aplicar RBAC, reembolsos autorizados y auditoría de cambios críticos"
--- Requisitos: RN-17 (privilegios mínimos), RN-19 (reembolsos), RN-20 (auditoría)
--- Motor: PostgreSQL. Script INCREMENTAL: se ejecuta sobre la BD que ya tiene
---        imax.sql (tablas de A, B-parcial y C-01/C-02). No borra datos ni tablas.
--- Es repetible (idempotente): puede ejecutarse más de una vez.
--- Incluye: RBAC en BD, reembolsos (solicitar/resolver/forzar), políticas, cortesías,
--- cambio manual de asiento, historial y resumen de auditoría administrativa.
--- Ejecutar con:  psql -v ON_ERROR_STOP=1 -d <base> -f script_c03_rbac_reembolsos_auditoria.sql
--- =============================================================================
 BEGIN;
 
 -- -----------------------------------------------------------------------------
@@ -268,9 +257,9 @@ $$;
 -- -----------------------------------------------------------------------------
 -- 4. SOLICITUD DE REEMBOLSO / CANCELACIÓN (RN-19)  -  gestión por C
 -- Reglas: permiso solicitar_reembolso; el cliente solo su propia compra;
--- solo boletos 'emitido' (nunca usados ni anulados); política de horas antes
--- del inicio (ordinaria). Fuera de política solo la crea quien tenga el
--- permiso forzar_reembolso (administrador); los demás reciben FUERA_DE_POLITICA.
+-- solo boletos 'emitido' ; política de horas antes
+-- del inicio. Fuera de política solo la crea quien tenga el
+-- permiso forzar_reembolso ; los demás reciben FUERA_DE_POLITICA.
 -- p_ids_boleto NULL o vacío = todos los boletos emitidos de la compra.
 -- -----------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION solicitar_reembolso(
@@ -385,7 +374,6 @@ $$;
 -- Solo se crea si B todavía no publicó la suya; si ya existe, no se toca.
 -- Pendiente de B: liberar inventario_funcion (vendido -> disponible) y registrar
 -- reembolso/pago cuando existan esas tablas.
--- -----------------------------------------------------------------------------
 DO $do$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_proc p INNER JOIN pg_namespace n ON n.oid = p.pronamespace
@@ -441,7 +429,6 @@ $do$;
 -- Fuera de política solo se ejecuta con p_forzar = TRUE, permiso forzar_reembolso
 -- y motivo escrito (override autorizado y auditado). Nunca revive boletos
 -- usados o anulados. Todo ocurre en una sola transacción.
--- -----------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION resolver_reembolso(
     p_id_usuario_admin integer, p_id_solicitud integer, p_decision text,
     p_motivo text, p_ip text, p_forzar boolean DEFAULT FALSE)
@@ -824,7 +811,7 @@ $$;
 --  * Sin actor y conectado como imax_app (rol de la aplicación): se rechaza.
 --  * Sin actor y con otra cuenta (migraciones/administración de BD): se permite.
 -- Ocultar un botón NO es la protección: esta es la protección.
--- -----------------------------------------------------------------------------
+
 CREATE OR REPLACE FUNCTION guardia_rbac()
 RETURNS trigger
 LANGUAGE plpgsql
