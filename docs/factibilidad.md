@@ -251,7 +251,7 @@ Se propone pasar por integración A/B/C, ensayo con un alcance controlado, simul
 | Tarifas y promociones | Consultas y condiciones estructuradas listas para B. | Cálculo/reserva de cotización e históricos de compra requieren integrar B. |
 | Permisos, auditoría e ingreso | Contratos y dependencias en T-02 (#23). | No se presentan como controles ya implementados en las pantallas de A. |
 | Infraestructura global | Diseño, riesgos y criterios de validación de este documento. | No hay CDN, clúster, pool, cola, réplica, pasarela real ni recuperación regional desplegados por esta entrega. |
-| Capacidad y costos | Bases aritméticas y variables explícitas. | Benchmark global, dimensionamiento de C y comparación económica de A-06 pendientes. |
+| Capacidad y costos | Bases aritméticas y variables explícitas. | C-05 recibido y comparación preliminar en costos_A06.md; benchmark global, conciliación con B y cotizaciones completas pendientes. |
 
 Las referencias de versiones y rutas de los acuerdos iniciales no sustituyen la instalación real de A. El prototipo utiliza la aplicación existente de `dev/`, base local `p2`, entorno virtual y dependencias fijadas en `dev/requirements.txt`; este documento no cambia Python, PostgreSQL, tablas, scripts SQL ni configuración.
 
@@ -265,3 +265,7 @@ Las referencias de versiones y rutas de los acuerdos iniciales no sustituyen la 
 | Coordinación | A no declara implementados módulos de B/C ni inventa su dimensionamiento. | Límites, contratos y validaciones pendientes identificados. |
 
 Esta verificación revisa el contenido del documento. No representa la ejecución de los ensayos globales de la sección 6 ni la aprobación de políticas por C. La entrega se incorpora a la matriz de requisitos para revisión de Mauriart; A-04 continúa pendiente de la actividad de B y A-06 conserva su alcance económico.
+
+## 10. Avance económico de A-06
+
+La [comparación AWS/Azure](compañeroA/costos_A06.md) usa C-05 versión 1.0 y C-06 para presupuestar un escenario equivalente a tres años. Incluye inversión inicial, OPEX, dos escenarios de crecimiento, costo por millón de compras y ROI condicionado a beneficios explícitos. Los parámetros y resultados se pueden recalcular sin conectarse a la base. La comparación todavía requiere conciliar B, medir capacidad y completar cotizaciones antes de cerrar A-06; no acredita el costo o la capacidad de toda la operación mundial.

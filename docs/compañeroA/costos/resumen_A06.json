@@ -1,0 +1,138 @@
+[
+  {
+    "proveedor": "AWS",
+    "crecimiento": "0",
+    "inicial": "20000.00000000",
+    "opex_36_meses": "277996.85600926",
+    "tco_36_meses": "297996.85600926",
+    "costo_opex_por_millon_compras_creadas": "772.21348891",
+    "costo_total_por_millon_compras_creadas": "827.76904447",
+    "costo_total_por_millon_compras_pagadas": "1379.61507412",
+    "recuperacion_equilibrio_pct": "0.04598717",
+    "roi": [
+      {
+        "fraccion_recuperada": "0.00025000",
+        "beneficio": "162000.00000000",
+        "roi_pct": "-45.63701035"
+      },
+      {
+        "fraccion_recuperada": "0.00050000",
+        "beneficio": "324000.00000000",
+        "roi_pct": "8.72597931"
+      },
+      {
+        "fraccion_recuperada": "0.00100000",
+        "beneficio": "648000.00000000",
+        "roi_pct": "117.45195861"
+      }
+    ],
+    "anios": [
+      "92605.05443906",
+      "92678.31578376",
+      "92713.48578644"
+    ],
+    "tco_reserva_variable_doble": "349836.85600926"
+  },
+  {
+    "proveedor": "Azure",
+    "crecimiento": "0",
+    "inicial": "20000.00000000",
+    "opex_36_meses": "279738.09260197",
+    "tco_36_meses": "299738.09260197",
+    "costo_opex_por_millon_compras_creadas": "777.05025723",
+    "costo_total_por_millon_compras_creadas": "832.60581278",
+    "costo_total_por_millon_compras_pagadas": "1387.67635464",
+    "recuperacion_equilibrio_pct": "0.04625588",
+    "roi": [
+      {
+        "fraccion_recuperada": "0.00025000",
+        "beneficio": "162000.00000000",
+        "roi_pct": "-45.95281548"
+      },
+      {
+        "fraccion_recuperada": "0.00050000",
+        "beneficio": "324000.00000000",
+        "roi_pct": "8.09436905"
+      },
+      {
+        "fraccion_recuperada": "0.00100000",
+        "beneficio": "648000.00000000",
+        "roi_pct": "116.18873810"
+      }
+    ],
+    "anios": [
+      "93195.74452610",
+      "93256.18855853",
+      "93286.15951733"
+    ],
+    "tco_reserva_variable_doble": "351578.09260197"
+  },
+  {
+    "proveedor": "AWS",
+    "crecimiento": "0.10",
+    "inicial": "20000.00000000",
+    "opex_36_meses": "283417.04949984",
+    "tco_36_meses": "303417.04949984",
+    "costo_opex_por_millon_compras_creadas": "713.53738545",
+    "costo_total_por_millon_compras_creadas": "763.88985272",
+    "costo_total_por_millon_compras_pagadas": "1273.14975453",
+    "recuperacion_equilibrio_pct": "0.04243833",
+    "roi": [
+      {
+        "fraccion_recuperada": "0.00025000",
+        "beneficio": "178740.00000000",
+        "roi_pct": "-41.09098342"
+      },
+      {
+        "fraccion_recuperada": "0.00050000",
+        "beneficio": "357480.00000000",
+        "roi_pct": "17.81803316"
+      },
+      {
+        "fraccion_recuperada": "0.00100000",
+        "beneficio": "714960.00000000",
+        "roi_pct": "135.63606632"
+      }
+    ],
+    "anios": [
+      "92605.05443906",
+      "94424.40202767",
+      "96387.59303311"
+    ],
+    "tco_reserva_variable_doble": "360613.84949984"
+  },
+  {
+    "proveedor": "Azure",
+    "crecimiento": "0.10",
+    "inicial": "20000.00000000",
+    "opex_36_meses": "285146.09900990",
+    "tco_36_meses": "305146.09900990",
+    "costo_opex_por_millon_compras_creadas": "717.89048089",
+    "costo_total_por_millon_compras_creadas": "768.24294816",
+    "costo_total_por_millon_compras_pagadas": "1280.40491360",
+    "recuperacion_equilibrio_pct": "0.04268016",
+    "roi": [
+      {
+        "fraccion_recuperada": "0.00025000",
+        "beneficio": "178740.00000000",
+        "roi_pct": "-41.42477961"
+      },
+      {
+        "fraccion_recuperada": "0.00050000",
+        "beneficio": "357480.00000000",
+        "roi_pct": "17.15044078"
+      },
+      {
+        "fraccion_recuperada": "0.00100000",
+        "beneficio": "714960.00000000",
+        "roi_pct": "134.30088155"
+      }
+    ],
+    "anios": [
+      "93195.74452610",
+      "94998.75694714",
+      "96951.59753666"
+    ],
+    "tco_reserva_variable_doble": "362342.89900990"
+  }
+]

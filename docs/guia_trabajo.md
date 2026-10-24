@@ -184,3 +184,7 @@ El entregable de A-05 es [factibilidad.md](factibilidad.md): dictamen del legado
 ## Acceso a las pantallas administrativas de A
 
 La integración de A con identidad, permisos y auditoría de C-01 se explica en [permisos_auditoria_A.md](compa%C3%B1eroA/permisos_auditoria_A.md). Incluye la preparación local de la contraseña, los permisos por rol y las 47 pruebas de A y compatibilidad. El esquema de C se conserva en su carpeta original. A-04 sigue dependiendo de reservas y ventas de B; T-02 permanece pendiente para la integración completa.
+
+## Avance preliminar de A-06
+
+C-05 y C-06 ya están disponibles en main. La [comparación económica de A](compa%C3%B1eroA/costos_A06.md) incorpora el almacenamiento de C, precios públicos, inversión inicial, operación, sensibilidad y ROI. El cálculo se reproduce con dev/calcular_costos_a06.py. A-06 sigue abierto hasta conciliar B, dimensionar la carga y completar las cotizaciones; la estimación no demuestra capacidad mundial.

@@ -1,0 +1,319 @@
+{
+  "tmp_sup": [
+    {
+      "id": "S-01",
+      "nombre": "boletos_mes",
+      "valor": "15000000",
+      "fuente": "Consigna (15 M boletos mensuales)"
+    },
+    {
+      "id": "S-02",
+      "nombre": "meses_retencion",
+      "valor": "60",
+      "fuente": "RN-20 / consigna (mínimo 5 años)"
+    },
+    {
+      "id": "S-03",
+      "nombre": "boletos_por_compra",
+      "valor": "2.5",
+      "fuente": "Equipo: promedio; tope RN-04 = 6"
+    },
+    {
+      "id": "S-04",
+      "nombre": "conversion_reserva_a_pago",
+      "valor": "0.60",
+      "fuente": "Equipo: 60 % de las reservas termina pagada"
+    },
+    {
+      "id": "S-05",
+      "nombre": "pct_no_pagadas_que_expiran",
+      "valor": "0.75",
+      "fuente": "Equipo: el resto son pagos rechazados"
+    },
+    {
+      "id": "S-06",
+      "nombre": "pct_colision_sobre_bloqueos",
+      "valor": "0.10",
+      "fuente": "Equipo: intentos sobre asiento ya tomado (estrenos)"
+    },
+    {
+      "id": "S-07",
+      "nombre": "pct_no_show",
+      "valor": "0.05",
+      "fuente": "Equipo: boletos que nunca se escanean"
+    },
+    {
+      "id": "S-08",
+      "nombre": "pct_rechazo_puerta_sobre_aceptados",
+      "valor": "0.10",
+      "fuente": "Equipo: 2.º escaneo, función/horario/QR inválido"
+    },
+    {
+      "id": "S-09",
+      "nombre": "pct_boletos_reembolsados",
+      "valor": "0.03",
+      "fuente": "Equipo"
+    },
+    {
+      "id": "S-10",
+      "nombre": "funciones_mes",
+      "valor": "15000",
+      "fuente": "Consigna: 500 funciones diarias x 30 días"
+    },
+    {
+      "id": "S-11",
+      "nombre": "filas_tarifa_por_funcion",
+      "valor": "12",
+      "fuente": "Equipo: 3 zonas x 4 categorías"
+    },
+    {
+      "id": "S-12",
+      "nombre": "otros_eventos_admin_mes",
+      "valor": "35000",
+      "fuente": "Equipo: cortesías, cambios de asiento, políticas, roles y denegados"
+    },
+    {
+      "id": "S-13",
+      "nombre": "ocupacion_media",
+      "valor": "0.70",
+      "fuente": "Equipo (solo para inventario_funcion; ver ambigüedad de capacidad)"
+    },
+    {
+      "id": "S-14",
+      "nombre": "meses_calientes",
+      "valor": "6",
+      "fuente": "Equipo: meses en PostgreSQL (NVMe)"
+    },
+    {
+      "id": "S-15",
+      "nombre": "crecimiento_anual",
+      "valor": "0.10",
+      "fuente": "Ejemplo de la consigna (OPEX +10 %/año)"
+    },
+    {
+      "id": "S-16",
+      "nombre": "factor_espacio_operativo",
+      "valor": "1.25",
+      "fuente": "Equipo: bloat, fillfactor, espacio libre"
+    },
+    {
+      "id": "S-17",
+      "nombre": "copias_calientes_extra",
+      "valor": "2",
+      "fuente": "Equipo: réplica en la región + réplica DR"
+    },
+    {
+      "id": "S-18",
+      "nombre": "compresion_archivo",
+      "valor": "4.0",
+      "fuente": "Equipo: Parquet+zstd; DEBE medirse (no medido)"
+    },
+    {
+      "id": "S-19",
+      "nombre": "copias_archivo",
+      "valor": "2",
+      "fuente": "Equipo: región principal + región DR"
+    },
+    {
+      "id": "S-20",
+      "nombre": "compresion_backup",
+      "valor": "2.0",
+      "fuente": "Equipo: pgBackRest; DEBE medirse"
+    },
+    {
+      "id": "S-21",
+      "nombre": "fulls_retenidos",
+      "valor": "5",
+      "fuente": "Equipo: 4 semanales + 1 (retención 30 días)"
+    },
+    {
+      "id": "S-22",
+      "nombre": "multiplicador_wal",
+      "valor": "2.5",
+      "fuente": "Equipo: WAL generado / datos+índices insertados; DEBE medirse"
+    },
+    {
+      "id": "S-23",
+      "nombre": "tps_pico",
+      "valor": "50000",
+      "fuente": "Consigna"
+    },
+    {
+      "id": "S-24",
+      "nombre": "segundos_pico",
+      "valor": "600",
+      "fuente": "Consigna"
+    }
+  ],
+  "tmp_tab": [
+    {
+      "cat": "L1 Financiero",
+      "bloque": "LOG",
+      "tabla": "transaccion_log",
+      "ddl": "provisional (B pendiente)",
+      "duena": "B",
+      "eventos_mes": "29360000.00000000000000",
+      "b_heap": "135",
+      "b_idx": "46",
+      "archivable": true
+    },
+    {
+      "cat": "L2 Inventario",
+      "bloque": "LOG",
+      "tabla": "asiento_auditoria_log",
+      "ddl": "provisional (B pendiente)",
+      "duena": "B",
+      "eventos_mes": "52950000.000000000000000",
+      "b_heap": "126",
+      "b_idx": "55",
+      "archivable": true
+    },
+    {
+      "cat": "L3 Puerta",
+      "bloque": "LOG",
+      "tabla": "acceso_puerta_log",
+      "ddl": "existe en imax.sql",
+      "duena": "C",
+      "eventos_mes": "15675000.0000",
+      "b_heap": "119",
+      "b_idx": "80",
+      "archivable": true
+    },
+    {
+      "cat": "L4 Administración",
+      "bloque": "LOG",
+      "tabla": "admin_operacion_audit",
+      "ddl": "existe en imax.sql",
+      "duena": "C",
+      "eventos_mes": "435500.000000000000",
+      "b_heap": "376",
+      "b_idx": "100",
+      "archivable": true
+    },
+    {
+      "cat": "D1 Operativo histórico",
+      "bloque": "OPER",
+      "tabla": "compra",
+      "ddl": "existe en imax.sql",
+      "duena": "B",
+      "eventos_mes": "10000000.000000000000",
+      "b_heap": "77",
+      "b_idx": "76",
+      "archivable": true
+    },
+    {
+      "cat": "D1 Operativo histórico",
+      "bloque": "OPER",
+      "tabla": "compra_detalle",
+      "ddl": "existe en imax.sql",
+      "duena": "B",
+      "eventos_mes": "25000000.0000000000000",
+      "b_heap": "76",
+      "b_idx": "52",
+      "archivable": true
+    },
+    {
+      "cat": "D1 Operativo histórico",
+      "bloque": "OPER",
+      "tabla": "boleto",
+      "ddl": "existe en imax.sql",
+      "duena": "B",
+      "eventos_mes": "15000000",
+      "b_heap": "69",
+      "b_idx": "85",
+      "archivable": true
+    },
+    {
+      "cat": "D1 Operativo histórico",
+      "bloque": "OPER",
+      "tabla": "pago",
+      "ddl": "provisional (B pendiente)",
+      "duena": "B",
+      "eventos_mes": "7000000.00000000000000",
+      "b_heap": "117",
+      "b_idx": "95",
+      "archivable": true
+    },
+    {
+      "cat": "D1 Operativo histórico",
+      "bloque": "OPER",
+      "tabla": "reserva",
+      "ddl": "provisional (B pendiente)",
+      "duena": "B",
+      "eventos_mes": "10000000.000000000000",
+      "b_heap": "69",
+      "b_idx": "45",
+      "archivable": true
+    },
+    {
+      "cat": "D1 Operativo histórico",
+      "bloque": "OPER",
+      "tabla": "reserva_detalle",
+      "ddl": "provisional (B pendiente)",
+      "duena": "B",
+      "eventos_mes": "25000000.0000000000000",
+      "b_heap": "45",
+      "b_idx": "32",
+      "archivable": true
+    },
+    {
+      "cat": "D2 Solo operación activa",
+      "bloque": "OPER",
+      "tabla": "inventario_funcion",
+      "ddl": "provisional (B pendiente)",
+      "duena": "B",
+      "eventos_mes": "21428571.4285714285710000",
+      "b_heap": "61",
+      "b_idx": "23",
+      "archivable": false
+    }
+  ],
+  "tmp_res": [
+    {
+      "bloque": "LOG",
+      "escenario": "A sin crecimiento",
+      "caliente_primario": "127.298289444297552000",
+      "caliente_replicas": "254.596578888595104000",
+      "archivo_comprimido_copias": "353.8384940475225450",
+      "backup_fulls": "318.245723610743880000",
+      "backup_incrementales_30d": "8.4865526296198368",
+      "backup_wal_30d": "21.21638157404959200"
+    },
+    {
+      "bloque": "LOG",
+      "escenario": "B crecimiento anual",
+      "caliente_primario": "186.3774255753960458832000000000000000",
+      "caliente_replicas": "372.7548511507920917664000000000000000",
+      "archivo_comprimido_copias": "432.04387800190597789590000000000000",
+      "backup_fulls": "465.9435639384901147080000000000000000",
+      "backup_incrementales_30d": "12.42516170502640305888000000000000",
+      "backup_wal_30d": "31.062904262566007647200000000000000"
+    },
+    {
+      "bloque": "OPER",
+      "escenario": "A sin crecimiento",
+      "caliente_primario": "93.521084636449814250",
+      "caliente_replicas": "187.042169272899628500",
+      "archivo_comprimido_copias": "177.1096140146255490",
+      "backup_fulls": "233.802711591124535625",
+      "backup_incrementales_30d": "6.2347389757633210",
+      "backup_wal_30d": "15.58684743940830238"
+    },
+    {
+      "bloque": "OPER",
+      "escenario": "B crecimiento anual",
+      "caliente_primario": "136.9242200162261730434250000000000000",
+      "caliente_replicas": "273.8484400324523460868500000000000000",
+      "archivo_comprimido_copias": "216.25438090413808783998000000000000",
+      "backup_fulls": "342.3105500405654326085625000000000000",
+      "backup_incrementales_30d": "9.12828133441507820289500000000000",
+      "backup_wal_30d": "22.820703336037695507237500000000000"
+    }
+  ],
+  "fuente": {
+    "version": "1.0",
+    "commit": "02ff08bc0b8d12e52a5f6827395c320d8a64cf51",
+    "archivo": "docs/compañeroC/c05_dimensionamiento.sql",
+    "ejecucion": "Tablas temporales; sin cambios en public."
+  }
+}
