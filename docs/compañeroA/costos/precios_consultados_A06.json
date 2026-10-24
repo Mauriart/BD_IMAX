@@ -1,0 +1,488 @@
+{
+  "fecha_consulta": "2026-10-24",
+  "moneda": "USD",
+  "registros": {
+    "azure_db": {
+      "url": "https://prices.azure.com/api/retail/prices",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 0.768,
+        "unitPrice": 0.768,
+        "armRegionName": "eastus",
+        "location": "US East",
+        "effectiveStartDate": "2021-11-01T00:00:00Z",
+        "meterId": "fe5cc4b8-fb43-5188-a76d-8780fd6eca98",
+        "meterName": "D16s v5",
+        "productId": "DZH318Z08M9W",
+        "skuId": "DZH318Z08M9W/0062",
+        "productName": "Virtual Machines Dsv5 Series",
+        "skuName": "Standard_D16s_v5",
+        "serviceName": "Virtual Machines",
+        "serviceId": "DZH313Z7MMC8",
+        "serviceFamily": "Compute",
+        "unitOfMeasure": "1 Hour",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": true,
+        "armSkuName": "Standard_D16s_v5"
+      }
+    },
+    "azure_db_dr": {
+      "url": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Virtual%20Machines%27%20and%20armRegionName%20eq%20%27eastus2%27%20and%20armSkuName%20eq%20%27Standard_D16s_v5%27%20and%20priceType%20eq%20%27Consumption%27",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 0.768,
+        "unitPrice": 0.768,
+        "armRegionName": "eastus2",
+        "location": "US East 2",
+        "effectiveStartDate": "2021-12-01T00:00:00Z",
+        "meterId": "c2f799ae-7f0d-5426-a4b2-c1e66286e509",
+        "meterName": "D16s v5",
+        "productId": "DZH318Z08M9W",
+        "skuId": "DZH318Z08M9W/00HX",
+        "productName": "Virtual Machines Dsv5 Series",
+        "skuName": "Standard_D16s_v5",
+        "serviceName": "Virtual Machines",
+        "serviceId": "DZH313Z7MMC8",
+        "serviceFamily": "Compute",
+        "unitOfMeasure": "1 Hour",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": true,
+        "armSkuName": "Standard_D16s_v5"
+      }
+    },
+    "azure_app": {
+      "url": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Virtual%20Machines%27%20and%20armRegionName%20eq%20%27eastus%27%20and%20armSkuName%20eq%20%27Standard_D4s_v5%27%20and%20priceType%20eq%20%27Consumption%27",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 0.192,
+        "unitPrice": 0.192,
+        "armRegionName": "eastus",
+        "location": "US East",
+        "effectiveStartDate": "2021-11-01T00:00:00Z",
+        "meterId": "db8c0962-f3f8-5b44-99aa-f3c7c1e668c8",
+        "meterName": "D4s v5",
+        "productId": "DZH318Z08M9W",
+        "skuId": "DZH318Z08M9W/004T",
+        "productName": "Virtual Machines Dsv5 Series",
+        "skuName": "Standard_D4s_v5",
+        "serviceName": "Virtual Machines",
+        "serviceId": "DZH313Z7MMC8",
+        "serviceFamily": "Compute",
+        "unitOfMeasure": "1 Hour",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": true,
+        "armSkuName": "Standard_D4s_v5"
+      }
+    },
+    "azure_proxy": {
+      "url": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Virtual%20Machines%27%20and%20armRegionName%20eq%20%27eastus%27%20and%20armSkuName%20eq%20%27Standard_D2s_v5%27%20and%20priceType%20eq%20%27Consumption%27",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 0.096,
+        "unitPrice": 0.096,
+        "armRegionName": "eastus",
+        "location": "US East",
+        "effectiveStartDate": "2021-11-01T00:00:00Z",
+        "meterId": "36cc2454-47d7-517f-884f-be4d6b7efa55",
+        "meterName": "D2s v5",
+        "productId": "DZH318Z08M9W",
+        "skuId": "DZH318Z08M9W/0061",
+        "productName": "Virtual Machines Dsv5 Series",
+        "skuName": "Standard_D2s_v5",
+        "serviceName": "Virtual Machines",
+        "serviceId": "DZH313Z7MMC8",
+        "serviceFamily": "Compute",
+        "unitOfMeasure": "1 Hour",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": true,
+        "armSkuName": "Standard_D2s_v5"
+      }
+    },
+    "azure_datos": {
+      "url": "https://prices.azure.com/api/retail/prices",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 0.00011,
+        "unitPrice": 0.00011,
+        "armRegionName": "eastus",
+        "location": "US East",
+        "effectiveStartDate": "2022-11-01T00:00:00Z",
+        "meterId": "d2a8dbd0-6bd6-532c-a000-3b1a1b0b06dd",
+        "meterName": "Premium LRS Provisioned Capacity",
+        "productId": "DZH318Z09V07",
+        "skuId": "DZH318Z09V07/0007",
+        "productName": "Azure Premium SSD v2",
+        "skuName": "Premium LRS",
+        "serviceName": "Storage",
+        "serviceId": "DZH317F1HKN0",
+        "serviceFamily": "Storage",
+        "unitOfMeasure": "1 GiB/Hour",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": true,
+        "armSkuName": ""
+      }
+    },
+    "azure_boot": {
+      "url": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Storage%27%20and%20armRegionName%20eq%20%27eastus%27%20and%20contains%28productName%2C%27Premium%20SSD%20Managed%20Disks%27%29%20and%20skuName%20eq%20%27P6%20LRS%27",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 10.207,
+        "unitPrice": 10.207,
+        "armRegionName": "eastus",
+        "location": "US East",
+        "effectiveStartDate": "2018-05-01T00:00:00Z",
+        "meterId": "39edab1a-b691-4088-9bb2-6ffe51d91da4",
+        "meterName": "P6 LRS Disk",
+        "productId": "DZH318Z0BP04",
+        "skuId": "DZH318Z0BP04/0015",
+        "productName": "Premium SSD Managed Disks",
+        "skuName": "P6 LRS",
+        "serviceName": "Storage",
+        "serviceId": "DZH317F1HKN0",
+        "serviceFamily": "Storage",
+        "unitOfMeasure": "1/Month",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": true,
+        "armSkuName": "Premium_SSD_Managed_Disk_P6"
+      }
+    },
+    "azure_objeto": {
+      "url": "https://prices.azure.com/api/retail/prices",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 0.0208,
+        "unitPrice": 0.0208,
+        "armRegionName": "eastus",
+        "location": "US East",
+        "effectiveStartDate": "2017-02-03T00:00:00Z",
+        "meterId": "272492b3-1c92-4a5f-bee9-52a8e10ca514",
+        "meterName": "Hot LRS Data Stored",
+        "productId": "DZH318Z0BPH7",
+        "skuId": "DZH318Z0BPH7/006M",
+        "productName": "General Block Blob v2",
+        "skuName": "Hot LRS",
+        "serviceName": "Storage",
+        "serviceId": "DZH317F1HKN0",
+        "serviceFamily": "Storage",
+        "unitOfMeasure": "1 GB/Month",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": false,
+        "armSkuName": ""
+      }
+    },
+    "azure_objeto_dr": {
+      "url": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Storage%27%20and%20armRegionName%20eq%20%27eastus2%27%20and%20productName%20eq%20%27General%20Block%20Blob%20v2%27%20and%20skuName%20eq%20%27Hot%20LRS%27",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 0.0184,
+        "unitPrice": 0.0184,
+        "armRegionName": "eastus2",
+        "location": "US East 2",
+        "effectiveStartDate": "2017-02-03T00:00:00Z",
+        "meterId": "10b97fb2-5db4-4ad2-a4e0-69b858d6b52d",
+        "meterName": "Hot LRS Data Stored",
+        "productId": "DZH318Z0BPH7",
+        "skuId": "DZH318Z0BPH7/0067",
+        "productName": "General Block Blob v2",
+        "skuName": "Hot LRS",
+        "serviceName": "Storage",
+        "serviceId": "DZH317F1HKN0",
+        "serviceFamily": "Storage",
+        "unitOfMeasure": "1 GB/Month",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": false,
+        "armSkuName": ""
+      }
+    },
+    "aws_m6i.large": {
+      "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/US%20East%20(N.%20Virginia)/Linux/index.json",
+      "publicado": {
+        "serviceId": "ec2",
+        "accessType": "publish",
+        "hawkFilePublicationDate": "2026-10-23T22:13:55Z",
+        "ETLIngestionTriggerDate": "2026-10-23T22:13:55Z",
+        "currencyCode": "USD",
+        "source": "ec2-ondemand-without-sec-sel"
+      },
+      "registro": {
+        "rateCode": "B8JJ44GS8MG4RPR4.JRTCKXETXF.6YS6EN2CT7",
+        "price": "0.0960000000",
+        "Location": "US East (N. Virginia)",
+        "Instance Family": "General purpose",
+        "vCPU": "2",
+        "Instance Type": "m6i.large",
+        "Memory": "8 GiB",
+        "Storage": "EBS only",
+        "Network Performance": "Up to 12500 Megabit",
+        "plc:OperatingSystem": "Linux",
+        "plc:InstanceFamily": "General Purpose",
+        "Operating System": "Linux",
+        "Pre Installed S/W": "NA",
+        "License Model": "No License required"
+      }
+    },
+    "aws_m6i.xlarge": {
+      "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/US%20East%20(N.%20Virginia)/Linux/index.json",
+      "publicado": {
+        "serviceId": "ec2",
+        "accessType": "publish",
+        "hawkFilePublicationDate": "2026-10-23T22:13:55Z",
+        "ETLIngestionTriggerDate": "2026-10-23T22:13:55Z",
+        "currencyCode": "USD",
+        "source": "ec2-ondemand-without-sec-sel"
+      },
+      "registro": {
+        "rateCode": "2UVH39HPDNC399X4.JRTCKXETXF.6YS6EN2CT7",
+        "price": "0.1920000000",
+        "Location": "US East (N. Virginia)",
+        "Instance Family": "General purpose",
+        "vCPU": "4",
+        "Instance Type": "m6i.xlarge",
+        "Memory": "16 GiB",
+        "Storage": "EBS only",
+        "Network Performance": "Up to 12500 Megabit",
+        "plc:OperatingSystem": "Linux",
+        "plc:InstanceFamily": "General Purpose",
+        "Operating System": "Linux",
+        "Pre Installed S/W": "NA",
+        "License Model": "No License required"
+      }
+    },
+    "aws_m6i.4xlarge": {
+      "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/US%20East%20(N.%20Virginia)/Linux/index.json",
+      "publicado": {
+        "serviceId": "ec2",
+        "accessType": "publish",
+        "hawkFilePublicationDate": "2026-10-23T22:13:55Z",
+        "ETLIngestionTriggerDate": "2026-10-23T22:13:55Z",
+        "currencyCode": "USD",
+        "source": "ec2-ondemand-without-sec-sel"
+      },
+      "registro": {
+        "rateCode": "RXNCKVEZBNE693G4.JRTCKXETXF.6YS6EN2CT7",
+        "price": "0.7680000000",
+        "Location": "US East (N. Virginia)",
+        "Instance Family": "General purpose",
+        "vCPU": "16",
+        "Instance Type": "m6i.4xlarge",
+        "Memory": "64 GiB",
+        "Storage": "EBS only",
+        "Network Performance": "Up to 12500 Megabit",
+        "plc:OperatingSystem": "Linux",
+        "plc:InstanceFamily": "General Purpose",
+        "Operating System": "Linux",
+        "Pre Installed S/W": "NA",
+        "License Model": "No License required"
+      }
+    },
+    "aws_dr_m6i.4xlarge": {
+      "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/US%20East%20(Ohio)/Linux/index.json",
+      "publicado": {
+        "serviceId": "ec2",
+        "accessType": "publish",
+        "hawkFilePublicationDate": "2026-10-23T22:13:55Z",
+        "ETLIngestionTriggerDate": "2026-10-23T22:13:55Z",
+        "currencyCode": "USD",
+        "source": "ec2-ondemand-without-sec-sel"
+      },
+      "registro": {
+        "rateCode": "2MMQWZDR49HPPVAF.JRTCKXETXF.6YS6EN2CT7",
+        "price": "0.7680000000",
+        "Location": "US East (Ohio)",
+        "Instance Family": "General purpose",
+        "vCPU": "16",
+        "Instance Type": "m6i.4xlarge",
+        "Memory": "64 GiB",
+        "Storage": "EBS only",
+        "Network Performance": "Up to 12500 Megabit",
+        "plc:OperatingSystem": "Linux",
+        "plc:InstanceFamily": "General Purpose",
+        "Operating System": "Linux",
+        "Pre Installed S/W": "NA",
+        "License Model": "No License required"
+      }
+    },
+    "aws_objeto": {
+      "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonS3/current/us-east-1/index.json",
+      "version": "20261015173540",
+      "registro": {
+        "rateCode": "WP9ANXZGBYYSGJEA.JRTCKXETXF.PGHJ3S3EYE",
+        "description": "$0.023 per GB - first 50 TB / month of storage used",
+        "beginRange": "0",
+        "endRange": "51200",
+        "unit": "GB-Mo",
+        "pricePerUnit": {
+          "USD": "0.0230000000"
+        },
+        "appliesTo": []
+      }
+    },
+    "aws_objeto_dr": {
+      "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonS3/current/us-east-2/index.json",
+      "version": "20261015173540",
+      "registro": {
+        "rateCode": "YPGKVRB2EKTVDJDT.JRTCKXETXF.PGHJ3S3EYE",
+        "description": "$0.023 per GB - first 50 TB / month of storage used",
+        "beginRange": "0",
+        "endRange": "51200",
+        "unit": "GB-Mo",
+        "pricePerUnit": {
+          "USD": "0.0230000000"
+        },
+        "appliesTo": []
+      }
+    },
+    "aws_datos": {
+      "url": "https://aws.amazon.com/ebs/pricing/",
+      "precio": "0.08",
+      "unidad": "GB-mes (referencia del ejemplo oficial gp3)",
+      "estado": "Referencia pÃºblica del ejemplo; tarifa regional por reconfirmar en calculadora."
+    },
+    "azure_app_dr": {
+      "url": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Virtual%20Machines%27%20and%20armRegionName%20eq%20%27eastus2%27%20and%20%28armSkuName%20eq%20%27Standard_D4s_v5%27%20or%20armSkuName%20eq%20%27Standard_D2s_v5%27%29%20and%20productName%20eq%20%27Virtual%20Machines%20Dsv5%20Series%27%20and%20priceType%20eq%20%27Consumption%27",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 0.192,
+        "unitPrice": 0.192,
+        "armRegionName": "eastus2",
+        "location": "US East 2",
+        "effectiveStartDate": "2021-12-01T00:00:00Z",
+        "meterId": "ee39e5c1-268f-547c-b3b2-f318b5552e79",
+        "meterName": "D4s v5",
+        "productId": "DZH318Z08M9W",
+        "skuId": "DZH318Z08M9W/00JH",
+        "productName": "Virtual Machines Dsv5 Series",
+        "skuName": "Standard_D4s_v5",
+        "serviceName": "Virtual Machines",
+        "serviceId": "DZH313Z7MMC8",
+        "serviceFamily": "Compute",
+        "unitOfMeasure": "1 Hour",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": true,
+        "armSkuName": "Standard_D4s_v5"
+      }
+    },
+    "azure_proxy_dr": {
+      "url": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Virtual%20Machines%27%20and%20armRegionName%20eq%20%27eastus2%27%20and%20%28armSkuName%20eq%20%27Standard_D4s_v5%27%20or%20armSkuName%20eq%20%27Standard_D2s_v5%27%29%20and%20productName%20eq%20%27Virtual%20Machines%20Dsv5%20Series%27%20and%20priceType%20eq%20%27Consumption%27",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 0.096,
+        "unitPrice": 0.096,
+        "armRegionName": "eastus2",
+        "location": "US East 2",
+        "effectiveStartDate": "2021-12-01T00:00:00Z",
+        "meterId": "ddb0f62c-2b06-5911-ad07-d0ec9c692600",
+        "meterName": "D2s v5",
+        "productId": "DZH318Z08M9W",
+        "skuId": "DZH318Z08M9W/00HV",
+        "productName": "Virtual Machines Dsv5 Series",
+        "skuName": "Standard_D2s_v5",
+        "serviceName": "Virtual Machines",
+        "serviceId": "DZH313Z7MMC8",
+        "serviceFamily": "Compute",
+        "unitOfMeasure": "1 Hour",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": true,
+        "armSkuName": "Standard_D2s_v5"
+      }
+    },
+    "azure_datos_dr": {
+      "url": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Storage%27%20and%20armRegionName%20eq%20%27eastus2%27%20and%20%28productName%20eq%20%27Azure%20Premium%20SSD%20v2%27%20or%20%28contains%28productName%2C%27Premium%20SSD%20Managed%20Disks%27%29%20and%20skuName%20eq%20%27P6%20LRS%27%29%29",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 0.00011,
+        "unitPrice": 0.00011,
+        "armRegionName": "eastus2",
+        "location": "US East 2",
+        "effectiveStartDate": "2023-03-01T00:00:00Z",
+        "meterId": "49521633-9f11-5dfc-8ddf-f26aa7f47b1c",
+        "meterName": "Premium LRS Provisioned Capacity",
+        "productId": "DZH318Z09V07",
+        "skuId": "DZH318Z09V07/000K",
+        "productName": "Azure Premium SSD v2",
+        "skuName": "Premium LRS",
+        "serviceName": "Storage",
+        "serviceId": "DZH317F1HKN0",
+        "serviceFamily": "Storage",
+        "unitOfMeasure": "1 GiB/Hour",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": true,
+        "armSkuName": ""
+      }
+    },
+    "azure_boot_dr": {
+      "url": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Storage%27%20and%20armRegionName%20eq%20%27eastus2%27%20and%20%28productName%20eq%20%27Azure%20Premium%20SSD%20v2%27%20or%20%28contains%28productName%2C%27Premium%20SSD%20Managed%20Disks%27%29%20and%20skuName%20eq%20%27P6%20LRS%27%29%29",
+      "registro": {
+        "currencyCode": "USD",
+        "tierMinimumUnits": 0.0,
+        "retailPrice": 9.2801,
+        "unitPrice": 9.2801,
+        "armRegionName": "eastus2",
+        "location": "US East 2",
+        "effectiveStartDate": "2018-05-01T00:00:00Z",
+        "meterId": "8b8ea5c2-3db4-4e90-9c45-e591e316a2ad",
+        "meterName": "P6 LRS Disk",
+        "productId": "DZH318Z0BP04",
+        "skuId": "DZH318Z0BP04/0018",
+        "productName": "Premium SSD Managed Disks",
+        "skuName": "P6 LRS",
+        "serviceName": "Storage",
+        "serviceId": "DZH317F1HKN0",
+        "serviceFamily": "Storage",
+        "unitOfMeasure": "1/Month",
+        "type": "Consumption",
+        "isPrimaryMeterRegion": true,
+        "armSkuName": "Premium_SSD_Managed_Disk_P6"
+      }
+    },
+    "aws_dr_m6i.xlarge": {
+      "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/US%20East%20(Ohio)/Linux/index.json",
+      "registro": {
+        "rateCode": "AZDPP3QWR6Y6VCFA.JRTCKXETXF.6YS6EN2CT7",
+        "price": "0.1920000000",
+        "Location": "US East (Ohio)",
+        "Instance Family": "General purpose",
+        "vCPU": "4",
+        "Instance Type": "m6i.xlarge",
+        "Memory": "16 GiB",
+        "Storage": "EBS only",
+        "Network Performance": "Up to 12500 Megabit",
+        "plc:OperatingSystem": "Linux",
+        "plc:InstanceFamily": "General Purpose",
+        "Operating System": "Linux",
+        "Pre Installed S/W": "NA",
+        "License Model": "No License required"
+      }
+    },
+    "aws_dr_m6i.large": {
+      "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/US%20East%20(Ohio)/Linux/index.json",
+      "registro": {
+        "rateCode": "37YYE7FKU8SXD6SZ.JRTCKXETXF.6YS6EN2CT7",
+        "price": "0.0960000000",
+        "Location": "US East (Ohio)",
+        "Instance Family": "General purpose",
+        "vCPU": "2",
+        "Instance Type": "m6i.large",
+        "Memory": "8 GiB",
+        "Storage": "EBS only",
+        "Network Performance": "Up to 12500 Megabit",
+        "plc:OperatingSystem": "Linux",
+        "plc:InstanceFamily": "General Purpose",
+        "Operating System": "Linux",
+        "Pre Installed S/W": "NA",
+        "License Model": "No License required"
+      }
+    }
+  }
+}
