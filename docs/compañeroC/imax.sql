@@ -2,12 +2,12 @@
 -- PostgreSQL database dump
 --
 
-\restrict fPjqaYoVIgqp5jt63EZ2cd88xOG0FrrjWc1bXwbJ2TSsx03UfgLrR1JdHZIjg0y
+\restrict HAdwbJgYaTA2I1oNUenAPRvoItWbNoxFKS9WOezQzT1rwsiaPCjvbt4sqkwJVOY
 
 -- Dumped from database version 18.6
 -- Dumped by pg_dump version 18.6
 
--- Started on 2026-10-24 00:24:32
+-- Started on 2026-10-24 16:57:41
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -3931,11 +3931,11 @@ GRANT SELECT,INSERT,UPDATE ON TABLE public.usuario TO imax_app;
 GRANT USAGE ON SEQUENCE public.usuario_id_usuario_seq TO imax_app;
 
 
--- Completed on 2026-10-24 00:24:32
+-- Completed on 2026-10-24 16:57:41
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict fPjqaYoVIgqp5jt63EZ2cd88xOG0FrrjWc1bXwbJ2TSsx03UfgLrR1JdHZIjg0y
+\unrestrict HAdwbJgYaTA2I1oNUenAPRvoItWbNoxFKS9WOezQzT1rwsiaPCjvbt4sqkwJVOY
 

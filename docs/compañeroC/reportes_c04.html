@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Reportes — IMAX</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 1.5rem; color: #1b1b1b; }
+    table { border-collapse: collapse; margin: .5rem 0 1.5rem; width: 100%; font-size: .9rem; }
+    th, td { border: 1px solid #ccc; padding: .3rem .5rem; text-align: left; }
+    th { background: #f1f1f1; }
+    td.num { text-align: right; }
+    .aviso { background: #fff4d6; border: 1px solid #e0c36a; padding: .5rem .75rem; }
+    .metricas span { display: inline-block; margin-right: 1.5rem; font-weight: 600; }
+    form label { margin-right: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Reportes y métricas</h1>
+
+  <form method="get">
+    <label>Función <input name="funcion" size="5" value="{{ filtros.get('funcion','') }}"></label>
+    <label>Desde <input type="date" name="desde" value="{{ filtros.get('desde','') }}"></label>
+    <label>Hasta <input type="date" name="hasta" value="{{ filtros.get('hasta','') }}"></label>
+    <button>Aplicar</button>
+  </form>
+
+  {% if resumen %}
+  <p class="metricas">
+    <span>Funciones: {{ resumen.funciones }}</span>
+    <span>Boletos vendidos: {{ resumen.vendidos }}</span>
+    <span>Ingreso neto: USD {{ '%.2f'|format(resumen.neto) }}</span>
+  </p>
+  {% endif %}
+
+  {% for clave, s in secciones.items() %}
+    <h2>{{ s.titulo }}
+      <small><a href="{{ url_for('reportes_c04.exportar', clave=clave, **filtros) }}">CSV</a></small>
+    </h2>
+    {% if s.error %}
+      <p class="aviso">{{ s.error }}</p>
+    {% elif not s.filas %}
+      <p>Sin resultados para el periodo.</p>
+    {% else %}
+      <table>
+        <thead><tr>{% for col in s.filas[0].keys() %}<th>{{ col }}</th>{% endfor %}</tr></thead>
+        <tbody>
+        {% for fila in s.filas %}
+          <tr>{% for v in fila.values() %}<td>{{ v if v is not none else '—' }}</td>{% endfor %}</tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  {% endfor %}
+</body>
+</html>
