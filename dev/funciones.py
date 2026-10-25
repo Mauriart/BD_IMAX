@@ -131,6 +131,8 @@ def formulario_funcion(id_funcion=None):
                                 antes=antes, despues=leer_registro(conexion, 'funcion', identificador))
                 if error is None:
                     return redirect(url_for("funciones.listar_funciones"))
+            except psycopg.errors.ObjectNotInPrerequisiteState:
+                error = 'La función tiene reservas, ventas o inventario activo. Requiere una reprogramación autorizada.'
             except psycopg.errors.RaiseException:
                 error = "El horario se cruza con otra función o con sus 15 minutos de limpieza."
             except psycopg.errors.CheckViolation:

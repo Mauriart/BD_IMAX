@@ -5,6 +5,9 @@ from salas import salas_bp
 from funciones import funciones_bp
 from cartelera import cartelera_bp
 from precios import precios_bp
+from ventas import ventas_bp
+from reportes import reportes_bp
+from operacion import operacion_bp
 from seguridad import preparar_seguridad, autorizar_cambio, auditar, leer_registro
 
 app = Flask(__name__)
@@ -12,6 +15,9 @@ app.register_blueprint(salas_bp)
 app.register_blueprint(funciones_bp)
 app.register_blueprint(cartelera_bp)
 app.register_blueprint(precios_bp)
+app.register_blueprint(ventas_bp)
+app.register_blueprint(reportes_bp)
+app.register_blueprint(operacion_bp)
 preparar_seguridad(app)
 
 

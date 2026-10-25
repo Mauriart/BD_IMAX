@@ -11,16 +11,25 @@
         <div class="barra">
             <a class="marca" href="{{ url_for('cartelera.ver_cartelera') }}">IMAX <span>Administración</span></a>
             <nav aria-label="Navegación principal">
-                <a href="{{ url_for('cartelera.ver_cartelera') }}" {% if request.blueprint == 'cartelera' or request.endpoint == 'precios.ver_precios' %}aria-current="page"{% endif %}>Cartelera</a>
-                {% if puede('gestionar_catalogo') %}
-                <a href="{{ url_for('listar_peliculas') }}" {% if not request.blueprint %}aria-current="page"{% endif %}>Películas</a>
-                <a href="{{ url_for('salas.listar_salas') }}" {% if request.blueprint == 'salas' %}aria-current="page"{% endif %}>Salas y asientos</a>
-                <a href="{{ url_for('funciones.listar_funciones') }}" {% if request.blueprint == 'funciones' %}aria-current="page"{% endif %}>Funciones</a>
-                {% endif %}
-                {% if puede('ver_tarifas') %}<a href="{{ url_for('precios.listar_precios') }}" {% if request.blueprint == 'precios' and request.endpoint != 'precios.ver_precios' %}aria-current="page"{% endif %}>Tarifas</a>{% endif %}
+                <a href="{{ url_for('cartelera.ver_cartelera') }}">Cartelera</a>
+                {% if puede('reservar_comprar') or puede('venta_presencial') or puede('consultar_boletos_admin') %}<a href="{{ url_for('ventas.inicio') }}">Entradas</a>{% endif %}
+                {% if puede('validar_ingreso') %}<a href="{{ url_for('operacion.puerta') }}">Puerta</a>{% endif %}
+                {% if puede('solicitar_reembolso') and not puede('resolver_reembolso') %}<a href="{{ url_for('operacion.reembolsos') }}">Mis reembolsos</a>{% endif %}
+                {% if puede('ver_reportes_financieros') %}<a href="{{ url_for('reportes_c04.dashboard') }}">Reportes</a>{% endif %}
+                {% if puede('gestionar_catalogo') or puede('ver_tarifas') or puede('resolver_reembolso') %}
+                <details class="menu-gestion"><summary>Gestión</summary><div>
+                    {% if puede('gestionar_catalogo') %}
+                    <a href="{{ url_for('listar_peliculas') }}">Películas</a>
+                    <a href="{{ url_for('salas.listar_salas') }}">Salas y asientos</a>
+                    <a href="{{ url_for('funciones.listar_funciones') }}">Funciones</a>
+                    {% endif %}
+                    {% if puede('ver_tarifas') %}<a href="{{ url_for('precios.listar_precios') }}">Tarifas</a>{% endif %}
+                    {% if puede('otorgar_cortesia') %}<a href="{{ url_for('operacion.ajustes') }}">Ajustes de entradas</a>{% endif %}
+                    {% if puede('resolver_reembolso') %}<a href="{{ url_for('operacion.resolver') }}">Resolver reembolsos</a>{% endif %}
+                </div></details>{% endif %}
             </nav>
             <div class="sesion">
-            {% if g.usuario %}<span>{{ g.usuario.nombre }}<small>{{ g.usuario.rol }}</small></span>
+            {% if g.usuario %}<span>{{ g.usuario.nombre }}<small>{{ g.usuario.rol.replace('_',' ') }}</small></span>
             <form method="post" action="{{ url_for('seguridad.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="secundario" type="submit">Salir</button></form>
             {% else %}<a class="boton secundario" href="{{ url_for('seguridad.login') }}">Iniciar sesión</a>{% endif %}
             </div>

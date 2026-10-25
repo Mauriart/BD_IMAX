@@ -1,0 +1,9 @@
+{% extends 'base.html' %}{% block title %}Ingreso a sala{% endblock %}
+{% block content %}<h1>Ingreso a sala</h1><section class="tarjeta panel-alta">
+{% if resultado %}<p class="alerta" role="status">{{ resultado.mensaje }}</p>{% endif %}
+<form method="post" class="formulario"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Funcion<select name="funcion" required>{% for f in funciones %}<option value="{{ f.id_funcion }}">#{{ f.id_funcion }} - {{ f.titulo }} - {{ f.inicio.strftime('%d/%m %H:%M') }}</option>{% endfor %}</select></label>
+<label>Codigo del QR<input name="token" required autocomplete="off" placeholder="Pegue el codigo de la entrada"></label>
+<label>Dispositivo<input name="dispositivo" value="Puerta 1" required maxlength="100"></label>
+<label><input type="checkbox" name="acreditacion"> Verifique la acreditacion de la categoria especial</label>
+<button type="submit">Validar entrada</button></form></section>{% endblock %}

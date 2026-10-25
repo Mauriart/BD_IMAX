@@ -1,6 +1,6 @@
 # Pruebas iniciales del esquema A — A-01
 
-Este documento conserva la evidencia de A-01. Para el estado actual, las 47 pruebas automatizadas y los pendientes de integración, consultar [pruebas_modulo_A.md](pruebas_modulo_A.md).
+Este documento conserva la evidencia de A-01. Para el estado actual, las 97 pruebas automatizadas y el estado integrado, consultar [pruebas_modulo_A.md](pruebas_modulo_A.md).
 
 ## Condiciones
 

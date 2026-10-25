@@ -171,7 +171,7 @@ Para la base ya creada en DBeaver, ejecutar únicamente [ajuste_integridad_A.sql
 
 ## Entrega funcional de A-02
 
-Las pantallas de películas, salas, distribución y funciones, más el rechazo de traslapes y las pruebas simultáneas, están completas en dev/. Para verificar: desde dev ejecutar `.\.venv\Scripts\python.exe verificar_a02.py`. La descripción y el guion están en [interfaz_A.md](compa%C3%B1eroA/interfaz_A.md). Por decisión de Mauriart, permisos/auditoría con C se integran en T-02 (#23); siguen pendientes y no bloquean este cierre funcional de A-02.
+Las pantallas de películas, salas, distribución y funciones, más el rechazo de traslapes y las pruebas simultáneas, están completas en dev/. Para verificar: desde dev ejecutar `.\.venv\Scripts\python.exe verificar_a02.py`. La descripción y el guion están en [interfaz_A.md](compa%C3%B1eroA/interfaz_A.md). Por decisión de Mauriart, permisos/auditoría con C se integran en T-02 (#23); no bloquearon aquel cierre funcional y se completaron posteriormente en el PR #40.
 
 ## Avance de A-03, A-04 y A-05
 
@@ -183,10 +183,20 @@ El entregable de A-05 es [factibilidad.md](factibilidad.md): dictamen del legado
 
 ## Acceso a las pantallas administrativas de A
 
-La integración de A con identidad, permisos y auditoría de C-01 se explica en [permisos_auditoria_A.md](compa%C3%B1eroA/permisos_auditoria_A.md). Incluye la preparación local de la contraseña, los permisos por rol y las 47 pruebas de A y compatibilidad. El esquema de C se conserva en su carpeta original. A-04 sigue dependiendo de reservas y ventas de B; T-02 permanece pendiente para la integración completa.
+La integración de A con identidad, permisos y auditoría de C-01 se explica en [permisos_auditoria_A.md](compa%C3%B1eroA/permisos_auditoria_A.md). Incluye la preparación local de la contraseña, los permisos por rol y las 47 pruebas de A y compatibilidad. El esquema de C se conserva en su carpeta original. A-04 y B/C ya tienen integración operativa; T-02 conserva la conciliación del Chen y documentación.
 
-## Avance parcial de A-07
+## Avance de A-04 con SQL reales de B
 
-Las [pruebas del módulo A](compa%C3%B1eroA/pruebas_modulo_A.md) reúnen los casos PA-01 a PA-15, las salidas reales de 47 pruebas y las instrucciones para repetirlas. El [guion de defensa](compa%C3%B1eroA/guion_defensa_A.md) explica qué mostrar y por qué se usan esas reglas, con ejemplos de reversión de lotes, limpieza, tarifas y permisos.
+La [protección de salas](compa%C3%B1eroA/salas_protegidas_A04.md) incorpora eliminación autorizada de asientos, protección SQL de la distribución y coordinación por sala con reservas/boletos/inventario. Pasaron 17 pruebas con contrato reducido, 10 con reserva/pago reales de B y las 47 anteriores (74 en total). La migración exige el esquema compatible de B; posteriormente se instaló en p2. Los tres SQL corregidos de B están en docs/compañeraB. Se probaron con C-01 en esquema temporal; la instalación completa y el despliegue se completaron en el PR #40.
 
-A-07 permanece abierto. Faltan la protección por reservas/ventas de A-04, la concurrencia con B y el ensayo completo del guion. Las referencias antiguas a permisos/auditoría pendientes describen el cierre funcional original de A-02; la integración posterior de A con C-01 y la compatibilidad acotada con C-03 están documentadas en permisos_auditoria_A.md.
+
+## Integracion ejecutable del equipo
+
+La [guia de integracion](integracion/guia.md) identifica el SQL unico, la actualizacion de A/C-01 sin borrar datos, las 97 pruebas y el modelo relacional de 33 tablas. La integracion con B/C fue autorizada por Mauriart; el alcance inicial solo A ya no limita estos ajustes compartidos. A-06 conserva el cierre económico; A-07 reúne pruebas y guion actualizados; T-03 reune la entrega final.
+
+
+## Documentación actual de A-07
+
+Las [pruebas del módulo A](compa%C3%B1eroA/pruebas_modulo_A.md) vinculan PA-01 a PA-15 con las ocho suites y sus 97 resultados. El [guion de defensa](compa%C3%B1eroA/guion_defensa_A.md) explica el recorrido y el papel de SQL/Python, incluyendo salas protegidas y su conexión con B/C. La comprobación técnica local no se presenta como reproducción en otra computadora ni ensayo oral del equipo.
+
+La organización definitiva se hará después del informe final: un SQL de toda la base, un documento final y los archivos del programa ordenados. Hasta entonces se conservan fuentes, borradores e historia. El SQL operativo actual es docs/integracion/instalacion_completa.sql.

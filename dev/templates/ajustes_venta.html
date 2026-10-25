@@ -1,0 +1,10 @@
+{% extends 'base.html' %}{% block title %}Ajustes de entradas{% endblock %}
+{% block content %}<h1>Ajustes de entradas</h1>{% if resultado %}<p class="alerta" role="status">{{ resultado.mensaje }}</p>{% endif %}
+{% for modo in ['cortesia','asiento'] %}<section class="tarjeta separada"><h2>{{ 'Otorgar cortesia' if modo=='cortesia' else 'Cambiar asiento' }}</h2>
+<form method="post" class="formulario"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="modo" value="{{ modo }}">
+{% if modo=='cortesia' %}<label>Funcion<select name="funcion">{% for f in funciones %}<option value="{{ f.id_funcion }}">{{ f.id_funcion }} - {{ f.titulo }}</option>{% endfor %}</select></label>
+<label>Cliente<select name="cliente">{% for c in clientes %}<option value="{{ c.id_usuario }}">{{ c.nombre }}</option>{% endfor %}</select></label>
+<label>Categoria<select name="categoria">{% for c in categorias %}<option value="{{ c.id_categoria_entrada }}">{{ c.nombre }}</option>{% endfor %}</select></label>
+{% else %}<label>Entrada<select name="boleto">{% for b in boletos %}<option value="{{ b.id_boleto }}">Entrada {{ b.id_boleto }} - funcion {{ b.id_funcion }}</option>{% endfor %}</select></label>{% endif %}
+<label>Asiento<select name="asiento">{% for a in asientos %}<option value="{{ a.id_asiento }}">{{ a.sala }} - {{ a.zona }} - {{ a.fila }}{{ a.numero }}</option>{% endfor %}</select></label>
+<label>Motivo<textarea name="motivo" required maxlength="500"></textarea></label><button>Guardar ajuste</button></form></section>{% endfor %}{% endblock %}

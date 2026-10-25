@@ -1,0 +1,28 @@
+test_2x1_impar_cotizacion_congelada (__main__.IntegracionGlobal.test_2x1_impar_cotizacion_congelada) ... ok
+test_2x1_solo_miercoles_segun_dia_local_de_funcion (__main__.IntegracionGlobal.test_2x1_solo_miercoles_segun_dia_local_de_funcion) ... ok
+test_50_escaneos_simultaneos_un_ingreso (__main__.IntegracionGlobal.test_50_escaneos_simultaneos_un_ingreso) ... ok
+test_50_reservas_simultaneas_un_ganador (__main__.IntegracionGlobal.test_50_reservas_simultaneas_un_ganador) ... ok
+test_acreditacion_y_qr_de_otra_funcion (__main__.IntegracionGlobal.test_acreditacion_y_qr_de_otra_funcion) ... ok
+test_actualizacion_desde_a_c_conserva_datos_y_contrasenas (__main__.IntegracionGlobal.test_actualizacion_desde_a_c_conserva_datos_y_contrasenas) ... ok
+test_auditoria_fallida_revierte_cortesia_y_pago (__main__.IntegracionGlobal.test_auditoria_fallida_revierte_cortesia_y_pago) ... ok
+test_boleto_usado_no_se_reembolsa (__main__.IntegracionGlobal.test_boleto_usado_no_se_reembolsa) ... ok
+test_checkout_web_factura_qr_y_propiedad (__main__.IntegracionGlobal.test_checkout_web_factura_qr_y_propiedad) ... ok
+test_cortesia_cambio_asiento_auditado_y_conflicto (__main__.IntegracionGlobal.test_cortesia_cambio_asiento_auditado_y_conflicto) ... ok
+test_expiracion_y_pago_tardio_no_emiten (__main__.IntegracionGlobal.test_expiracion_y_pago_tardio_no_emiten) ... ok
+test_funcion_inactiva_y_asientos_repetidos_rechazados (__main__.IntegracionGlobal.test_funcion_inactiva_y_asientos_repetidos_rechazados) ... ok
+test_ingreso_contra_reembolso_concurrente (__main__.IntegracionGlobal.test_ingreso_contra_reembolso_concurrente) ... ok
+test_instalacion_y_generacion_inventario (__main__.IntegracionGlobal.test_instalacion_y_generacion_inventario) ... ok
+test_pago_rechazado_y_repeticion_idempotente (__main__.IntegracionGlobal.test_pago_rechazado_y_repeticion_idempotente) ... ok
+test_permisos_sql_y_csrf_sin_sesion_de_prueba (__main__.IntegracionGlobal.test_permisos_sql_y_csrf_sin_sesion_de_prueba) ... ok
+test_qr_una_vez_y_rol_puerta (__main__.IntegracionGlobal.test_qr_una_vez_y_rol_puerta) ... ok
+test_reembolso_fuera_de_politica_y_usado (__main__.IntegracionGlobal.test_reembolso_fuera_de_politica_y_usado) ... ok
+test_reembolso_parcial_reventa_y_reportes (__main__.IntegracionGlobal.test_reembolso_parcial_reventa_y_reportes) ... ok
+test_reinstalacion_rechaza_sin_borrar_y_script_actualizado (__main__.IntegracionGlobal.test_reinstalacion_rechaza_sin_borrar_y_script_actualizado) ... ok
+test_reportes_pago_top5_y_logs_inmutables (__main__.IntegracionGlobal.test_reportes_pago_top5_y_logs_inmutables) ... ok
+test_sin_tarifa_no_inventa_precio (__main__.IntegracionGlobal.test_sin_tarifa_no_inventa_precio) ... ok
+test_venta_presencial_y_reembolso_desde_interfaz (__main__.IntegracionGlobal.test_venta_presencial_y_reembolso_desde_interfaz) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 6.160s
+
+OK

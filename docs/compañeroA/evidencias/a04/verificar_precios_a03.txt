@@ -1,0 +1,16 @@
+test_ambiguedad_no_cotiza_aun_sin_trigger (__main__.PruebasPrecios.test_ambiguedad_no_cotiza_aun_sin_trigger) ... ok
+test_cruces_rechazados_y_vigencias_contiguas_permitidas (__main__.PruebasPrecios.test_cruces_rechazados_y_vigencias_contiguas_permitidas) ... ok
+test_datos_invalidos_no_guardan_y_zona_ajena (__main__.PruebasPrecios.test_datos_invalidos_no_guardan_y_zona_ajena) ... ok
+test_dia_de_funcion_local_y_promocion_antigua_incompleta (__main__.PruebasPrecios.test_dia_de_funcion_local_y_promocion_antigua_incompleta) ... ok
+test_fallo_en_ultima_condicion_revierte_toda_promocion (__main__.PruebasPrecios.test_fallo_en_ultima_condicion_revierte_toda_promocion) ... ok
+test_formulario_tarifa_categoria_y_matriz_publica (__main__.PruebasPrecios.test_formulario_tarifa_categoria_y_matriz_publica) ... ok
+test_funcion_inactiva_pasada_e_inexistente (__main__.PruebasPrecios.test_funcion_inactiva_pasada_e_inexistente) ... ok
+test_promocion_estructurada_filtros_y_limites (__main__.PruebasPrecios.test_promocion_estructurada_filtros_y_limites) ... ok
+test_promocion_invalida_no_deja_registros_parciales (__main__.PruebasPrecios.test_promocion_invalida_no_deja_registros_parciales) ... ok
+test_tarifas_simultaneas (__main__.PruebasPrecios.test_tarifas_simultaneas) ... ok
+test_vigencia_desde_incluido_hasta_excluido_y_decimal (__main__.PruebasPrecios.test_vigencia_desde_incluido_hasta_excluido_y_decimal) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 2.121s
+
+OK

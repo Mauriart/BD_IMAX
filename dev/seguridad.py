@@ -58,7 +58,7 @@ def comprobar_solicitud():
     if not configurada:
         if request.endpoint in {'cartelera.ver_cartelera', 'precios.ver_precios'}:
             return None
-        raise ServiceUnavailable('El acceso todavÃ­a no estÃ¡ configurado. Ejecuta configurar_acceso.py desde dev.')
+        raise ServiceUnavailable('El acceso todavía no está configurado. Ejecuta configurar_acceso.py desde dev.')
     identificador = session.get('id_usuario')
     if type(identificador) is int and 1 <= identificador <= 2147483647:
         try:
@@ -76,7 +76,7 @@ def comprobar_solicitud():
                     else:
                         session.clear()
         except psycopg.Error as ex:
-            raise ServiceUnavailable('El servicio de usuarios y permisos no estÃ¡ disponible.') from ex
+            raise ServiceUnavailable('El servicio de usuarios y permisos no está disponible.') from ex
     elif identificador is not None:
         session.clear()
     if request.endpoint not in PUBLICOS:
@@ -84,17 +84,27 @@ def comprobar_solicitud():
             return redirect(url_for('seguridad.login'))
         if request.blueprint == 'precios':
             accion = 'configurar_tarifas' if request.method == 'POST' else 'ver_tarifas'
+        elif request.blueprint == 'ventas':
+            opciones = ('reservar_comprar','venta_presencial','consultar_boletos_admin')
+            accion = next((a for a in opciones if puede(a)), opciones[0])
+        elif request.blueprint == 'reportes_c04':
+            accion = 'ver_reportes_financieros'
+        elif request.blueprint == 'operacion':
+            accion = {'operacion.puerta':'validar_ingreso',
+                      'operacion.reembolsos':'solicitar_reembolso',
+                      'operacion.resolver':'resolver_reembolso'}.get(request.endpoint,'resolver_reembolso')
         elif request.blueprint in (None, 'salas', 'funciones'):
+
             accion = 'gestionar_catalogo'
         else:
-            abort(403, description='Esta operaciÃ³n no tiene un permiso configurado.')
+            abort(403, description='Esta operación no tiene un permiso configurado.')
         if not puede(accion):
-            abort(403, description='Tu usuario no tiene permiso para realizar esta operaciÃ³n.')
+            abort(403, description='Tu usuario no tiene permiso para realizar esta operación.')
     if request.method == 'POST':
         esperado = session.get('csrf_token')
         recibido = request.form.get('csrf_token', '')
         if not isinstance(esperado, str) or not compare_digest(esperado.encode(), recibido.encode()):
-            abort(400, description='El formulario venciÃ³ o no es vÃ¡lido. Recarga la pÃ¡gina e intÃ©ntalo de nuevo.')
+            abort(400, description='El formulario venció o no es válido. Recarga la página e inténtalo de nuevo.')
 
 
 @seguridad_bp.route('/login', methods=['GET', 'POST'])
@@ -111,7 +121,7 @@ def login():
                         cursor.execute('SELECT id_usuario,password_hash FROM usuario WHERE correo=%s AND activo=TRUE', (correo,))
                         usuario = cursor.fetchone()
             except psycopg.Error as ex:
-                raise ServiceUnavailable('El esquema de usuarios de C no estÃ¡ disponible.') from ex
+                raise ServiceUnavailable('El esquema de usuarios de C no está disponible.') from ex
         hash_guardado = usuario['password_hash'] if usuario else ''
         hash_valido = hash_guardado.startswith(('scrypt:', 'pbkdf2:'))
         try:
@@ -123,7 +133,7 @@ def login():
             session['id_usuario'] = usuario['id_usuario']
             session.permanent = True
             return redirect(url_for('cartelera.ver_cartelera'))
-        error = 'Correo o contraseÃ±a incorrectos, o usuario inactivo.'
+        error = 'Correo o contraseña incorrectos, o usuario inactivo.'
     return render_template('login.html', correo=correo, error=error), 400 if error else 200
 
 
@@ -134,12 +144,15 @@ def logout():
 
 
 def autorizar_cambio(conexion, accion):
+    return autorizar_operacion(conexion, accion, request.form.get('motivo', '').strip())
+
+
+def autorizar_operacion(conexion, accion, motivo='Operacion del sistema'):
     """Revalidar identidad/permiso y conservarlos estables durante el cambio."""
     if not getattr(g, 'usuario', None):
         abort(403)
-    motivo = request.form.get('motivo', '').strip()
     if not motivo or len(motivo) > 500:
-        abort(400, description='Indica el motivo del cambio, con un mÃ¡ximo de 500 caracteres.')
+        abort(400, description='Indica el motivo del cambio, con un máximo de 500 caracteres.')
     with conexion.cursor(row_factory=dict_row) as cursor:
         cursor.execute('''SELECT u.id_usuario,u.id_rol,r.nombre AS rol
             FROM usuario u INNER JOIN rol r ON r.id_rol=u.id_rol
@@ -152,8 +165,8 @@ def autorizar_cambio(conexion, accion):
         cursor.execute('SELECT autorizar_accion(%s,%s) AS permitido', (actor['id_usuario'], accion))
         permitido = cursor.fetchone()['permitido']
         if not permiso or not permitido:
-            abort(403, description='El permiso cambiÃ³. No se guardÃ³ la operaciÃ³n.')
-    # C-03 lee este contexto para sus guardias y triggers. Solo dura la transacciÃ³n.
+            abort(403, description='El permiso cambió. No se guardó la operación.')
+    # C-03 lee este contexto para sus guardias y triggers. Solo dura la transacción.
     conexion.execute("""SELECT set_config('app.id_usuario',%s,true),
         set_config('app.ip',%s,true), set_config('app.motivo',%s,true)""",
         (str(actor['id_usuario']), request.remote_addr or 'desconocida', motivo))
@@ -163,7 +176,7 @@ def autorizar_cambio(conexion, accion):
 
 def leer_registro(conexion, tabla, identificador, bloquear=False):
     if tabla not in {'pelicula', 'sala', 'zona', 'asiento', 'funcion', 'tarifa', 'promocion', 'categoria_entrada'}:
-        raise ValueError('Entidad de auditorÃ­a no permitida')
+        raise ValueError('Entidad de auditoría no permitida')
     consulta = sql.SQL('SELECT to_jsonb(t) FROM {} t WHERE {}=%s').format(
         sql.Identifier(tabla), sql.Identifier('id_' + tabla))
     if bloquear:
@@ -176,11 +189,12 @@ def leer_registro(conexion, tabla, identificador, bloquear=False):
     return fila[0]
 
 
-def auditar(conexion, actor, accion, entidad, identificador, antes=None, despues=None):
+def auditar(conexion, actor, accion, entidad, identificador, antes=None, despues=None, operacion=None):
     try:
         # El cambio ya mantiene el bloqueo de la tabla: su trigger no puede
-        # desaparecer entre la escritura y esta comprobaciÃ³n.
-        evento = 4 if antes is None else 16  # INSERT o UPDATE en pg_trigger.
+        # desaparecer entre la escritura y esta comprobación.
+        tipo = operacion or ('INSERT' if antes is None else 'UPDATE')
+        evento = {'INSERT': 4, 'UPDATE': 16, 'DELETE': 8}[tipo]
         automatica = conexion.execute(
             """SELECT EXISTS (
                 SELECT 1 FROM pg_trigger t
@@ -208,4 +222,4 @@ def auditar(conexion, actor, accion, entidad, identificador, antes=None, despues
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
                 (actor['id_usuario'], actor['rol'], *valores[1:]))
     except psycopg.Error as ex:
-        raise ServiceUnavailable('No se pudo registrar la auditorÃ­a. El cambio no se guardÃ³.') from ex
+        raise ServiceUnavailable('No se pudo registrar la auditoría. El cambio no se guardó.') from ex

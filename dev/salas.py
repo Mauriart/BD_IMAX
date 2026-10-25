@@ -66,7 +66,7 @@ def mostrar_distribucion(id_sala, error=None, datos=None):
     sala, zonas, asientos = cargar_detalle_sala(id_sala)
     return render_template(
         "sala_detalle.html", sala=sala, zonas=zonas, asientos=asientos,
-        capacidad=len(asientos), error=error, datos=datos or {},
+        capacidad=len(asientos), error=error, datos=datos or {}, proteccion_disponible=proteccion_disponible(),
     ), 400 if error else 200
 
 
@@ -131,6 +131,8 @@ def crear_zona(id_sala):
                     auditar(conexion, actor, 'gestionar_catalogo', 'zona', id_zona,
                             despues=leer_registro(conexion, 'zona', id_zona))
             return redirect(url_for("salas.detalle_sala", id_sala=id_sala))
+        except psycopg.errors.ObjectNotInPrerequisiteState:
+            error = 'La sala tiene reservas, ventas o referencias de B. No se guardó el cambio.'
         except psycopg.errors.UniqueViolation:
             error = "La sala ya tiene una zona con ese nombre."
         except psycopg.errors.ForeignKeyViolation:
@@ -181,6 +183,8 @@ def crear_fila_asientos(id_sala):
                                          'desde': desde, 'hasta': hasta, 'cantidad': hasta-desde+1})
             if error is None:
                 return redirect(url_for("salas.detalle_sala", id_sala=id_sala) + "#asientos")
+        except psycopg.errors.ObjectNotInPrerequisiteState:
+            error = 'La sala tiene reservas, ventas o referencias de B. No se guardó el cambio.'
         except psycopg.errors.UniqueViolation:
             error = "Algún asiento de la fila ya existe. No se agregó ningún asiento del lote."
         except psycopg.errors.ForeignKeyViolation:
@@ -223,6 +227,8 @@ def crear_asiento(id_sala):
                                 despues=leer_registro(conexion, 'asiento', id_asiento))
             if error is None:
                 return redirect(url_for("salas.detalle_sala", id_sala=id_sala))
+        except psycopg.errors.ObjectNotInPrerequisiteState:
+            error = 'La sala tiene reservas, ventas o referencias de B. No se guardó el cambio.'
         except psycopg.errors.UniqueViolation:
             error = "Ya existe un asiento con esa fila y número en la zona."
         except psycopg.errors.ForeignKeyViolation:
@@ -230,3 +236,42 @@ def crear_asiento(id_sala):
         except psycopg.DataError:
             error = "Revisa los datos del asiento."
     return mostrar_distribucion(id_sala, error, datos)
+
+
+def proteccion_disponible():
+    with obtener_conexion() as conexion:
+        return conexion.execute(
+            "SELECT to_regprocedure('a04_bloquear_sala(integer)') IS NOT NULL"
+        ).fetchone()[0]
+
+
+@salas_bp.route('/salas/<int:id_sala>/asientos/<int:id_asiento>/eliminar', methods=['GET','POST'])
+def eliminar_asiento(id_sala, id_asiento):
+    if not proteccion_disponible():
+        abort(503, description='La eliminación de asientos requiere completar la integración de salas con ventas.')
+    sala, zonas, asientos = cargar_detalle_sala(id_sala)
+    asiento = next((a for a in asientos if a['id_asiento']==id_asiento), None)
+    if asiento is None:
+        abort(404)
+    error = None
+    if request.method=='POST':
+        try:
+            with obtener_conexion() as conexion:
+                actor = autorizar_cambio(conexion, 'gestionar_catalogo')
+                conexion.execute('SELECT a04_bloquear_sala(%s)',(id_sala,))
+                antes = leer_registro(conexion,'asiento',id_asiento,bloquear=True)
+                pertenece = conexion.execute('SELECT 1 FROM zona WHERE id_zona=%s AND id_sala=%s',
+                                               (antes['id_zona'],id_sala)).fetchone()
+                if not pertenece:
+                    abort(404)
+                conexion.execute('DELETE FROM asiento WHERE id_asiento=%s',(id_asiento,))
+                auditar(conexion,actor,'gestionar_catalogo','asiento',id_asiento,
+                        antes=antes,despues=None,operacion='DELETE')
+            return redirect(url_for('salas.detalle_sala',id_sala=id_sala))
+        except psycopg.errors.ObjectNotInPrerequisiteState:
+            error = 'La sala tiene reservas o ventas activas. No se eliminó el asiento.'
+        except psycopg.errors.ForeignKeyViolation:
+            error = 'El asiento conserva referencias de ventas o inventario. No se eliminó su historia.'
+        except (psycopg.errors.DeadlockDetected,psycopg.errors.SerializationFailure):
+            error = 'Otra operación cambió la sala. Revisa los datos e inténtalo de nuevo.'
+    return render_template('asiento_eliminar.html',sala=sala,asiento=asiento,error=error),400 if error else 200

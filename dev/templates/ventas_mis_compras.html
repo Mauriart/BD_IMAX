@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Mis compras{% endblock %}
+
+{% block content %}
+<div class="ventas">
+  {% include "ventas_comun.html" %}
+
+  <div class="v-tarjeta">
+    <h1>Mis compras</h1>
+    <p class="v-suave">Aquí ves todas tus compras. Las pagadas tienen factura con sus boletos y QR.</p>
+
+    {% if compras %}
+      <table>
+        <tr><th>#</th><th>Película</th><th>Función</th><th>Estado</th><th class="v-num">Total</th><th></th></tr>
+        {% for c in compras %}
+          <tr>
+            <td>{{ c.id_compra }}</td>
+            <td>{{ c.titulo }}</td>
+            <td>{{ c.inicio_local.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td><span class="v-etiqueta {{ c.estado }}">{{ c.estado }}</span></td>
+            <td class="v-num">{{ '%.2f'|format(c.total) }} {{ c.moneda }}</td>
+            <td class="v-num">
+              {% if c.estado in ('Pagada', 'Reembolsada') %}
+                <a class="v-boton v-secundario" href="{{ url_for('ventas.factura', id_compra=c.id_compra) }}">Ver factura</a>
+              {% elif c.estado == 'Pendiente' %}
+                <a class="v-boton" href="{{ url_for('ventas.compra', id_compra=c.id_compra) }}">Pagar</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p>Todavía no tienes compras.</p>
+      <a class="v-boton" href="{{ url_for('ventas.inicio') }}">Ver funciones</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

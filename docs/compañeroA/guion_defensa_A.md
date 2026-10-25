@@ -4,19 +4,19 @@
 
 El bloque A prepara lo que después necesita la venta: películas, salas, asientos físicos, funciones, tarifas y promociones. También permite consultar la cartelera y controla quién puede modificar esa información.
 
-Este es un guion preparado para practicar. Las pruebas automatizadas tienen evidencia en [pruebas_modulo_A.md](pruebas_modulo_A.md), pero todavía no se ha ejecutado este recorrido completo como ensayo de defensa. La compra, el pago y el ingreso se explican junto con B/C cuando estén integrados.
+Este guion sirve para practicar la explicación del programa integrado. Sus pasos se contrastaron con las 97 pruebas y las pantallas revisadas en [pruebas_modulo_A.md](pruebas_modulo_A.md). La práctica oral del equipo sigue pendiente; las comprobaciones técnicas no se presentan como ese ensayo humano.
 
 ## Preparación
 
-Usar una base de ensayo con A y C-01 instalados. El SQL instalacion_completa_A.sql de esta carpeta instala A con datos de ejemplo en una base vacía; no debe repetirse sobre la base que ya tiene sus tablas. Para una instalación existente basta comprobar sus datos y acceso.
+Para una base de ensayo vacía, usar [instalacion_completa.sql](../integracion/instalacion_completa.sql), que instala A/B/C. No repetirlo sobre p2: esa base ya está actualizada. Si se usa p2 para practicar, los datos creados permanecerán; identificarlos como práctica.
 
 El usuario administrador debe tener su contraseña local configurada. Para mostrar la vista de contador, preparar también contador@imax.test con configurar_acceso.py si todavía conserva el marcador de prueba. Las contraseñas se eligen en la computadora y no se incluyen en la presentación.
 
 Desde dev, iniciar la aplicación:
 
-    .\.venv\Scripts\python.exe -m flask --app app run
+    .\.venv\Scripts\python.exe iniciar.py
 
-Abrir http://127.0.0.1:5000/cartelera. Tener DBeaver conectado a la misma base para las consultas finales. No es necesario mostrar el archivo .env.
+El iniciador también libera reservas vencidas. Abrir http://127.0.0.1:5000/cartelera. Tener DBeaver conectado a la misma base para las consultas finales. No es necesario mostrar el archivo .env.
 
 Escoger una fecha futura cercana y una sala de ensayo sin funciones previas. Los ejemplos siguientes usan una película de 120 minutos y una primera función a las 18:00, hora local del cine.
 
@@ -81,7 +81,7 @@ En Tarifas, abrir la primera función de práctica:
 1. Registrar una tarifa de 8,00 USD para General/Adulto.
 2. Elegir una vigencia que incluya el momento actual y llegue hasta el inicio de la función.
 3. Intentar otra tarifa para esa misma función, zona y categoría con fechas superpuestas. Debe rechazarse.
-4. Registrar una promoción 2x1 con nombre, descripción, vigencia actual, días aplicables, General y Adulto. Para simplificar la práctica se pueden seleccionar los siete días.
+4. Registrar una promoción 2x1 con nombre, descripción, vigencia actual, días aplicables, General y Adulto. Seleccionar miércoles y una función de ese día, con vigencia que incluya la cotización. La promoción inicial quedó definida para miércoles; las otras promociones permiten configurar sus días.
 5. Volver a Cartelera y abrir Ver precios de esa función.
 
 La categoría Adulto debe existir; si falta, crearla desde el formulario correspondiente. No utilizar una tarifa preexistente de otra función como dato de esta demostración.
@@ -90,7 +90,7 @@ Explicación sugerida:
 
 > Cada tarifa corresponde a una función, una zona y una categoría. Las vigencias no pueden cruzarse para esa combinación. La promoción guarda condiciones estructuradas para que B pueda comprobarlas y aplicar el descuento al comprar.
 
-A configura y consulta el 2x1. El cálculo del descuento en la compra pertenece a B y no se demuestra aquí.
+A configura las condiciones; B las consulta al reservar y guarda la cotización. A USD 8 por adulto de General, dos adultos cuestan USD 8 con 2x1; tres cuestan USD 16. Se evalúa el día local de la función. Cambiar la tarifa después de reservar no cambia ese precio guardado. Evidencia: test_2x1_impar_cotizacion_congelada.
 
 ## 6. Mostrar permisos y auditoría
 
@@ -110,7 +110,7 @@ Explicación sugerida:
 
 Con C-01 un lote de asientos deja un evento del lote. Con los triggers de C-03 deja uno por asiento; A evita agregar el mismo registro otra vez. No se debe esperar siempre la misma cantidad de eventos en ambas instalaciones.
 
-El guion demuestra las pantallas y auditoría de A con C-01. Las cinco pruebas de compatibilidad con C-03 ensayan sus mecanismos pertinentes de forma aislada; no prueban su instalación completa.
+La instalación global incluye C-03. La suite global también comprueba que una cortesía se revierta si falla su auditoría; los cinco casos de compatibilidad conservan la comprobación específica de los triggers de A.
 
 ## 7. Relacionar la pantalla con SQL
 
@@ -127,15 +127,27 @@ Explicación sugerida:
 
 > La clave primaria identifica cada registro. Las claves foráneas conectan sala con cine, zona con sala y asiento con zona. Estas relaciones permiten consultar la distribución sin repetir toda la información en cada tabla.
 
-## 8. Cerrar el alcance de la demostración
+## 8. Mostrar protección con una reserva real
 
-Mostrar las cinco salidas de prueba y explicar el total: 11 de catálogo/programación, 5 de cartelera, 11 de precios, 15 de seguridad y 5 de compatibilidad con C-03.
+Como cliente, abrir la función de práctica, seleccionar Adulto y reservar un asiento. Antes de pagar, volver como administrador e intentar borrar ese asiento o agregar otro a la distribución de su sala. Debe rechazarse mientras la reserva esté vigente. Si vence durante la demostración, repetir la reserva antes de comprobar el rechazo.
 
-Explicación sugerida:
+Pagar usando el resultado simulado de éxito del prototipo. Mostrar factura, boleto y QR; volver a intentar el cambio incompatible. El boleto emitido mantiene la protección. Usar otra sala de práctica para repetir; no borrar la historia.
 
-> Lo demostrado corresponde a A y a sus conexiones verificadas con C. Todavía falta comprobar que una sala con reservas o ventas activas no pueda modificarse de forma incompatible; eso necesita las operaciones reales de B y es A-04.
+> El asiento físico pertenece a una zona; su disponibilidad pertenece a una función. Reserva y distribución coordinan el bloqueo de la sala para evitar referencias incompatibles. Una venta conserva historia incluso después del reembolso.
 
-No presentar la protección de una función con tarifas como si fuera protección por ventas. Son reglas distintas.
+Mostrar PA-13 si preguntan por simultaneidad: se ensayaron ambos órdenes de reserva y borrado con conexiones independientes. No es necesario reproducir a mano esa carrera en la exposición.
+
+## 9. Conectar con ingreso y reportes
+
+Puerta necesita un boleto dentro de su ventana de ingreso: desde 30 minutos antes hasta 15 minutos después del inicio. Una función de la semana siguiente permite vender, pero su ingreso todavía debe rechazarse. No alterar la hora de la computadora ni afirmar que se aceptó ese boleto.
+
+El operador elige la función, pega el token y confirma acreditación cuando corresponde. El primer ingreso válido se acepta; el segundo se rechaza. Evidencia: test_qr_una_vez_y_rol_puerta y test_acreditacion_y_qr_de_otra_funcion.
+
+Abrir Reportes con un usuario autorizado y un periodo que incluya las compras de práctica. Mostrar cobros y devoluciones por separado. El reembolso parcial anula solamente los boletos seleccionados y libera esos asientos. Evidencia: test_reembolso_parcial_reventa_y_reportes.
+
+> SQL guarda estados, aplica reglas y coordina operaciones simultáneas. Python conecta la sesión con los permisos, recibe formularios y confirma o revierte. La pantalla presenta lo ocurrido.
+
+Mostrar las ocho salidas: 11 + 5 + 11 + 15 + 5 + 17 + 10 + 23 = 97. La propuesta de capacidad y los costos requieren su propia explicación y evidencia.
 
 ## Preguntas para practicar
 
@@ -143,7 +155,7 @@ No presentar la protección de una función con tarifas como si fuera protecció
 | --- | --- |
 | ¿Por qué separar sala, zona y asiento? | La sala contiene zonas y cada zona agrupa asientos. Permite describir la distribución y asociar precios por zona sin repetirla por función. |
 | ¿Por qué el asiento no tiene un campo ocupado global? | El mismo asiento puede venderse para funciones distintas. La disponibilidad se maneja por asiento y función en B. |
-| ¿Por qué SERIAL e INT? | SERIAL genera el identificador entero automáticamente. INT es suficiente para el alcance elegido del prototipo; la propuesta de escala global requiere su propio dimensionamiento. |
+| ¿Por qué SERIAL e INT? | SERIAL genera el identificador entero automáticamente. INT cubre los identificadores de A en este prototipo. B conserva BIGINT en compras/boletos y sus referencias compartidas. La escala global requiere su propio dimensionamiento. |
 | ¿UNIQUE es una clave foránea? | No. UNIQUE impide repetir una combinación; FOREIGN KEY exige que el registro relacionado exista. |
 | ¿Para qué usar una transacción? | Para guardar juntas las partes de una operación o deshacerlas juntas si algo falla. |
 | ¿Por qué el trigger y no solo el formulario? | La regla de horarios también debe aplicarse a escrituras que no pasen por esa pantalla. |
@@ -152,4 +164,4 @@ No presentar la protección de una función con tarifas como si fuera protecció
 
 ## Cómo registrar el ensayo
 
-Después de practicar, anotar qué pasos se ejecutaron, qué ocurrió y cualquier diferencia respecto al esperado. Las capturas y consultas que se conserven deben corresponder a ese ensayo real. PA-15 permanece pendiente hasta ejecutarlo y completar la parte de A-04 cuando esté disponible.
+Antes de exponer, recorrer las pantallas con usuarios y datos de práctica y anotar diferencias. La evidencia técnica actual incluye A-04 y B/C real. No presentarla como si otro integrante hubiera realizado ya el ensayo oral o lo hubiera ejecutado en su computadora.

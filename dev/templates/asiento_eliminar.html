@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar asiento{% endblock %}
+{% block content %}
+<a class="volver" href="{{ url_for('salas.detalle_sala',id_sala=sala.id_sala) }}">← Volver a la sala</a>
+<div class="titulo-pagina"><div><p class="etiqueta">{{ sala.cine }} · {{ sala.nombre }}</p><h1>Eliminar asiento</h1></div></div>
+<section class="tarjeta panel-alta">
+<p>Se eliminará el asiento <strong>{{ asiento.fila }}{{ asiento.numero }}</strong> de la zona {{ asiento.zona }}.</p>
+<p>La operación se rechaza si la sala tiene reservas o ventas activas, o si el asiento conserva referencias de inventario o ventas.</p>
+{% if error %}<p class="alerta" role="alert">{{ error }}</p>{% endif %}
+<form method="post" class="formulario">
+{% include '_seguridad_form.html' %}
+<div class="acciones-formulario"><button type="submit">Eliminar asiento</button><a class="boton secundario" href="{{ url_for('salas.detalle_sala',id_sala=sala.id_sala) }}">Cancelar</a></div>
+</form>
+</section>
+{% endblock %}
