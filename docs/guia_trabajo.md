@@ -188,3 +188,8 @@ La integración de A con identidad, permisos y auditoría de C-01 se explica en 
 ## Avance de A-04 con SQL reales de B
 
 La [protección de salas](compa%C3%B1eroA/salas_protegidas_A04.md) incorpora eliminación autorizada de asientos, protección SQL de la distribución y coordinación por sala con reservas/boletos/inventario. Pasaron 17 pruebas con contrato reducido, 10 con reserva/pago reales de B y las 47 anteriores (74 en total). La migración exige el esquema compatible de B y no se instaló en public. Los tres SQL corregidos de B están en docs/compañeraB. Se probaron con C-01 en esquema temporal; la instalación completa y el despliegue siguen en T-02. El issue conserva pendiente integrar el PR.
+
+
+## Integracion ejecutable del equipo
+
+La [guia de integracion](integracion/guia.md) identifica el SQL unico, la actualizacion de A/C-01 sin borrar datos, las 96 pruebas y el modelo relacional de 33 tablas. La integracion con B/C fue autorizada por Mauriart; el alcance inicial solo A ya no limita estos ajustes compartidos. A-06 y A-07 conservan sus pendientes; T-03 reune la entrega final.

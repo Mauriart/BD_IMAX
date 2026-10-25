@@ -1,0 +1,22 @@
+{% extends 'base.html' %}{% block title %}Reportes{% endblock %}
+{% block content %}<div class="titulo-pagina"><div><p class="etiqueta">OPERACION</p><h1>Reportes y metricas</h1><p class="descripcion">Ocupacion, recaudacion, pagos y auditoria.</p></div></div>
+<form method="get" class="tarjeta filtros-cartelera"><div class="campos-filtros">
+<label>Funcion (ocupacion)<input type="number" min="1" name="funcion" value="{{ filtros.get('funcion','') }}" placeholder="Todas"></label>
+<label>Desde<input type="date" name="desde" value="{{ filtros.get('desde','') }}"></label>
+<label>Hasta<input type="date" name="hasta" value="{{ filtros.get('hasta','') }}"></label></div><button>Aplicar filtros</button></form>
+{% if resumen %}<div class="resumen-reportes"><section class="tarjeta">Funciones consultadas<strong>{{ resumen.funciones }}</strong></section>
+<section class="tarjeta">Entradas vigentes<strong>{{ resumen.vendidos }}</strong></section><section class="tarjeta">Ingreso neto<strong>${{ '%.2f'|format(resumen.neto) }}</strong></section></div>{% endif %}
+{% set etiquetas={'id_funcion':'Funcion','pelicula':'Pelicula','cine':'Cine','sala':'Sala','inicio':'Inicio','capacidad':'Asientos',
+'boletos_vendidos':'Vendidos','boletos_usados':'Ingresos','porcentaje_ocupacion':'Ocupacion (%)','ingreso_bruto':'Bruto (USD)',
+'total_devuelto':'Devuelto (USD)','ingreso_neto':'Neto (USD)','moneda':'Moneda','posicion':'Posicion','id_pelicula':'Pelicula',
+'clasificacion':'Clasificacion','recaudacion':'Recaudacion (USD)','metodo':'Metodo','compras':'Compras','pct_compras':'Compras (%)',
+'monto':'Monto (USD)','pct_monto':'Monto (%)','id_administrador':'Administrador','nombre_administrador':'Nombre',
+'acciones_manuales':'Acciones','cortesias':'Cortesias','reembolsos':'Reembolsos','reembolsos_forzados':'Excepcionales',
+'reembolsos_rechazados':'Rechazados','cambios_asiento':'Cambios de asiento','cambios_politica':'Politicas',
+'cambios_catalogo_precios_roles':'Catalogo y precios','intentos_denegados':'Denegados','ultima_accion':'Ultima accion'} %}
+{% for clave,seccion in secciones.items() %}<section class="tarjeta separada"><div class="encabezado-tarjeta"><h2>{{ seccion.titulo }}</h2>
+<a class="boton secundario" href="{{ url_for('reportes_c04.exportar',clave=clave,**filtros) }}">Exportar CSV</a></div>
+{% if seccion.error %}<p class="alerta">{{ seccion.error }}</p>{% elif seccion.filas %}<div class="tabla-scroll"><table><thead><tr>
+{% for campo in seccion.filas[0] %}<th>{{ etiquetas.get(campo,campo.replace('_',' ')) }}</th>{% endfor %}</tr></thead><tbody>
+{% for fila in seccion.filas %}<tr>{% for campo,valor in fila.items() %}<td>{% if campo in ['inicio','ultima_accion'] and valor %}{{ valor.strftime('%d/%m/%Y %H:%M') }}{% elif valor is none %}-{% else %}{{ valor }}{% endif %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>{% else %}<p class="descripcion">Sin resultados para el periodo.</p>{% endif %}</section>{% endfor %}{% endblock %}

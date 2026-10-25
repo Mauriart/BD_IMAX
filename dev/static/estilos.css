@@ -123,3 +123,18 @@ summary { cursor:pointer; font-weight:600; font-size:13px; }
 .sesion form { margin:0; }
 .sesion button,.sesion .boton { font-size:12px; padding:7px 10px; }
 .barra { flex-wrap:wrap; gap:16px; }
+
+/* Menu comun de los modulos integrados. */
+.menu-gestion { position:relative; }
+.menu-gestion summary { cursor:pointer; padding:8px; color:#fff; }
+.menu-gestion > div { position:absolute; top:100%; right:0; z-index:20; display:grid;
+    min-width:210px; padding:10px; background:#14253f; border:1px solid #44536a; border-radius:8px; }
+.menu-gestion > div a { display:block; padding:9px 12px; white-space:nowrap; }
+.resumen-reportes { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:24px 0; }
+.resumen-reportes strong { display:block; font-size:1.7rem; margin-top:8px; }
+@media(max-width:640px) { .resumen-reportes { grid-template-columns:1fr; } }
+
+.resumen-reportes .tarjeta { padding:20px; }
+
+.formulario label:has(input[type="checkbox"]) { display:flex; flex-direction:row; align-items:center; gap:10px; }
+.formulario input[type="checkbox"] { width:18px; height:18px; min-height:0; padding:0; margin:0; flex:0 0 auto; }

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block title %}Solicitar reembolso{% endblock %}
+{% block content %}<h1>Solicitar reembolso</h1><section class="tarjeta panel-alta">
+{% if resultado %}<p class="alerta" role="status">{{ resultado.mensaje }}</p>{% endif %}
+<p>Puede solicitar la devolucion de las entradas sin utilizar. Un administrador revisa la solicitud.</p>
+<form method="post" class="formulario"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Compra<select name="compra" required>{% for c in compras %}<option value="{{ c.id_compra }}">Compra {{ c.id_compra }} - {{ c.total }} USD</option>{% endfor %}</select></label>
+<label>Motivo<textarea name="motivo" required maxlength="500"></textarea></label><button>Enviar solicitud</button></form></section>
+<section class="tarjeta separada"><h2>Mis solicitudes</h2>{% for s in solicitudes %}<p>Compra {{ s.id_compra }} - {{ s.estado }} - {{ s.motivo }}</p>{% else %}<p>No hay solicitudes.</p>{% endfor %}</section>{% endblock %}

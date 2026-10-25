@@ -133,3 +133,8 @@ La [salida real de integración](evidencias/a04/verificar_integracion_b_a04.txt)
 Esta validación cubre las funciones SQL de B y las rutas de A. No certifica las pantallas, permisos ni todas las reglas comerciales de B; tampoco su pasarela externa. Los datos usan una sola categoría y tarifa vigente: no se presenta el fallback de precios ni la elección de categoría de B como integración completa de A-03. La conciliación del boleto provisional de C, su instalación completa y los privilegios de despliegue siguen en T-02. Las pruebas usan la cuenta local configurada y no demuestran privilegios mínimos de una cuenta nueva.
 
 Las pruebas de reserva, pago, expiración y reversión con los SQL reales de B ya se reprodujeron en esta validación. La interfaz integrada, el despliegue y la revisión global de bloqueos permanecen en T-02; la evidencia de A-04 se incorpora a la entrega final de A-07.
+
+
+## Ajuste al integrar el flujo completo
+
+El alta de funcion crea inventario y el mapa agrega solo los asientos nuevos mediante ON CONFLICT DO NOTHING. Para borrar un asiento nunca utilizado, A-04 elimina primero sus filas de inventario disponible dentro de la misma transaccion. Las reservas, boletos e historia de ventas siguen impidiendo el borrado mediante FK. La eliminacion de inventario tambien se revierte si falla la operacion. Ver [integracion](../integracion/guia.md).

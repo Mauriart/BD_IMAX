@@ -37,7 +37,7 @@ CREATE TABLE rol_permiso (
 -- integracion_C_B.sql cuando existan compra y boleto.
 CREATE TABLE solicitud_reembolso (
     id_solicitud_reembolso SERIAL PRIMARY KEY,
-    id_compra INT NOT NULL,
+    id_compra BIGINT NOT NULL,
     id_usuario_actor INT NOT NULL,
     motivo TEXT NOT NULL,
     estado VARCHAR(20) NOT NULL DEFAULT 'pendiente',
@@ -57,7 +57,7 @@ CREATE TABLE solicitud_reembolso (
 
 CREATE TABLE solicitud_reembolso_detalle (
     id_solicitud_reembolso INT NOT NULL,
-    id_boleto INT NOT NULL,
+    id_boleto BIGINT NOT NULL,
     PRIMARY KEY (id_solicitud_reembolso, id_boleto),
     CONSTRAINT fk_srd_solicitud FOREIGN KEY (id_solicitud_reembolso)
         REFERENCES solicitud_reembolso(id_solicitud_reembolso)
@@ -67,7 +67,7 @@ CREATE TABLE solicitud_reembolso_detalle (
 CREATE TABLE acceso_puerta_log (
     id_acceso_puerta_log SERIAL PRIMARY KEY,
     fecha TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    id_boleto INT,
+    id_boleto BIGINT,
     id_funcion_solicitada INT,
     id_usuario_operador INT NOT NULL,
     dispositivo VARCHAR(100) NOT NULL,

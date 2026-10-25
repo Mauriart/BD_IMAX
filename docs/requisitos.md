@@ -73,3 +73,8 @@ Esta matriz se amplía con rutas reales y resultados a medida que se completa A.
 ## Alcance de cierre de A-02
 
 Mauriart decidió completar A-02 con las pantallas y reglas funcionales de A, y dejar la integración de permisos y auditoría de C en T-02 (#23). Ese fue el alcance del cierre funcional. Posteriormente se verificó RF-A-04 para las operaciones actuales de A con el esquema real de C-01; ver [permisos_auditoria_A.md](compa%C3%B1eroA/permisos_auditoria_A.md). T-02 conserva la integración global pendiente. La entrega funcional y sus 11 pruebas están documentadas en [interfaz_A.md](compa%C3%B1eroA/interfaz_A.md).
+
+
+## Evidencia de integracion operativa
+
+La [integracion A/B/C](integracion/guia.md) incorpora cotizacion 2x1 e historicos reales de B, inventario por funcion, permiso y actor comunes, ingreso QR unico, reembolso parcial y reportes. La suite global aporta 22 casos y el conjunto conserva 96 casos aprobados. El modelo relacional global contiene 33 tablas. Los ensayos de concurrencia son de 50 reservas y 50 escaneos, no una certificacion de capacidad mundial. La conciliacion del Chen, rendimiento analitico y documento final conservan su seguimiento en T-02/T-03 y C-07.

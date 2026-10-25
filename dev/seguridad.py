@@ -84,7 +84,17 @@ def comprobar_solicitud():
             return redirect(url_for('seguridad.login'))
         if request.blueprint == 'precios':
             accion = 'configurar_tarifas' if request.method == 'POST' else 'ver_tarifas'
+        elif request.blueprint == 'ventas':
+            opciones = ('reservar_comprar','venta_presencial','consultar_boletos_admin')
+            accion = next((a for a in opciones if puede(a)), opciones[0])
+        elif request.blueprint == 'reportes_c04':
+            accion = 'ver_reportes_financieros'
+        elif request.blueprint == 'operacion':
+            accion = {'operacion.puerta':'validar_ingreso',
+                      'operacion.reembolsos':'solicitar_reembolso',
+                      'operacion.resolver':'resolver_reembolso'}.get(request.endpoint,'resolver_reembolso')
         elif request.blueprint in (None, 'salas', 'funciones'):
+
             accion = 'gestionar_catalogo'
         else:
             abort(403, description='Esta operación no tiene un permiso configurado.')
@@ -134,10 +144,13 @@ def logout():
 
 
 def autorizar_cambio(conexion, accion):
+    return autorizar_operacion(conexion, accion, request.form.get('motivo', '').strip())
+
+
+def autorizar_operacion(conexion, accion, motivo='Operacion del sistema'):
     """Revalidar identidad/permiso y conservarlos estables durante el cambio."""
     if not getattr(g, 'usuario', None):
         abort(403)
-    motivo = request.form.get('motivo', '').strip()
     if not motivo or len(motivo) > 500:
         abort(400, description='Indica el motivo del cambio, con un máximo de 500 caracteres.')
     with conexion.cursor(row_factory=dict_row) as cursor:

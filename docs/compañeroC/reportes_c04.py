@@ -1,19 +1,11 @@
-"""
-C-04 · Dashboard de reportes (Blueprint Flask).  Archivo sugerido: src/operacion/reportes_c04.py
-
-SUPUESTOS (no vi el código de la aplicación; ajustar a su estructura real):
-  * Psycopg 3 y app.config['DATABASE_URL'] (acuerdos §3).
-  * El usuario autenticado está en session['id_usuario'] (nunca viene del formulario).
-  * Solo lectura: no hay formularios que escriban, por eso no requiere CSRF.
-El permiso REAL lo decide la BD (autorizar_accion dentro de cada función, SQLSTATE 42501);
-la interfaz solo refleja el resultado. Registro:  app.register_blueprint(reportes_bp)
-"""
+"""Reportes de C con la conexion y sesion comunes de la aplicacion."""
 import csv
 import io
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import psycopg
+from conexion import obtener_conexion
 from psycopg.rows import dict_row
 from flask import Blueprint, Response, abort, current_app, render_template, request, session
 
@@ -60,10 +52,12 @@ def _params():
 
 def _ejecutar(clave, params):
     """Devuelve (filas, mensaje_de_error). Traduce los rechazos de la BD a mensajes de pantalla."""
+    if params['d'] and params['h'] and params['d'] >= params['h']:
+        abort(400,'El rango de fechas no es valido.')
     sql = REPORTES[clave][1]
     try:
-        with psycopg.connect(current_app.config["DATABASE_URL"], row_factory=dict_row) as con:
-            with con.cursor() as cur:
+        with obtener_conexion() as con:
+            with con.cursor(row_factory=dict_row) as cur:
                 cur.execute(sql, params)
                 return cur.fetchall(), None
     except psycopg.errors.InsufficientPrivilege:
