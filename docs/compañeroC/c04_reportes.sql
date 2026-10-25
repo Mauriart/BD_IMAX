@@ -3,14 +3,7 @@
 -- Archivo sugerido: sql/c04_reportes.sql
 -- Contenido: cuatro reportes analíticos con RBAC en servidor.
 --
--- Alineado con el esquema REAL de imax.sql (IDs INTEGER, admin_operacion_audit con
--- fecha/rol_al_actuar/cambios, roles en minúscula, capacidad = asientos de las zonas
--- de la sala). Reutiliza autorizar_accion (C-01); no crea otra versión de reembolsos:
--- resolver_reembolso (C-03) y revertir_venta (B) ya existen.
---
--- Idempotente: CREATE OR REPLACE. No crea índices (ver c07_indices_propuestos.sql).
--- No modifica datos.
---
+
 -- Definiciones comunes (acuerdos §4 y §11):
 --   * Moneda: USD (CHECK en compra/tarifa). No se mezclan monedas.
 --   * Ventanas móviles: semana = 168 h, mes = 720 h, intervalos [desde, hasta)
@@ -168,7 +161,7 @@ $$;
 -- REPORTE 3. Métodos de pago preferidos
 --   Depende de la tabla `pago` de B (acuerdos §5: id_pago, id_compra, estado, metodo,
 --   monto, moneda, creado_en), que AÚN NO EXISTE en imax.sql. Mientras B no la entregue,
---   la función falla con un mensaje claro (SQLSTATE 55000) y no inventa datos.
+--   la función falla con un mensaje claro y no inventa datos.
 --   Denominadores explícitos (acuerdos §11), solo pagos 'aprobado' del periodo:
 --     pct_compras = compras pagadas con el método / compras pagadas totales
 --     pct_monto   = monto del método / monto aprobado total

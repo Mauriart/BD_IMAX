@@ -1,19 +1,9 @@
--- =============================================================================
--- C-04 · Verificación de los cuatro reportes con dataset conocido
--- Archivo sugerido: sql/c04_verificacion_reportes.sql
---
--- Requisitos: imax.sql (con sus datos) + sql/c04_reportes.sql ya aplicados.
+-- C-04 · Verificación de los cuatro reportes con dataset conocidos
 -- Ejecutar con un usuario propietario (postgres), NO con imax_app: se insertan filas de
 -- ensayo directamente. Todo ocurre en una transacción que termina en ROLLBACK:
 -- no deja filas ni la tabla pago de ensayo.
 -- Resultado esperado: todas las filas con resultado = 'OK' (o 'OMITIDO' donde se indica).
 --
--- Dataset base (imax.sql): función 1, sala 1 con 6 asientos.
---   compra 1 pagada 13.00 (boleto 1 emitido 8.00, boleto 2 usado 5.00)
---   compra 2 reembolsada 12.00 (boleto 3 anulado)
---   compra 3 pagada 8.00 (boleto 4 emitido)
---   => vendidos 3, usados 1, ocupación 50.00 %, bruto 33.00, devuelto 12.00, neto 21.00
--- =============================================================================
 
 BEGIN;
 
@@ -69,7 +59,7 @@ BEGIN
     PERFORM pg_temp.c04_chk(11, 'R1 función sin ventas: bruto, devuelto y neto en 0.00', '0.00|0.00|0.00',
                             to_char(r.ingreso_bruto, 'FM99990.00') || '|' || to_char(r.total_devuelto, 'FM99990.00') || '|' || to_char(r.ingreso_neto, 'FM99990.00'));
 
-    ------------------------------------------------------------------ Dataset para Reporte 2
+    -- Dataset para Reporte 2
     -- Películas 2..7 con una función y una compra pagada cada una; boletos emitidos el 24-oct 10:00.
     FOR i IN 2..7 LOOP
         INSERT INTO pelicula (titulo, sinopsis, clasificacion, duracion_min, poster_url)
