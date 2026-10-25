@@ -1,7 +1,7 @@
 # Acuerdos del equipo — Proyecto II: Base de datos IMAX
 
-Versión 1.1 · 15 de octubre de 2026  
-Repositorio: [Mauriart/BD_IMAX](https://github.com/Mauriart/BD_IMAX)  
+Versión 1.1 · 15 de octubre de 2026
+Repositorio: [Mauriart/BD_IMAX](https://github.com/Mauriart/BD_IMAX)
 Relacionado con [T-01 / issue #1](https://github.com/Mauriart/BD_IMAX/issues/1).
 
 Este documento fija la base común para desarrollar los tres módulos. Sustituye el borrador `00_acuerdos.pdf` y prevalece sobre las recomendaciones organizativas de la guía cuando exista una diferencia. Describe acuerdos de implementación; publicar este archivo no significa que el DER, la aplicación o las pruebas ya estén terminados ni que se haya realizado una revisión de los tres integrantes.
@@ -125,15 +125,15 @@ La capacidad coincide con los asientos activos vendibles; no se mantienen valore
 | --- | --- |
 | `compra` | `id_compra, id_usuario_cliente, id_usuario_actor, id_funcion, estado, total, moneda, creada_en`. Una función por compra; cliente y actor permiten venta de taquilla identificada. |
 | `compra_detalle` | `id_compra_detalle, id_compra, id_asiento, id_categoria_entrada, id_tarifa, id_promocion, precio_base, descuento, cargo_servicio, total_linea`. Una línea por asiento; instantánea histórica de lo cobrado. |
-| `reserva` | `id_reserva, id_compra, estado, creada_en, vence_en`. Una reserva por compra. |
-| `reserva_detalle` | `id_reserva, id_asiento`. Conserva los asientos solicitados, incluso después de expirar. |
+| `reserva` | `id_reserva, id_compra, id_funcion, id_asiento, estado, creada_en, vence_en`. Una fila por asiento reservado de la compra. |
+| Detalle de reserva | Los asientos se conservan en las filas de `reserva`; la version integrada de B no crea otra tabla `reserva_detalle`. |
 | `inventario_funcion` | PK `(id_funcion, id_asiento)`; `estado, id_reserva, id_boleto`. Una fila por asiento vendible de la función. |
 | `pago` | `id_pago, id_compra, estado, metodo, referencia, monto, moneda, creado_en`. Referencia de idempotencia única. |
-| `boleto` | `id_boleto, id_compra_detalle, token_qr, estado, emitido_en, usado_en`. Token UUID aleatorio y único, separado del ID interno. Función/asiento se obtienen del detalle y la compra. |
+| `boleto` | `id_boleto, id_compra, id_funcion, id_asiento, token_qr, estado, emitido_en, usado_en`. Se conserva el contrato publicado por B. La linea de precio se identifica por `(id_compra,id_asiento)` y el QR es un UUID unico. |
 | `reembolso` | `id_reembolso, id_solicitud_reembolso, id_pago, referencia, monto, moneda, creado_en`. Constancia de devolución simulada. |
 | `reembolso_detalle` | `id_reembolso, id_boleto, monto`. Impide devolver dos veces el mismo boleto. |
 
-El inventario representa disponibilidad actual; la reserva y sus detalles conservan historia. **No son una sola tabla.** Un boleto se emite por línea y una compra admite varios boletos.
+El inventario representa disponibilidad actual; las filas de reserva conservan historia. **No son una sola tabla.** Un boleto se emite por línea y una compra admite varios boletos.
 
 La BD debe garantizar que el asiento pertenece a la sala de la función y que inventario, reserva, detalle y boleto se refieren al mismo asiento/función. Usar FK compuestas y restricciones, o una operación/triggers equivalentes explicados en el diseño. No basta comprobarlo en el formulario.
 
@@ -402,3 +402,8 @@ Mauriart toma las decisiones pendientes. La matriz y la guía de esta etapa cubr
 ### Diseño parcial entregado por A
 
 La implementación A-01 usa SERIAL PRIMARY KEY e INT en sus referencias; la sala de un asiento se obtiene a través de zona. La capacidad se calcula y género se normaliza en genero/pelicula_genero. Las promociones conservan condición textual en esta etapa; su aplicación se implementa en A-03. El esquema y contratos vigentes de A están en [compañeroA/modelo_a.md](compa%C3%B1eroA/modelo_a.md) y [compañeroA/contratos_a.md](compa%C3%B1eroA/contratos_a.md). Esta especificación refleja el SQL construido con Mauriart y prevalece para A-01 sobre los detalles más amplios propuestos al inicio. Por su decisión, A-01 se entrega sin revisión externa ni PR adicional.
+
+
+## Contrato de la integracion ejecutable
+
+La implementacion conjunta conserva las tablas de ventas publicadas por B, con los ajustes comprobados en [la guia de integracion](integracion/guia.md). C consulta ese mismo boleto; no se instala el boleto provisional de su volcado anterior. Compra usa Pendiente/Pagada/Cancelada/Expirada/ParcialmenteReembolsada/Reembolsada; boleto usa Emitido/Usado/Anulado. Las solicitudes de C mantienen pendiente/ejecutada/rechazada. La instalacion completa tiene 33 tablas. Esta precision sustituye las firmas provisionales de los modelos parciales donde difieran.

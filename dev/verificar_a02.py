@@ -35,7 +35,7 @@ class PruebasA02(unittest.TestCase):
     @classmethod
     def conectar(cls):
         conexion = obtener_conexion()
-        conexion.execute(sql.SQL("SET search_path TO {}, public").format(sql.Identifier(cls.esquema)))
+        conexion.execute(sql.SQL("SET search_path TO {}, pg_temp").format(sql.Identifier(cls.esquema)))
         return conexion
 
     @classmethod

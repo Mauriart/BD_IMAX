@@ -1,3 +1,5 @@
+> Version de trabajo anterior. La aplicacion, SQL y evidencia de la integracion actual se describen en [integracion/guia.md](../integracion/guia.md). Los resultados historicos de este archivo no sustituyen las pruebas sobre las tablas reales de B.
+
 # Documentación técnica C-04 — Cuatro reportes SQL y dashboard operativo
 
 **Issue:** [C-04 · #18](https://github.com/Mauriart/BD_IMAX/issues/18) · **Bloque:** C · **Versión:** 2.0 · 24 de octubre de 2026

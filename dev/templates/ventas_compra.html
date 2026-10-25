@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Compra #{{ compra.id_compra }}{% endblock %}
+
+{% block content %}
+<div class="ventas">
+  {% include "ventas_comun.html" %}
+
+  <style>
+    .ventas .v-cuenta { font-size:1.6rem; font-weight:700; }
+    .ventas .v-cuenta.v-urgente { color:var(--v-error); }
+    .ventas .v-total { font-size:1.3rem; font-weight:700; text-align:right; margin-top:12px; }
+    .ventas .v-pago { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:14px; }
+    .ventas select { padding:9px 10px; border:1px solid var(--v-borde); border-radius:8px; font-size:1rem; }
+  </style>
+
+  <div class="v-tarjeta">
+    <h1>Compra #{{ compra.id_compra }} <span class="v-etiqueta {{ compra.estado }}">{{ compra.estado }}</span></h1>
+    <p class="v-suave">{{ compra.titulo }} · {{ compra.cine }} · {{ compra.sala }} ·
+      {{ compra.inicio_local.strftime('%d/%m/%Y %H:%M') }}</p>
+
+    {% if compra.estado == 'Pendiente' and vence_iso %}
+      <p>Tus asientos están apartados. Tiempo para pagar:
+        <span class="v-cuenta" id="v-cuenta" data-vence="{{ vence_iso }}">--:--</span></p>
+    {% endif %}
+  </div>
+
+  <div class="v-tarjeta">
+    <h2>Detalle</h2>
+    <table>
+      <tr><th>Asiento</th><th>Zona</th><th>Categoría</th>
+          <th class="v-num">Precio</th><th class="v-num">Descuento</th><th class="v-num">Total</th></tr>
+      {% for l in lineas %}
+        <tr>
+          <td>{{ l.fila }}{{ l.numero }}</td>
+          <td>{{ l.zona }}</td>
+          <td>{{ l.categoria }}</td>
+          <td class="v-num">{{ '%.2f'|format(l.precio_base) }}</td>
+          <td class="v-num">{{ '%.2f'|format(l.descuento) }}</td>
+          <td class="v-num">{{ '%.2f'|format(l.total_linea) }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <div class="v-total">Total a pagar: {{ '%.2f'|format(compra.total) }} {{ compra.moneda }}</div>
+  </div>
+
+  {% if compra.estado == 'Pendiente' %}
+    <div class="v-tarjeta">
+      <h2>Pago simulado</h2>
+      <p class="v-suave">Es una simulación: no se piden ni se guardan datos de tarjeta.
+        Elige el resultado que quieres probar.</p>
+      <form method="post" action="{{ url_for('ventas.pagar', id_compra=compra.id_compra) }}" id="v-form-pago"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="referencia" value="{{ referencia }}">
+        <div class="v-pago">
+          <label for="v-metodo">Método:</label>
+          <select name="metodo" id="v-metodo">
+            {% for m in metodos %}<option>{{ m }}</option>{% endfor %}
+          </select>
+          <button class="v-boton" name="resultado" value="Exito" type="submit">Simular pago APROBADO</button>
+          <button class="v-boton v-peligro" name="resultado" value="Rechazado" type="submit">Simular pago RECHAZADO</button>
+        </div>
+      </form>
+    </div>
+  {% else %}
+    <div class="v-tarjeta">
+      <p>Esta compra está <strong>{{ compra.estado|lower }}</strong>.</p>
+      <a class="v-boton" href="{{ url_for('ventas.mapa', id_funcion=compra.id_funcion) }}">Volver al mapa de asientos</a>
+    </div>
+  {% endif %}
+
+  <script>
+    // Cuenta regresiva hasta el vencimiento del apartado. Al llegar a cero recarga la pagina:
+    // el servidor libera los asientos vencidos y muestra el estado real de la compra.
+    (function () {
+      var cuenta = document.getElementById('v-cuenta');
+      if (!cuenta) return;
+      var vence = new Date(cuenta.dataset.vence).getTime();
+      function pintar() {
+        var restante = Math.floor((vence - Date.now()) / 1000);
+        if (restante <= 0) { cuenta.textContent = '00:00'; window.location.reload(); return; }
+        var m = String(Math.floor(restante / 60)).padStart(2, '0');
+        var s = String(restante % 60).padStart(2, '0');
+        cuenta.textContent = m + ':' + s;
+        cuenta.classList.toggle('v-urgente', restante <= 30);
+      }
+      pintar();
+      setInterval(pintar, 1000);
+      // Evita enviar dos veces el pago con doble clic
+      document.getElementById('v-form-pago').addEventListener('submit', function () {
+        var botones = this.querySelectorAll('button');
+        setTimeout(function () { botones.forEach(function (b) { b.disabled = true; }); }, 0);
+      });
+    })();
+  </script>
+</div>
+{% endblock %}

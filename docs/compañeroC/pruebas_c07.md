@@ -1,3 +1,5 @@
+> Version de trabajo anterior. La aplicacion, SQL y evidencia de la integracion actual se describen en [integracion/guia.md](../integracion/guia.md). Los resultados historicos de este archivo no sustituyen las pruebas sobre las tablas reales de B.
+
 # Pruebas del bloque C — C-07 (issue de pruebas de acceso, permisos, reportes y rendimiento)
 
 Responsable: **bloque C** (asignación personal pendiente). Revisión cruzada: **B revisa C**.

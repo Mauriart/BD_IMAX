@@ -1,3 +1,5 @@
+> Version de trabajo anterior. La aplicacion, SQL y evidencia de la integracion actual se describen en [integracion/guia.md](../integracion/guia.md). Los resultados historicos de este archivo no sustituyen las pruebas sobre las tablas reales de B.
+
 # Evidencias del bloque C (C-07)
 
 Una carpeta por caso o suite. Guardar la salida **tal como se obtuvo**; no editar resultados.

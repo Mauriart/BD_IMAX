@@ -146,6 +146,9 @@ BEGIN
             RAISE EXCEPTION 'La zona tiene asientos referenciados por B; no se puede trasladar.' USING ERRCODE='55000';
         END IF;
     END IF;
+    IF TG_TABLE_NAME='asiento' AND TG_OP='DELETE' THEN
+        DELETE FROM inventario_funcion WHERE id_asiento=OLD.id_asiento AND estado='disponible';
+    END IF;
     IF TG_OP='DELETE' THEN RETURN OLD; END IF;
     RETURN NEW;
 END $$;

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Mapa de asientos{% endblock %}
+
+{% block content %}
+<div class="ventas">
+  {% include "ventas_comun.html" %}
+
+  <style>
+    .ventas .v-pantalla { background:#374151; color:#fff; text-align:center; padding:8px;
+                          border-radius:6px 6px 40px 40px; margin:6px auto 22px; max-width:520px;
+                          letter-spacing:.2em; font-size:.8rem; }
+    .ventas .v-fila { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:8px; }
+    .ventas .v-letra { width:24px; font-weight:700; color:var(--v-suave); text-align:center; }
+    .ventas .v-zona-fila { width:auto; font-size:.8rem; color:var(--v-suave); }
+    .ventas .v-asiento { position:relative; display:block; }
+    .ventas .v-asiento input { position:absolute; opacity:0; inset:0; cursor:pointer; margin:0; }
+    .ventas .v-asiento span { display:block; width:44px; padding:9px 0; text-align:center;
+                              border-radius:8px 8px 4px 4px; font-size:.85rem; font-weight:600;
+                              border:2px solid transparent; }
+    .ventas .v-asiento.disponible span { background:#d1fae5; color:#065f46; border-color:#a7f3d0; }
+    .ventas .v-asiento.disponible input:checked + span { background:#1d4ed8; color:#fff; border-color:#1e3a8a; }
+    .ventas .v-asiento.bloqueado span { background:#fef3c7; color:#92400e; cursor:not-allowed; }
+    .ventas .v-asiento.vendido span { background:#e5e7eb; color:#374151; cursor:not-allowed; }
+    .ventas .v-leyenda { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin:14px 0; font-size:.88rem; }
+    .ventas .v-leyenda i { display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px; margin-right:6px; }
+    .ventas .v-barra { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+                       border-top:1px solid var(--v-borde); padding-top:16px; margin-top:12px; }
+  </style>
+
+  <div class="v-tarjeta">
+    <h1>{{ funcion.titulo }}</h1>
+    <p class="v-suave">{{ funcion.cine }} · {{ funcion.sala }} · {{ funcion.inicio_local.strftime('%d/%m/%Y %H:%M') }}</p>
+
+    {% if not funcion.vendible %}
+      <p class="v-mensaje error">Esta función ya no está disponible para la venta.</p>
+    {% endif %}
+
+    <div class="v-pantalla">PANTALLA</div>
+
+    {% if total_asientos == 0 %}
+      <p class="v-mensaje error">Esta función todavía no tiene asientos cargados en el inventario.
+        </p>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('ventas.reservar', id_funcion=funcion.id_funcion) }}"
+          id="v-formulario" data-maximo="{{ max_asientos }}"><label>Categoria <select name="categoria" required>{% for c in categorias %}<option value="{{ c.id_categoria_entrada }}">{{ c.nombre }}{% if c.requiere_acreditacion %} (requiere acreditacion){% endif %}</option>{% endfor %}</select></label>
+{% if clientes %}<label>Cliente <select name="cliente" required>{% for c in clientes %}<option value="{{ c.id_usuario }}">{{ c.nombre }}</option>{% endfor %}</select></label>{% endif %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      {% for fila, asientos in filas_mapa.items() %}
+        <div class="v-fila">
+          <div class="v-letra">{{ fila }}</div>
+          {% for a in asientos %}
+            <label class="v-asiento {{ a.estado_actual }}"
+                   title="Asiento {{ a.fila }}{{ a.numero }} · {{ a.zona }} · {{ a.estado_actual }}">
+              {% if a.estado_actual == 'disponible' and funcion.vendible %}
+                <input type="checkbox" name="asiento" value="{{ a.asiento_id }}">
+              {% endif %}
+              <span>{{ a.numero }}</span>
+            </label>
+          {% endfor %}
+          <div class="v-letra v-zona-fila">{{ asientos[0].zona }}</div>
+        </div>
+      {% endfor %}
+
+      <div class="v-leyenda">
+        <span><i style="background:#d1fae5"></i>Disponible ({{ resumen.disponible }})</span>
+        <span><i style="background:#1d4ed8"></i>Seleccionado</span>
+        <span><i style="background:#fef3c7"></i>Bloqueado: alguien lo está pagando ({{ resumen.bloqueado }})</span>
+        <span><i style="background:#fecaca"></i>Vendido ({{ resumen.vendido }})</span>
+      </div>
+
+      <div class="v-barra">
+        <div>
+          Seleccionados: <strong id="v-contador">0</strong> de {{ max_asientos }} permitidos
+          <div class="v-suave">Al reservar, tus asientos quedan apartados por 2 minutos para que completes el pago.</div>
+        </div>
+        <button type="submit" class="v-boton" id="v-boton-reservar" disabled>Reservar asientos</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Cuenta los asientos marcados y no deja pasar del limite (la base de datos tambien lo verifica)
+    (function () {
+      var formulario = document.getElementById('v-formulario');
+      var maximo = parseInt(formulario.dataset.maximo, 10);
+      var casillas = document.querySelectorAll('.ventas input[name="asiento"]');
+      var contador = document.getElementById('v-contador');
+      var boton = document.getElementById('v-boton-reservar');
+
+      function marcadas() {
+        return document.querySelectorAll('.ventas input[name="asiento"]:checked').length;
+      }
+      function actualizar() {
+        contador.textContent = marcadas();
+        boton.disabled = (marcadas() === 0);
+      }
+      casillas.forEach(function (c) {
+        c.addEventListener('change', function () {
+          if (marcadas() > maximo) {
+            c.checked = false;
+            alert('Solo puedes elegir hasta ' + maximo + ' asientos por compra.');
+          }
+          actualizar();
+        });
+      });
+      // Evita enviar dos veces el mismo formulario con doble clic
+      document.getElementById('v-formulario').addEventListener('submit', function () {
+        setTimeout(function () { boton.disabled = true; boton.textContent = 'Reservando...'; }, 0);
+      });
+      actualizar();
+      setInterval(async function () {
+        if (document.hidden) return;
+        try {
+          var r = await fetch({{ url_for('ventas.disponibilidad',id_funcion=funcion.id_funcion)|tojson }});
+          if (!r.ok) return;
+          var estados = await r.json();
+          estados.forEach(function (a) {
+            var input=document.querySelector('input[name="asiento"][value="'+a.id+'"]');
+            if (!input) return;
+            var etiqueta=input.closest('.v-asiento');
+            etiqueta.classList.remove('disponible','bloqueado','vendido');
+            etiqueta.classList.add(a.estado);
+            input.disabled=a.estado!=='disponible';
+            if (input.disabled) input.checked=false;
+          });
+          actualizar();
+        } catch (_) { /* Se conserva el mapa; SQL revalida al reservar. */ }
+      }, 2000);
+    })();
+  </script>
+</div>
+{% endblock %}

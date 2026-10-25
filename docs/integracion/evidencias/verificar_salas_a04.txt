@@ -1,0 +1,22 @@
+test_borrado_permitido_auditado_y_pantalla (__main__.PruebasSalasProtegidas.test_borrado_permitido_auditado_y_pantalla) ... ok
+test_concurrencia_borrado_primero_rechaza_reserva (__main__.PruebasSalasProtegidas.test_concurrencia_borrado_primero_rechaza_reserva) ... ok
+test_concurrencia_reserva_primero_rechaza_borrado (__main__.PruebasSalasProtegidas.test_concurrencia_reserva_primero_rechaza_borrado) ... ok
+test_delete_con_trigger_real_c03_sin_duplicacion (__main__.PruebasSalasProtegidas.test_delete_con_trigger_real_c03_sin_duplicacion) ... ok
+test_emitido_y_usado_protegen_la_sala (__main__.PruebasSalasProtegidas.test_emitido_y_usado_protegen_la_sala) ... ok
+test_fallo_auditoria_revierte_borrado (__main__.PruebasSalasProtegidas.test_fallo_auditoria_revierte_borrado) ... ok
+test_historia_no_se_elimina (__main__.PruebasSalasProtegidas.test_historia_no_se_elimina) ... ok
+test_instalacion_incompatible_se_rechaza_sin_cambios_parciales (__main__.PruebasSalasProtegidas.test_instalacion_incompatible_se_rechaza_sin_cambios_parciales) ... ok
+test_instalacion_rechaza_ocupacion_preexistente_incompatible (__main__.PruebasSalasProtegidas.test_instalacion_rechaza_ocupacion_preexistente_incompatible) ... ok
+test_ocupacion_rechaza_asiento_de_otra_sala (__main__.PruebasSalasProtegidas.test_ocupacion_rechaza_asiento_de_otra_sala) ... ok
+test_otro_aislamiento_no_omite_la_proteccion (__main__.PruebasSalasProtegidas.test_otro_aislamiento_no_omite_la_proteccion) ... ok
+test_permisos_csrf_y_ambito_sala (__main__.PruebasSalasProtegidas.test_permisos_csrf_y_ambito_sala) ... ok
+test_reprogramacion_con_reserva_rechazada (__main__.PruebasSalasProtegidas.test_reprogramacion_con_reserva_rechazada) ... ok
+test_reserva_activa_rechaza_borrado_y_nuevos_asientos (__main__.PruebasSalasProtegidas.test_reserva_activa_rechaza_borrado_y_nuevos_asientos) ... ok
+test_reserva_vencida_no_bloquea_otro_asiento_sin_referencias (__main__.PruebasSalasProtegidas.test_reserva_vencida_no_bloquea_otro_asiento_sin_referencias) ... ok
+test_sin_instalacion_no_habilita_eliminar (__main__.PruebasSalasProtegidas.test_sin_instalacion_no_habilita_eliminar) ... ok
+test_zona_con_inventario_no_se_traslada (__main__.PruebasSalasProtegidas.test_zona_con_inventario_no_se_traslada) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 7.327s
+
+OK

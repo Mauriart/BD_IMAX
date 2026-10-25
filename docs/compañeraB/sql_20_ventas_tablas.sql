@@ -4,11 +4,12 @@ id_compra BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 id_usuario_cliente BIGINT NOT NULL REFERENCES usuario(id_usuario),
 id_usuario_actor BIGINT NOT NULL REFERENCES usuario(id_usuario),
 id_funcion BIGINT NOT NULL REFERENCES funcion(id_funcion),
-estado VARCHAR (15) NOT NULL DEFAULT 'Pendiente' CHECK (estado IN
-('Pendiente', 'Pagada', 'Cancelada', 'Expirada', 'Reembolsada')),
+estado VARCHAR (30) NOT NULL DEFAULT 'Pendiente' CHECK (estado IN
+('Pendiente', 'Pagada', 'Cancelada', 'Expirada', 'Reembolsada', 'ParcialmenteReembolsada')),
 total NUMERIC (10,2) NOT NULL DEFAULT 0 CHECK (total >= 0),
 moneda CHAR(3) NOT NULL DEFAULT 'USD',
-creada_en TIMESTAMPTZ NOT NULL DEFAULT now()
+creada_en TIMESTAMPTZ NOT NULL DEFAULT now(),
+UNIQUE(id_compra,id_funcion)
 );
 
 CREATE TABLE compra_detalle (
@@ -21,7 +22,8 @@ id_promocion BIGINT REFERENCES promocion(id_promocion),
 precio_base NUMERIC (10,2) NOT NULL DEFAULT 0 CHECK (precio_base >= 0),
 descuento NUMERIC (10,2) NOT NULL DEFAULT 0 CHECK (descuento >= 0),
 cargo_servicio NUMERIC(10,2) NOT NULL DEFAULT 0,
-total_linea NUMERIC(10,2) NOT NULL
+total_linea NUMERIC(10,2) NOT NULL CHECK(total_linea=precio_base-descuento+cargo_servicio),
+UNIQUE(id_compra,id_asiento)
 );
 
 
@@ -36,7 +38,8 @@ CHECK (estado IN ('activa','confirmada','expirada','liberada')),
 categoria VARCHAR(20) NOT NULL DEFAULT 'adulto',
 precio_unitario NUMERIC(10,2) CHECK (precio_unitario >= 0),
 creada_en TIMESTAMPTZ NOT NULL DEFAULT now(),
-vence_en TIMESTAMPTZ NOT NULL
+vence_en TIMESTAMPTZ NOT NULL,
+FOREIGN KEY(id_compra,id_funcion) REFERENCES compra(id_compra,id_funcion)
 );
 
 
@@ -67,7 +70,9 @@ id_asiento BIGINT NOT NULL REFERENCES asiento(id_asiento),
 token_qr UUID NOT NULL UNIQUE DEFAULT gen_random_uuid(),
 estado VARCHAR(10) NOT NULL DEFAULT 'Emitido' CHECK (estado IN ('Emitido','Usado','Anulado')),
 emitido_en TIMESTAMPTZ NOT NULL DEFAULT now(),
-usado_en TIMESTAMPTZ
+usado_en TIMESTAMPTZ,
+CHECK((estado='Usado')=(usado_en IS NOT NULL)),
+FOREIGN KEY(id_compra,id_funcion) REFERENCES compra(id_compra,id_funcion)
 );
 
 -- Creación de tabla Inventario

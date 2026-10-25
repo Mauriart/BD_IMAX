@@ -1,0 +1,9 @@
+{% extends 'base.html' %}{% block title %}Resolver reembolsos{% endblock %}
+{% block content %}<h1>Resolver reembolsos</h1>{% if resultado %}<p class="alerta" role="status">{{ resultado.mensaje }}</p>{% endif %}
+{% for s in solicitudes %}<section class="tarjeta separada"><h2>Solicitud {{ s.id_solicitud_reembolso }} - compra {{ s.id_compra }}</h2>
+<p>{{ s.cliente }}: {{ s.motivo }}</p><form method="post" class="formulario">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="solicitud" value="{{ s.id_solicitud_reembolso }}">
+<label>Decision<select name="decision"><option value="ejecutar">Ejecutar devolucion</option><option value="rechazar">Rechazar</option></select></label>
+<label>Motivo<textarea name="motivo" required maxlength="500"></textarea></label>
+<label><input type="checkbox" name="forzar"> Autorizar excepcion a la politica de dos horas</label><button>Resolver solicitud</button>
+</form></section>{% else %}<p>No hay solicitudes pendientes.</p>{% endfor %}{% endblock %}

@@ -40,6 +40,9 @@ class PruebasIntegracionB(unittest.TestCase):
             migracion = (docs / 'compa\u00f1eroA' / 'proteccion_salas_A04.sql').read_text(encoding='utf-8-sig')
             c.execute(migracion)
             c.execute(migracion)
+            fuente=(docs/'compa\u00f1eroC'/'sql_C-03.sql').read_text(encoding='utf-8-sig')
+            fuente=fuente.replace('public.',cls.esquema+'.').replace('search_path = public','search_path = '+cls.esquema).replace("'public'","'"+cls.esquema+"'")
+            c.execute(fuente)
 
     def setUp(self):
         PruebasPrecios.setUp(self)
@@ -51,10 +54,12 @@ class PruebasIntegracionB(unittest.TestCase):
         self.ruta = f'/salas/1/asientos/{self.libre}/eliminar'
 
     def reservar(self, asientos=None):
+        self.conexion.execute("SELECT set_config('app.id_usuario',%s,true),set_config('app.ip','127.0.0.1',true),set_config('app.motivo','Ensayo',true)",(str(self.usuario),))
         return self.conexion.execute('SELECT reservar_asientos(%s::bigint,%s::bigint,%s::bigint,%s::int[])',
             (self.usuario,self.usuario,self.funcion,asientos or [self.asiento])).fetchone()[0]
 
     def pagar(self, compra, resultado='Exito', referencia='pago-ensayo'):
+        self.conexion.execute("SELECT set_config('app.id_usuario',%s,true)",(str(self.usuario),))
         self.conexion.execute('SELECT procesar_pago(%s::bigint,%s::varchar,%s::varchar,%s::varchar)',
             (compra,resultado,'Tarjeta',referencia))
 
@@ -64,6 +69,8 @@ class PruebasIntegracionB(unittest.TestCase):
         self.assertEqual(disponibilidad[0][0:2],(self.asiento,'bloqueado'))
         self.assertEqual(self.conexion.execute('SELECT total FROM compra WHERE id_compra=%s',(compra,)).fetchone()[0],Decimal('8.00'))
         self.assertEqual(self.cliente.post(self.ruta).status_code,400)
+        admin=self.conexion.execute("SELECT id_usuario FROM usuario WHERE correo='admin@imax.test'").fetchone()[0]
+        self.conexion.execute("SELECT set_config('app.id_usuario',%s,true)",(str(admin),))
         for consulta in ('DELETE FROM sala WHERE id_sala=1',"UPDATE zona SET nombre='Cambio' WHERE id_zona=1",
                          "INSERT INTO asiento(id_zona,fila,numero) VALUES(1,'B',1)"):
             with self.subTest(consulta=consulta),self.assertRaises(psycopg.errors.ObjectNotInPrerequisiteState),self.conexion.transaction():
@@ -77,8 +84,11 @@ class PruebasIntegracionB(unittest.TestCase):
         self.assertEqual(self.conexion.execute('SELECT estado FROM boleto WHERE id_compra=%s',(compra,)).fetchone()[0],'Emitido')
         self.assertEqual(self.conexion.execute('SELECT estado FROM inventario_funcion WHERE id_asiento=%s',(self.asiento,)).fetchone()[0],'vendido')
         self.assertEqual(self.cliente.post(self.ruta).status_code,400)
+        admin=self.conexion.execute("SELECT id_usuario FROM usuario WHERE correo='admin@imax.test'").fetchone()[0]
+        self.conexion.execute("SELECT set_config('app.id_usuario',%s,true)",(str(admin),))
         with self.assertRaises(psycopg.errors.ObjectNotInPrerequisiteState),self.conexion.transaction():
             self.conexion.execute("UPDATE funcion SET inicio=inicio+INTERVAL '1 day',fin=fin+INTERVAL '1 day' WHERE id_funcion=%s",(self.funcion,))
+        self.conexion.execute("SELECT set_config('app.id_usuario',%s,true)",(str(self.usuario),))
         boletos=self.conexion.execute('SELECT * FROM consultar_boletos_usuario(%s::bigint,%s::bigint)',(self.usuario,self.usuario)).fetchall()
         self.assertEqual(len(boletos),1)
 
@@ -102,7 +112,9 @@ class PruebasIntegracionB(unittest.TestCase):
     def test_reversion_real_conserva_historia(self):
         compra=self.reservar()
         self.pagar(compra)
-        self.conexion.execute("SELECT revertir_venta(%s::bigint,%s::bigint,'Ensayo'::varchar)",(compra,self.usuario))
+        admin=self.conexion.execute("SELECT id_usuario FROM usuario WHERE correo='admin@imax.test'").fetchone()[0]
+        self.conexion.execute("SELECT set_config('app.id_usuario',%s,true)",(str(admin),))
+        self.conexion.execute("SELECT revertir_venta(%s::bigint,%s::bigint,'Ensayo'::varchar)",(compra,admin))
         self.assertEqual(self.conexion.execute('SELECT estado FROM boleto WHERE id_compra=%s',(compra,)).fetchone()[0],'Anulado')
         self.assertEqual(self.cliente.post(self.ruta).status_code,302)
         respuesta=self.cliente.post(f'/salas/1/asientos/{self.asiento}/eliminar')
@@ -119,7 +131,7 @@ class PruebasIntegracionB(unittest.TestCase):
 
     def test_reserva_multiple_revierte_si_un_asiento_no_disponible(self):
         with self.assertRaises(psycopg.errors.RaiseException),self.conexion.transaction():
-            self.reservar([self.asiento,self.libre])
+            self.reservar([self.asiento,1000000])
         self.assertEqual(self.conexion.execute('SELECT COUNT(*) FROM compra WHERE id_funcion=%s',(self.funcion,)).fetchone()[0],0)
         self.assertEqual(self.conexion.execute('SELECT COUNT(*) FROM reserva WHERE id_funcion=%s',(self.funcion,)).fetchone()[0],0)
         self.assertEqual(self.conexion.execute('SELECT COUNT(*) FROM compra_detalle cd JOIN compra c USING(id_compra) WHERE c.id_funcion=%s',(self.funcion,)).fetchone()[0],0)
@@ -152,6 +164,7 @@ class PruebasIntegracionB(unittest.TestCase):
         self.addCleanup(segundo.close)
         for c in (primero,segundo):c.execute("SET LOCAL lock_timeout='6s'")
         def reservar(c):
+            c.execute("SELECT set_config('app.id_usuario',%s,true),set_config('app.ip','127.0.0.1',true),set_config('app.motivo','Ensayo',true)",(str(self.usuario),))
             c.execute('SELECT reservar_asientos(%s::bigint,%s::bigint,%s::bigint,%s::int[])',
                       (self.usuario,self.usuario,funcion,[asiento]))
         def borrar(c):

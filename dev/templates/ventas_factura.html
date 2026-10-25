@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Factura #{{ compra.id_compra }}{% endblock %}
+
+{% block content %}
+<div class="ventas">
+  {% include "ventas_comun.html" %}
+
+  <style>
+    .ventas .v-encabezado { display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+    .ventas .v-datos p { margin:2px 0; }
+    .ventas .v-total { font-size:1.25rem; font-weight:700; text-align:right; margin-top:12px; }
+    .ventas .v-boletos { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:14px; }
+    .ventas .v-boleto { border:2px dashed var(--v-borde); border-radius:12px; padding:14px; text-align:center; background:#fff; }
+    .ventas .v-boleto img { width:170px; height:170px; image-rendering:pixelated; }
+    .ventas .v-boleto .v-asiento-grande { font-size:1.4rem; font-weight:700; }
+    .ventas .v-token { font-family:ui-monospace, Menlo, monospace; font-size:.68rem; color:var(--v-suave); word-break:break-all; }
+    .ventas .v-acciones { display:flex; gap:10px; flex-wrap:wrap; }
+    @media print {
+      .cabecera, .pie, .ventas .v-menu, .ventas .v-acciones, .ventas .v-mensaje { display:none !important; }
+      .ventas .v-tarjeta { border:0; padding:0; }
+    }
+  </style>
+
+  <div class="v-tarjeta">
+    <div class="v-encabezado">
+      <div>
+        <h1>Factura #{{ compra.id_compra }}</h1>
+        <p class="v-suave">Comprobante de compra · pago simulado</p>
+      </div>
+      <div class="v-datos" style="text-align:right">
+        <p><span class="v-etiqueta {{ compra.estado }}">{{ compra.estado }}</span></p>
+        <p class="v-suave">Fecha: {{ compra.creada_en.strftime('%d/%m/%Y %H:%M') }}</p>
+      </div>
+    </div>
+
+    <div class="v-datos" style="margin-top:12px">
+      <p><strong>Cliente:</strong> {{ cliente or ('Usuario #' ~ compra.id_usuario_cliente) }}</p>
+      <p><strong>Película:</strong> {{ compra.titulo }}</p>
+      <p><strong>Función:</strong> {{ compra.cine }} · {{ compra.sala }} · {{ compra.inicio_local.strftime('%d/%m/%Y %H:%M') }}</p>
+      {% if pago %}
+        <p><strong>Pago:</strong> {{ pago.metodo }} · referencia {{ pago.referencia }} ·
+           {{ pago.estado }} · {{ '%.2f'|format(pago.monto) }} {{ pago.moneda }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="v-tarjeta">
+    <h2>Detalle de la compra</h2>
+    <table>
+      <tr><th>Asiento</th><th>Zona</th><th>Categoría</th>
+          <th class="v-num">Precio</th><th class="v-num">Descuento</th><th class="v-num">Cargo</th><th class="v-num">Total</th></tr>
+      {% for l in lineas %}
+        <tr>
+          <td>{{ l.fila }}{{ l.numero }}</td>
+          <td>{{ l.zona }}</td>
+          <td>{{ l.categoria }}</td>
+          <td class="v-num">{{ '%.2f'|format(l.precio_base) }}</td>
+          <td class="v-num">{{ '%.2f'|format(l.descuento) }}</td>
+          <td class="v-num">{{ '%.2f'|format(l.cargo_servicio) }}</td>
+          <td class="v-num">{{ '%.2f'|format(l.total_linea) }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <div class="v-total">Total: {{ '%.2f'|format(compra.total) }} {{ compra.moneda }}</div>
+  </div>
+
+  <div class="v-tarjeta">
+    <h2>Tus boletos</h2>
+    <p class="v-suave">Presenta el código QR en la puerta. Cada boleto se puede usar una sola vez.</p>
+    <div class="v-boletos">
+      {% for b in boletos %}
+        <div class="v-boleto">
+          <div class="v-asiento-grande">{{ b.fila }}{{ b.numero }}</div>
+          <div class="v-suave">{{ b.zona }}</div>
+          {% if b.estado == 'Emitido' %}
+            <img src="{{ url_for('ventas.qr', token=b.token_qr) }}" alt="Código QR del asiento {{ b.fila }}{{ b.numero }}">
+          {% else %}
+            <p><em>QR no disponible</em></p>
+          {% endif %}
+          <p><span class="v-etiqueta {{ b.estado }}">{{ b.estado }}</span></p>
+          <div class="v-token">{{ b.token_qr }}</div>
+        </div>
+      {% else %}
+        <p>Esta compra todavía no tiene boletos.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="v-acciones">
+    <button class="v-boton" onclick="window.print()">Imprimir factura</button>
+    <a class="v-boton v-secundario" href="{{ url_for('ventas.mis_compras') }}">Mis compras</a>
+    <a class="v-boton v-secundario" href="{{ url_for('ventas.inicio') }}">Ver más funciones</a>
+  </div>
+</div>
+{% endblock %}

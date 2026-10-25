@@ -1,0 +1,49 @@
+{# Fragmento comun de las pantallas de ventas (se incluye dentro de base.html).
+   Los estilos van limitados a ".ventas" y con prefijo "v-" para no chocar con estilos.css de A. #}
+<style>
+  .ventas .v-menu a { color:var(--v-acento); }
+  .ventas { --v-texto:#1f2430; --v-suave:#6b7280; --v-borde:#d9dce3; --v-acento:#1d4ed8;
+            --v-ok:#0a7a2f; --v-error:#b00020; color:var(--v-texto); }
+  .ventas h1 { font-size:1.5rem; margin:0 0 6px; }
+  .ventas h2 { font-size:1.1rem; margin:0 0 12px; }
+  .ventas .v-suave { color:var(--v-suave); font-size:.92rem; }
+  .ventas .v-menu { display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin:0 0 16px;
+                    padding-bottom:10px; border-bottom:1px solid var(--v-borde); font-size:.95rem; }
+  .ventas .v-menu .v-usuario { margin-left:auto; color:var(--v-suave); }
+  .ventas .v-tarjeta { background:#fff; border:1px solid var(--v-borde); border-radius:10px;
+                       padding:20px; margin-bottom:20px; }
+  .ventas .v-mensaje { padding:10px 14px; border-radius:8px; margin-bottom:12px; border:1px solid; }
+  .ventas .v-mensaje.ok { color:var(--v-ok); border-color:#b7e4c7; background:#ecfdf3; }
+  .ventas .v-mensaje.error { color:var(--v-error); border-color:#f5c2c7; background:#fdecee; }
+  .ventas table { border-collapse:collapse; width:100%; }
+  .ventas th, .ventas td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--v-borde); }
+  .ventas th { font-size:.85rem; color:var(--v-suave); font-weight:600; }
+  .ventas .v-num { text-align:right; }
+  .ventas .v-boton { display:inline-block; background:var(--v-acento); color:#fff; border:1px solid var(--v-acento);
+                     border-radius:8px; padding:9px 16px; font-size:1rem; cursor:pointer; text-decoration:none; }
+  .ventas .v-boton:hover { filter:brightness(1.1); }
+  .ventas .v-boton.v-secundario { background:#fff; color:var(--v-acento); }
+  .ventas .v-boton.v-peligro { background:#fff; color:var(--v-error); border-color:var(--v-error); }
+  .ventas .v-boton[disabled] { opacity:.45; cursor:not-allowed; }
+  .ventas .v-etiqueta { display:inline-block; padding:2px 10px; border-radius:999px; font-size:.8rem;
+                        font-weight:600; background:#e5e7eb; }
+  .ventas .v-etiqueta.Pagada, .ventas .v-etiqueta.Emitido { background:#d1fae5; color:#065f46; }
+  .ventas .v-etiqueta.Pendiente { background:#fef3c7; color:#92400e; }
+  .ventas .v-etiqueta.Cancelada, .ventas .v-etiqueta.Expirada, .ventas .v-etiqueta.Anulado { background:#fee2e2; color:#991b1b; }
+  .ventas .v-etiqueta.Reembolsada, .ventas .v-etiqueta.Usado { background:#e0e7ff; color:#3730a3; }
+</style>
+
+<nav class="v-menu" aria-label="Ventas">
+  <strong>Ventas</strong>
+  <a href="{{ url_for('ventas.inicio') }}">Funciones</a>
+  <a href="{{ url_for('ventas.mis_compras') }}">Mis compras</a>
+  <span class="v-usuario">
+    {% if session.get('id_usuario') %}Usuario #{{ session.get('id_usuario') }}{% else %}Sin sesión{% endif %}
+  </span>
+</nav>
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+  {% for categoria, texto in mensajes %}
+    <div class="v-mensaje {{ categoria }}">{{ texto }}</div>
+  {% endfor %}
+{% endwith %}

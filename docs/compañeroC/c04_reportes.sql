@@ -9,7 +9,7 @@
 --   * Ventanas móviles: semana = 168 h, mes = 720 h, intervalos [desde, hasta)
 --     con un único instante de corte.
 --   * Venta "cobrada": compra en pagada | parcialmente_reembolsada | reembolsada.
---   * Un boleto 'anulado' solo se origina en un reembolso (revertir_venta), por lo que
+--   * Un boleto 'Anulado' solo se origina en un reembolso (revertir_venta), por lo que
 --     el importe devuelto = suma de total_linea de los boletos anulados.
 --   * Cada reporte preagrega por función/película/método ANTES de unir, para no
 --     multiplicar importes ni conteos.
@@ -65,14 +65,14 @@ BEGIN
     ),
     ventas AS (
         SELECT c.id_funcion,
-               count(b.id_boleto) FILTER (WHERE b.estado IN ('emitido', 'usado')) AS vendidos,
-               count(b.id_boleto) FILTER (WHERE b.estado = 'usado')               AS usados,
+               count(b.id_boleto) FILTER (WHERE b.estado IN ('Emitido', 'Usado')) AS vendidos,
+               count(b.id_boleto) FILTER (WHERE b.estado = 'Usado')               AS usados,
                coalesce(sum(cd.total_linea), 0)                                   AS bruto,
-               coalesce(sum(cd.total_linea) FILTER (WHERE b.estado = 'anulado'), 0) AS devuelto
+               coalesce(sum(cd.total_linea) FILTER (WHERE b.estado = 'Anulado'), 0) AS devuelto
         FROM compra c
         INNER JOIN compra_detalle cd ON cd.id_compra = c.id_compra
-        LEFT  JOIN boleto b          ON b.id_compra_detalle = cd.id_compra_detalle
-        WHERE c.estado IN ('pagada', 'parcialmente_reembolsada', 'reembolsada')
+        LEFT  JOIN boleto b          ON b.id_compra = cd.id_compra AND b.id_asiento = cd.id_asiento
+        WHERE c.estado IN ('Pagada', 'ParcialmenteReembolsada', 'Reembolsada')
         GROUP BY c.id_funcion
     )
     SELECT f.id_funcion,
@@ -134,13 +134,13 @@ BEGIN
                count(b.id_boleto)   AS vendidos,
                sum(cd.total_linea)  AS recaudado
         FROM boleto b
-        INNER JOIN compra_detalle cd ON cd.id_compra_detalle = b.id_compra_detalle
+        INNER JOIN compra_detalle cd ON cd.id_compra = b.id_compra AND cd.id_asiento = b.id_asiento
         INNER JOIN compra c          ON c.id_compra = cd.id_compra
         INNER JOIN funcion f         ON f.id_funcion = c.id_funcion
         WHERE b.emitido_en >= p_corte - INTERVAL '168 hours'
           AND b.emitido_en <  p_corte
-          AND b.estado IN ('emitido', 'usado')
-          AND c.estado IN ('pagada', 'parcialmente_reembolsada')
+          AND b.estado IN ('Emitido', 'Usado')
+          AND c.estado IN ('Pagada', 'ParcialmenteReembolsada')
         GROUP BY f.id_pelicula
     )
     SELECT (row_number() OVER (ORDER BY pp.vendidos DESC, pe.id_pelicula))::integer,
@@ -162,7 +162,7 @@ $$;
 --   Depende de la tabla `pago` de B (acuerdos §5: id_pago, id_compra, estado, metodo,
 --   monto, moneda, creado_en), que AÚN NO EXISTE en imax.sql. Mientras B no la entregue,
 --   la función falla con un mensaje claro y no inventa datos.
---   Denominadores explícitos (acuerdos §11), solo pagos 'aprobado' del periodo:
+--   Denominadores explícitos (acuerdos §11), solo pagos 'Aprobado' del periodo:
 --     pct_compras = compras pagadas con el método / compras pagadas totales
 --     pct_monto   = monto del método / monto aprobado total
 --   Las devoluciones NO cuentan como pagos nuevos y se muestran aparte.
@@ -201,7 +201,7 @@ BEGIN
                count(DISTINCT pg.id_compra) AS n_compras,
                sum(pg.monto)                AS monto_met
         FROM pago pg
-        WHERE pg.estado = 'aprobado'
+        WHERE pg.estado = 'Aprobado'
           AND pg.creado_en >= v_desde AND pg.creado_en < v_hasta
         GROUP BY pg.metodo
     ),

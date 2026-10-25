@@ -22,7 +22,7 @@ BEGIN
         SELECT 1 FROM solicitud_reembolso_detalle d
         INNER JOIN solicitud_reembolso s ON s.id_solicitud_reembolso = d.id_solicitud_reembolso
         INNER JOIN boleto b ON b.id_boleto = d.id_boleto
-        INNER JOIN compra_detalle cd ON cd.id_compra_detalle = b.id_compra_detalle
+        INNER JOIN compra_detalle cd ON cd.id_compra = b.id_compra AND cd.id_asiento = b.id_asiento
         WHERE cd.id_compra <> s.id_compra) THEN
         RAISE EXCEPTION 'Hay boletos solicitados que no pertenecen a la compra de su solicitud.';
     END IF;
@@ -42,13 +42,13 @@ RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
-    compra_solicitud INT;
-    compra_boleto INT;
+    compra_solicitud BIGINT;
+    compra_boleto BIGINT;
 BEGIN
     SELECT id_compra INTO compra_solicitud
     FROM solicitud_reembolso WHERE id_solicitud_reembolso = NEW.id_solicitud_reembolso FOR SHARE;
     SELECT cd.id_compra INTO compra_boleto
-    FROM boleto b INNER JOIN compra_detalle cd ON cd.id_compra_detalle = b.id_compra_detalle
+    FROM boleto b INNER JOIN compra_detalle cd ON cd.id_compra = b.id_compra AND cd.id_asiento = b.id_asiento
     WHERE b.id_boleto = NEW.id_boleto;
     -- Las referencias inexistentes las rechazan las FK.
     IF compra_solicitud IS NOT NULL AND compra_boleto IS NOT NULL
