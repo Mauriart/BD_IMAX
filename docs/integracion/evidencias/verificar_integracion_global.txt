@@ -1,4 +1,5 @@
 test_2x1_impar_cotizacion_congelada (__main__.IntegracionGlobal.test_2x1_impar_cotizacion_congelada) ... ok
+test_2x1_solo_miercoles_segun_dia_local_de_funcion (__main__.IntegracionGlobal.test_2x1_solo_miercoles_segun_dia_local_de_funcion) ... ok
 test_50_escaneos_simultaneos_un_ingreso (__main__.IntegracionGlobal.test_50_escaneos_simultaneos_un_ingreso) ... ok
 test_50_reservas_simultaneas_un_ganador (__main__.IntegracionGlobal.test_50_reservas_simultaneas_un_ganador) ... ok
 test_acreditacion_y_qr_de_otra_funcion (__main__.IntegracionGlobal.test_acreditacion_y_qr_de_otra_funcion) ... ok
@@ -22,6 +23,6 @@ test_sin_tarifa_no_inventa_precio (__main__.IntegracionGlobal.test_sin_tarifa_no
 test_venta_presencial_y_reembolso_desde_interfaz (__main__.IntegracionGlobal.test_venta_presencial_y_reembolso_desde_interfaz) ... ok
 
 ----------------------------------------------------------------------
-Ran 22 tests in 13.816s
+Ran 23 tests in 6.160s
 
 OK

@@ -362,14 +362,14 @@ INSERT INTO promocion (
 )
 VALUES (
     'Pareja General', '2x1',
-    'Dos entradas de adulto en zona General de la misma función.',
+    'Dos entradas de adulto en zona General de la misma función, únicamente los miércoles.',
     CURRENT_DATE - INTERVAL '1 day', CURRENT_DATE + INTERVAL '7 days 18 hours', TRUE
 );
 INSERT INTO funcion_promocion (id_funcion, id_promocion)
 VALUES (1, 1);
 
 INSERT INTO promocion_dia (id_promocion, dia_semana)
-VALUES (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7);
+VALUES (1, 3);
 
 INSERT INTO promocion_zona (id_promocion, id_zona)
 VALUES (1, 1);

@@ -1,4 +1,6 @@
-# Pruebas del esquema A
+# Pruebas iniciales del esquema A — A-01
+
+Este documento conserva la evidencia de A-01. Para el estado actual, las 97 pruebas automatizadas y el estado integrado, consultar [pruebas_modulo_A.md](pruebas_modulo_A.md).
 
 ## Condiciones
 
@@ -52,6 +54,6 @@ La [salida de ejecución](resultado_verificacion_A.txt) conserva los resultados 
 
 Orden usado: relacional_A.sql → ajuste_integridad_A.sql → datos_A.sql → consultas_A.sql → verificacion_A.sql. La ejecución se detuvo ante cualquier error no previsto mediante ON_ERROR_STOP=1. Las comprobaciones de rechazo usan bloques EXCEPTION para distinguir el fallo esperado de otro problema.
 
-No se han ejecutado pruebas de concurrencia, traslapes, tarifas con vigencias superpuestas, permisos, ventas o auditoría. No se han medido tiempos ni planes de ejecución. Esas verificaciones corresponden a las tareas posteriores.
+En el alcance de aquella entrega de A-01 no se habían ejecutado pruebas de concurrencia, traslapes, tarifas con vigencias superpuestas, permisos, ventas o auditoría. No se han medido tiempos ni planes de ejecución. Esas verificaciones corresponden a las tareas posteriores.
 
 A-01 entrega el modelo parcial, la normalización, el diccionario, el esquema, los datos, los contratos y esta verificación. Mauriart indicó que no requiere revisión por otra persona para esta entrega. El ajuste deberá ejecutarse también en su base existente para que incorpore la validación nueva.

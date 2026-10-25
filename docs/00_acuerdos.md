@@ -174,7 +174,7 @@ Los ejemplos numéricos de la consigna se convierten aquí en decisiones del equ
 
 - A configura tarifas por función, zona y categoría. C documenta la comprobación física de credenciales para categorías especiales.
 - B calcula el precio en servidor; no acepta totales enviados por el navegador.
-- Promoción inicial: **2x1**, en los días y categorías configurados, para parejas de entradas de la misma función, zona y categoría.
+- Promoción inicial **Pareja General**: **2x1 los miércoles**, para parejas de entradas Adulto de la misma función y zona General. Se evalúa el día local de inicio según la zona horaria del cine. Decisión de Mauriart al completar la configuración inicial. Las demás promociones conservan días y categorías configurables.
 - Cada pareja recibe un descuento equivalente a una tarifa base; con cantidad impar se cobra la entrada sobrante. Las dos líneas conservan precio y descuento, distribuyendo el descuento por mitades y asignando cualquier centavo restante por orden de asiento.
 - No se acumulan promociones. Si varias son aplicables, se utiliza la de mayor descuento; en empate, la de menor ID.
 - La reserva fija la cotización y sus reglas hasta el vencimiento; un cambio posterior de tarifas no altera compras reservadas ni pagadas.

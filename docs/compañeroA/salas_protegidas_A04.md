@@ -6,7 +6,7 @@ A incorpora una operación de eliminación de asientos con confirmación, permis
 
 Se aprobaron 17 pruebas de protección con contrato reducido, 10 con los SQL reales de B y las 47 anteriores. Total de esta validación: 74 pruebas aprobadas. Las siete salidas reales están en [evidencias/a04](evidencias/a04/).
 
-La protección se verificó tanto con un fixture reducido como con las tablas y funciones reales de reserva/pago de B. El PR de A-04 queda pendiente de integrar; el issue no se cierra por publicar esta evidencia. El SQL no se instaló en public ni en los datos de trabajo. La nueva opción de eliminación permanece deshabilitada en una instalación que no tenga la migración de A-04.
+La protección se verificó tanto con un fixture reducido como con las tablas y funciones reales de reserva/pago de B. A-04 fue integrado y cerrado. Después se instaló en p2 mediante el PR #40, conservando los datos; las evidencias actuales están en [integración](../integracion/guia.md). Las 74 pruebas de este apartado corresponden a la etapa anterior y forman parte del conjunto actual. La nueva opción de eliminación permanece deshabilitada en una instalación que no tenga la migración de A-04.
 
 ## Qué hace SQL
 

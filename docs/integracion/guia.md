@@ -17,7 +17,7 @@ En otra computadora: crear .venv con py -m venv .venv, instalar con .venv\Script
 
 La base p2 se actualizó con el segundo script. Se compararon conteo y contenido de las 21 tablas originales de datos antes de confirmar; se conservaron. rol_permiso incorporó los permisos administrativos que C necesita para sus operaciones.
 
-Quedaron 33 tablas e inventario inicial para las funciones existentes. No se insertaron pagos de prueba en p2. Los experimentos de compra, pago, ingreso y reembolso se hicieron en esquemas de ensayo eliminados al terminar. La aplicación local debe reiniciarse para cargar el código actualizado.
+Quedaron 33 tablas e inventario inicial para las funciones existentes. No se insertaron pagos de prueba en p2. Los experimentos de compra, pago, ingreso y reembolso se hicieron en esquemas de ensayo eliminados al terminar. La aplicación local se verificó con iniciar.py y responde en http://127.0.0.1:5000/cartelera.
 
 La actualización no se aplica por segunda vez: reconoce las tablas de B y se detiene. El instalador completo tampoco es un mecanismo para reemplazar una base existente.
 
@@ -61,8 +61,8 @@ El proceso local se sirve en 127.0.0.1:5000 con debug desactivado. Para un despl
 | verificar_compatibilidad_c03.py | 5 |
 | verificar_salas_a04.py | 17 |
 | verificar_integracion_b_a04.py | 10 |
-| verificar_integracion_global.py | 22 |
-| Total | 96 |
+| verificar_integracion_global.py | 23 |
+| Total | 97 |
 
 Las ocho salidas reales están en [evidencias](evidencias/). Las suites crean sus propios esquemas, sin buscar tablas/funciones de public como respaldo, y los eliminan al terminar.
 
@@ -104,6 +104,13 @@ imax.sql de C conserva un modelo provisional de ventas: no se combina con este i
 
 T-02 conserva la conciliación del Chen global y la revisión documental final; este modelo relacional es la base comprobada. La integración operativa ya tiene código y evidencias.
 
-Todavía quedan A-07 (consolidar documentación y ensayo), A-06 (cerrar costos), la evidencia EXPLAIN ANALYZE de C-07 y la preparación del documento técnico final en T-03. Las pruebas de 50 conexiones no demuestran la escala mundial propuesta en factibilidad ni sustituyen una prueba de recuperación.
+A-07 reúne las pruebas y el guion actualizados. Quedan A-06 (cerrar costos), la evidencia EXPLAIN ANALYZE de C-07 y la preparación del documento técnico final en T-03. Las pruebas de 50 conexiones no demuestran la escala mundial propuesta en factibilidad ni sustituyen una prueba de recuperación.
 
 No se cerraron automáticamente los issues de B/C por integrar sus archivos. Su aceptación debe contrastarse con las pruebas y pendientes específicos. La limpieza final del repositorio conserva commits e historia y distingue los entregables finales de los borradores.
+
+
+## Configuración inicial y siguiente entrega
+
+Pareja General se configuró por decisión de Mauriart como 2x1 solo los miércoles, para Adulto/General. El día corresponde al inicio local de la función. Se conservan vigencias y asociaciones existentes: una función de domingo no recibe ese descuento y una promoción vencida tampoco. El instalador nuevo incluye el día 3; ajustar_pareja_general.sql documenta el ajuste aplicado a p2 con actor y auditoría. La suite global contrasta una compra de dos entradas en miércoles (USD 8) con jueves (USD 16), a tarifa base USD 8.
+
+Las [pruebas de A](../compañeroA/pruebas_modulo_A.md) y el [guion](../compañeroA/guion_defensa_A.md) son material para el informe. La práctica oral del equipo sigue por realizar. La limpieza y estructura definitiva quedan para después del documento final: un SQL completo, un informe y los archivos del programa ordenados.

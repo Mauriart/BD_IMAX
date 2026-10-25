@@ -94,6 +94,27 @@ class IntegracionGlobal(unittest.TestCase):
         self.assertEqual(self.conexion.execute('SELECT monto FROM pago WHERE id_compra=%s',(compra,)).fetchone()[0],Decimal('16'))
         self.assertEqual(self.conexion.execute('SELECT count(*) FROM boleto WHERE id_compra=%s',(compra,)).fetchone()[0],3)
 
+    def test_2x1_solo_miercoles_segun_dia_local_de_funcion(self):
+        self.promocion()
+        self.actor('administrador')
+        c=self.conexion
+        promocion=c.execute('SELECT id_promocion FROM funcion_promocion WHERE id_funcion=%s',(self.funcion,)).fetchone()[0]
+        c.execute('DELETE FROM promocion_dia WHERE id_promocion=%s',(promocion,))
+        c.execute('INSERT INTO promocion_dia VALUES(%s,3)',(promocion,))
+        # Dos funciones futuras con idéntica tarifa y asientos: cambia solamente el día.
+        miercoles=c.execute("SELECT (date_trunc('day',%s::timestamptz AT TIME ZONE ci.zona_horaria)+((3-extract(isodow FROM %s::timestamptz AT TIME ZONE ci.zona_horaria)::int+7)%%7+7)*interval '1 day'+interval '12 hours') AT TIME ZONE ci.zona_horaria FROM sala s JOIN cine ci USING(id_cine) WHERE s.id_sala=%s",(self.ahora,self.ahora,self.sala)).fetchone()[0]
+        c.execute('UPDATE funcion SET inicio=%s,fin=%s WHERE id_funcion=%s',(miercoles,miercoles+timedelta(hours=2),self.funcion))
+        c.execute('UPDATE tarifa SET vigente_hasta=%s WHERE id_tarifa=%s',(miercoles+timedelta(days=2),self.tarifa))
+        c.execute('UPDATE promocion SET vigente_hasta=%s WHERE id_promocion=%s',(miercoles+timedelta(days=2),promocion))
+        jueves=c.execute('INSERT INTO funcion(id_pelicula,id_sala,inicio,fin) VALUES(1,%s,%s,%s) RETURNING id_funcion',(self.sala,miercoles+timedelta(days=1),miercoles+timedelta(days=1,hours=2))).fetchone()[0]
+        c.execute('INSERT INTO tarifa(id_funcion,id_zona,id_categoria_entrada,monto,vigente_desde,vigente_hasta) VALUES(%s,%s,%s,8,%s,%s)',(jueves,self.zona,self.categoria,self.ahora-timedelta(days=1),miercoles+timedelta(days=2)))
+        c.execute('INSERT INTO funcion_promocion VALUES(%s,%s)',(jueves,promocion))
+        compra_miercoles=self.reservar(self.asientos[:2])
+        self.assertEqual(c.execute('SELECT total FROM compra WHERE id_compra=%s',(compra_miercoles,)).fetchone()[0],Decimal('8'))
+        self.funcion=jueves
+        compra_jueves=self.reservar(self.asientos[:2])
+        self.assertEqual(c.execute('SELECT total FROM compra WHERE id_compra=%s',(compra_jueves,)).fetchone()[0],Decimal('16'))
+
     def test_funcion_inactiva_y_asientos_repetidos_rechazados(self):
         with self.assertRaises(psycopg.errors.RaiseException),self.conexion.transaction():self.reservar([self.asientos[0]]*2)
         self.actor('administrador');self.conexion.execute('UPDATE funcion SET activa=FALSE WHERE id_funcion=%s',(self.funcion,))

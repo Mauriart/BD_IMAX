@@ -10,6 +10,6 @@ test_reserva_real_protege_distribucion (__main__.PruebasIntegracionB.test_reserv
 test_reversion_real_conserva_historia (__main__.PruebasIntegracionB.test_reversion_real_conserva_historia) ... ok
 
 ----------------------------------------------------------------------
-Ran 10 tests in 7.306s
+Ran 10 tests in 2.124s
 
 OK
