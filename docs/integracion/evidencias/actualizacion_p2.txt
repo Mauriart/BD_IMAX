@@ -1,4 +1,0 @@
-p2 actualizada. Datos de las 21 tablas originales conservados; permisos administrativos ampliados segun el contrato de C.
-Tablas finales: 33
-Inventario inicial: 26
-Pagos de prueba insertados en p2: 0

@@ -1,9 +1,0 @@
-Pruebas documentadas: 96
-PostgreSQL: 18.6
-Python: 3.14.7
-Esquemas temporales: 0
-/ventas/ 200
-/reportes/ 200
-/operacion/resolver 200
-/operacion/ajustes 200
-/ventas/funciones/1/asientos 200

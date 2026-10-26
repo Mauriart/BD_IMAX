@@ -1,14 +1,14 @@
 from flask import Flask, abort, redirect, render_template, request, url_for
 import psycopg
-from conexion import obtener_conexion
-from salas import salas_bp
-from funciones import funciones_bp
-from cartelera import cartelera_bp
-from precios import precios_bp
-from ventas import ventas_bp
-from reportes import reportes_bp
-from operacion import operacion_bp
-from seguridad import preparar_seguridad, autorizar_cambio, auditar, leer_registro
+from modulos.conexion import obtener_conexion
+from modulos.salas import salas_bp
+from modulos.funciones import funciones_bp
+from modulos.cartelera import cartelera_bp
+from modulos.precios import precios_bp
+from modulos.ventas import ventas_bp
+from modulos.reportes import reportes_bp
+from modulos.operacion import operacion_bp
+from modulos.seguridad import preparar_seguridad, autorizar_cambio, auditar, leer_registro
 
 app = Flask(__name__)
 app.register_blueprint(salas_bp)

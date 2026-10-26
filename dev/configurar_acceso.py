@@ -6,22 +6,17 @@ import secrets
 from dotenv import set_key, dotenv_values
 import psycopg
 from werkzeug.security import generate_password_hash
-from conexion import obtener_conexion
+from modulos.conexion import obtener_conexion
 
 TABLAS_C = ('rol', 'usuario', 'rol_permiso', 'solicitud_reembolso',
             'solicitud_reembolso_detalle', 'acceso_puerta_log', 'admin_operacion_audit')
 
 
-def instalar_c_si_falta():
+def verificar_instalacion():
     with obtener_conexion() as conexion:
         presentes = [conexion.execute('SELECT to_regclass(%s)', (tabla,)).fetchone()[0] for tabla in TABLAS_C]
-        if all(presentes):
-            return
-        if any(presentes):
-            raise ValueError('El esquema de C está incompleto. No se sobrescribirá; revisa su instalación.')
-        conexion.commit()
-        archivo = Path(__file__).resolve().parent.parent / 'docs' / 'compañeroC' / 'sql_C-01.sql'
-        conexion.execute(archivo.read_text(encoding='utf-8-sig'))
+        if not all(presentes):
+            raise ValueError('Primero instala la base completa con instalar.py o sql/instalacion_completa.sql.')
 
 
 def configurar_usuario(correo, password):
@@ -53,7 +48,7 @@ def preparar_clave(archivo=None):
 def main():
     try:
         preparar_clave()
-        instalar_c_si_falta()
+        verificar_instalacion()
         correo = input('Correo del usuario existente (ej. admin@imax.test): ').strip()
         password = getpass('Nueva contraseña (mínimo 12 caracteres): ')
         if password != getpass('Repite la contraseña: '):
